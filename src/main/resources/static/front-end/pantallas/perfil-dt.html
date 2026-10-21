@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol de Memoria - Perfil DT</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body id="perfil-body">
+    <main class="profile-screen">
+        <header class="profile-top">
+            <strong id="profile-name">LUCAS ARDROVER</strong>
+            <div>
+                <span id="profile-stars">★★★☆☆</span>
+                <div class="profile-exp"><span id="profile-exp-bar"></span><em id="profile-exp-text">1200/2000</em></div>
+            </div>
+            <strong id="profile-meta">MENDOCINO<br>22 ANOS</strong>
+        </header>
+
+        <nav class="profile-nav">
+            <button type="button" data-panel="historial" class="profile-btn active">HISTORIAL DE CLUBES</button>
+            <button type="button" data-panel="titulos" class="profile-btn">TITULOS</button>
+            <button type="button" data-panel="trofeos" class="profile-btn">TROFEOS</button>
+            <button type="button" data-panel="logros" class="profile-btn">LOGROS</button>
+            <button type="button" data-panel="ofertas" class="profile-btn">OFERTAS</button>
+            <button type="button" data-panel="noticias" class="profile-btn">NOTICIAS</button>
+            <button type="button" data-panel="mensajes" class="profile-btn">MENSAJES</button>
+        </nav>
+
+        <img id="profile-avatar" class="profile-avatar-main" src="../assets/avatar-1.png" alt="Director tecnico">
+
+        <section class="profile-panel">
+            <h1 id="profile-panel-title">HISTORIAL DE CLUBES</h1>
+            <div id="profile-panel-body" class="profile-panel-body"></div>
+        </section>
+
+        <button type="button" id="btn-profile-menu" class="menu-footer-btn profile-back">VOLVER AL MENU</button>
+    </main>
+
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/data-clubes.js"></script>
+    <script src="../scripts/experiencia.js"></script>
+    <script src="../scripts/perfil-dt.js"></script>
+</body>
+</html>

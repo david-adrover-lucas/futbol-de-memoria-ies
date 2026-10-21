@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol de Memoria - Menu</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body id="menu-body">
+    <main class="menu-screen" aria-label="Menu principal">
+        <header class="menu-header">
+            <div class="menu-dt-card">
+                <div class="menu-media-box">
+                    <img id="menu-dt-avatar" class="menu-avatar" src="../assets/avatar-1.png" alt="Avatar DT">
+                </div>
+                <div class="menu-dt-info">
+                    <div class="menu-dt-name-col">
+                        <strong id="menu-dt-name">DT</strong>
+                    </div>
+
+                    <div class="menu-dt-center" aria-label="Experiencia del DT">
+                        <div id="menu-dt-stars" class="menu-stars-row" aria-hidden="true"></div>
+                        <div class="menu-exp-wrap">
+                            <span id="menu-exp-bar" class="menu-exp-bar"></span>
+                            <span id="menu-exp-label" class="menu-exp-label">0/2000</span>
+                        </div>
+                    </div>
+
+                    <div class="menu-dt-meta-col">
+                        <span id="menu-dt-province" class="menu-dt-meta">--</span>
+                        <span id="menu-dt-age" class="menu-dt-meta">-- AÑOS</span>
+                    </div>
+                </div>
+            </div>
+
+            <img class="menu-app-logo" src="../assets/logo-futbolmemoria.png" alt="Futbol de Memoria">
+
+            <div class="menu-club-card">
+                <div class="menu-club-info">
+                    <strong id="menu-club-name">CLUB</strong>
+                    <span id="menu-club-apodo">APODO</span>
+                </div>
+                <div class="menu-media-box">
+                    <img id="menu-club-badge" class="menu-club-badge" src="../assets/Boca_escudo.png" alt="Escudo del club">
+                </div>
+            </div>
+        </header>
+
+        <nav class="menu-nav" aria-label="Acciones principales">
+            <button type="button" class="menu-btn active" data-action="jugar">JUGAR PARTIDO</button>
+            <button type="button" class="menu-btn" data-action="torneos">TORNEOS</button>
+            <button type="button" class="menu-btn" data-action="temporada">TEMPORADA</button>
+            <button type="button" class="menu-btn" data-panel="estadisticas">ESTADISTICAS</button>
+            <button type="button" class="menu-btn" data-panel="objetivo">OBJETIVO DEL CLUB</button>
+            <button type="button" class="menu-btn" data-panel="ofertas">OFERTAS DE CLUBES</button>
+            <button type="button" class="menu-btn" data-panel="ranking">RANKING DE DT</button>
+            <button type="button" class="menu-btn" data-action="noticias">PERFIL DT</button>
+            <button type="button" class="menu-btn" data-panel="mensajes">BANDEJA DE MENSAJES</button>
+        </nav>
+
+        <section id="menu-secondary-panel" class="menu-secondary-panel hidden" aria-live="polite">
+            <div class="menu-panel-content">
+                <button type="button" id="btn-close-menu-panel" class="menu-panel-close">CERRAR PANEL</button>
+                <h1 id="menu-panel-title">ESTADISTICAS</h1>
+                <div id="menu-panel-body" class="menu-panel-body"></div>
+            </div>
+        </section>
+
+        <div class="menu-footer-actions">
+            <button type="button" id="btn-save-game" class="menu-footer-btn">GUARDAR PARTIDA</button>
+            <button type="button" id="btn-logout-menu" class="menu-footer-btn">CERRAR SESION</button>
+        </div>
+    </main>
+
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/data-clubes.js"></script>
+    <script src="../scripts/experiencia.js"></script>
+    <script src="../scripts/menu.js"></script>
+</body>
+</html>

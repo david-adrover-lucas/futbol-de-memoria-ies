@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol de Memoria - Crear DT</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .panel-formulario .inputs-inner {
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .panel-formulario .inputs-inner .login-input-field {
+            width: 100%;
+            box-sizing: border-box;
+            display: block;
+            text-align: center;
+            text-align-last: center;
+        }
+    </style>
+</head>
+<body id="crear-dt-body">
+    <div class="crear-dt-container">
+        <div class="panel-formulario">
+            <h2 class="titulo-pantalla">CREAR DT</h2>
+
+            <form id="form-registro-dt">
+                <div class="inputs-inner">
+                    <input type="text" id="dt-name" class="login-input-field" placeholder="INGRESA TU NOMBRE" required>
+                    <input type="text" id="dt-lastname" class="login-input-field" placeholder="INGRESA TU APELLIDO" required>
+                    <input type="number" id="dt-age" class="login-input-field" placeholder="INGRESA TU EDAD" min="18" max="99" required>
+
+                    <select id="dt-province" class="login-input-field select-field" required>
+                        <option value="" disabled selected>SELECCIONA TU PROVINCIA</option>
+                        <option value="buenos-aires">Buenos Aires</option>
+                        <option value="capital-federal">Capital Federal</option>
+                        <option value="cordoba">Cordoba</option>
+                        <option value="mendoza">Mendoza</option>
+                        <option value="santa-fe">Santa Fe</option>
+                        <option value="tucuman">Tucuman</option>
+                        <option value="sanjuan">San Juan</option>
+                    </select>
+                </div>
+
+                <button type="submit" id="btn-continuar-dt" class="btn-login-esport btn-continuar-dt">CONTINUAR</button>
+
+                <div class="buttons-row">
+                    <button type="button" id="btn-random" class="btn-small-esport">RANDOM</button>
+                    <button type="button" id="btn-back" class="btn-small-esport">BACK</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="panel-avatares">
+            <div class="grid-avatares">
+                <div class="avatar-card" data-avatar="1"><div class="avatar-frame"><img src="../assets/avatar-1.png" alt="DT 1" class="avatar-img"></div></div>
+                <div class="avatar-card" data-avatar="2"><div class="avatar-frame"><img src="../assets/avatar-2.png" alt="DT 2" class="avatar-img"></div></div>
+                <div class="avatar-card" data-avatar="3"><div class="avatar-frame"><img src="../assets/avatar-3.png" alt="DT 3" class="avatar-img"></div></div>
+                <div class="avatar-card" data-avatar="4"><div class="avatar-frame"><img src="../assets/avatar-4.png" alt="DT 4" class="avatar-img"></div></div>
+                <div class="avatar-card" data-avatar="5"><div class="avatar-frame"><img src="../assets/avatar-5.png" alt="DT 5" class="avatar-img"></div></div>
+                <div class="avatar-card" data-avatar="6"><div class="avatar-frame"><img src="../assets/avatar-6.png" alt="DT 6" class="avatar-img"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/crear-dt.js"></script>
+</body>
+</html>

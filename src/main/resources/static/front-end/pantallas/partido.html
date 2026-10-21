@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol de Memoria - Partido</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body id="partido-body">
+    <main class="match-screen" aria-label="Partido de trivia">
+        <div id="match-event-layer" class="match-event-layer" aria-live="polite"></div>
+
+        <section class="match-scoreboard" aria-live="polite">
+            <b id="score-competition" class="score-competition">COPA</b>
+            <div class="score-mainline">
+                <strong id="score-local-code">BOC</strong>
+                <span id="score-local-goals">0</span>
+                <img id="score-cup" src="../assets/copa-libertadores.png" alt="">
+                <span id="score-away-goals">0</span>
+                <strong id="score-away-code">RIV</strong>
+            </div>
+            <em id="score-period">PT&nbsp;&nbsp;10'</em>
+        </section>
+
+        <section class="question-stage">
+            <div id="question-timer" class="match-timer">15 SEGUNDOS</div>
+            <h1 id="question-text" class="match-question">PREGUNTA</h1>
+            <div id="answers-grid" class="answers-grid"></div>
+        </section>
+
+        <div class="wildcards-row" aria-label="Comodines">
+            <button type="button" class="wildcard-btn" data-wildcard="penal" title="Penal">
+                <img src="../assets/comodin-penal.png" alt="Penal">
+            </button>
+            <button type="button" class="wildcard-btn" data-wildcard="doble" title="Gol doble">
+                <img src="../assets/comodin-x2.png" alt="Gol doble">
+            </button>
+            <button type="button" class="wildcard-btn" data-wildcard="cincuenta" title="50/50">
+                <img src="../assets/comodin-50-50.png" alt="50/50">
+            </button>
+            <button type="button" id="btn-exit-match" class="wildcard-btn" title="Salir">
+                <span>FIN</span>
+            </button>
+        </div>
+    </main>
+
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/data-clubes.js"></script>
+    <script src="../scripts/data-preguntas.js"></script>
+    <script src="../scripts/engine-partido.js"></script>
+    <script src="../scripts/partido.js"></script>
+</body>
+</html>

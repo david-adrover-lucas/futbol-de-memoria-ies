@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol de Memoria - Torneos</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body id="torneos-body">
+    <main class="career-screen tournament-screen">
+        <header class="career-header tour-header" aria-label="Datos del torneo">
+            <div class="career-dt tour-header-side tour-header-profile">
+                <img id="tour-dt-avatar" src="../assets/avatar-1.png" alt="">
+                <div class="tour-header-copy">
+                    <strong id="tour-dt-name">DT</strong>
+                    <span id="tour-dt-stars">★★★☆☆</span>
+                </div>
+            </div>
+
+            <div class="tour-header-center">
+                <img class="career-logo tour-logo" src="../assets/logo-futbolmemoria.png" alt="Futbol de Memoria">
+            </div>
+
+            <div class="career-club tour-header-side tour-header-club">
+                <strong id="tour-club-name">BOCA JUNIORS</strong>
+                <img id="tour-club-badge" src="../assets/Boca_escudo.png" alt="Escudo del club">
+            </div>
+        </header>
+
+        <h1 class="tour-page-title">TORNEOS</h1>
+
+        <nav id="tour-select" class="tour-select" aria-label="Seleccionar torneo">
+            <button type="button" class="tour-big-btn locked" data-torneo="libertadores">
+                <span>LIBERTADORES</span>
+                <img src="../assets/candado.png" alt="Candado de torneo bloqueado">
+            </button>
+            <button type="button" class="tour-big-btn" data-torneo="sudamericana">
+                <span>SUDAMERICANA</span>
+            </button>
+            <button type="button" class="tour-big-btn" data-torneo="nacional">
+                <span>NACIONAL</span>
+            </button>
+        </nav>
+
+        <section id="tour-bracket" class="tour-bracket hidden" aria-label="Llave del torneo">
+            <div class="tour-bracket-canvas">
+                <header class="tour-bracket-heading">
+                    <img id="tour-bracket-logo" class="tour-bracket-logo" src="../assets/logo-sudamericana.png" alt="">
+                    <div class="tour-bracket-title-wrap">
+                        <h2 id="tour-bracket-title" class="tour-bracket-title">TORNEO</h2>
+                        <span id="tour-bracket-round" class="tour-bracket-round">OCTAVOS A FINAL</span>
+                    </div>
+                    <img id="tour-bracket-cup" class="tour-bracket-cup" src="../assets/copa-sudamericana.png" alt="">
+                </header>
+
+                <div id="tour-bracket-teams" class="tour-bracket-teams"></div>
+            </div>
+        </section>
+
+        <footer class="tour-footer" aria-label="Acciones de torneo">
+            <button type="button" id="btn-tour-menu" class="menu-footer-btn">VOLVER AL MENU</button>
+            <button type="button" id="btn-tour-play" class="menu-footer-btn">JUGAR PARTIDO</button>
+        </footer>
+    </main>
+
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/data-clubes.js"></script>
+    <script src="../scripts/torneos.js"></script>
+</body>
+</html>

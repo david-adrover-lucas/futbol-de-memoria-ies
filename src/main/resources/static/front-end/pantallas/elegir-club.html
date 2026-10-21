@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol de Memoria - Elegir Club Inicial</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body id="elegir-club-body">
+    <main class="club-stage" aria-label="Elegir club inicial">
+        <section class="club-picker-panel" aria-labelledby="titulo-elegir-club">
+            <h1 id="titulo-elegir-club" class="club-screen-title">ELEGIR CLUB INICIAL</h1>
+
+            <div class="grid-clubes-scroll" id="grid-clubes" aria-label="Listado de clubes"></div>
+
+            <div class="row-botones-club">
+                <button type="button" id="btn-club-random" class="btn-small-esport">RANDOM</button>
+                <button type="button" id="btn-club-back" class="btn-small-esport">BACK</button>
+            </div>
+        </section>
+
+        <section class="club-detail-panel" id="panel-detalle" aria-live="polite">
+            <div class="club-detail-top">
+                <div class="escudo-detalle-frame">
+                    <img id="det-escudo" alt="" class="hidden">
+                </div>
+
+                <div class="info-rapida-club">
+                    <h2 id="det-nombre">SELECCIONA UN CLUB</h2>
+                    <p id="det-apodo">Apodo: --</p>
+                    <p id="det-estadio">Estadio: --</p>
+                    <p id="det-hinchada">Socios: --</p>
+                    <p id="det-provincia">Hinchada: --</p>
+                    <div id="det-estrellas" class="estrellas-container" aria-label="Estrellas del club"></div>
+                </div>
+            </div>
+
+            <p id="det-descripcion" class="descripcion-club-texto">
+                Explora los clubes disponibles del futbol argentino. Para iniciar tu carrera como DT, los clubes de 1 y 2 estrellas quedan listos para contratar. Los clubes grandes se muestran bloqueados para progresion.
+            </p>
+
+            <div class="seccion-objetivos">
+                <div class="separador-objetivos">OBJETIVOS</div>
+                <div id="lista-objetivos" class="container-botones-objetivos"></div>
+            </div>
+
+            <div class="footer-detalle-club">
+                <div class="sueldo-box">
+                    <span>SUELDO POR TEMPORADA</span>
+                    <strong id="det-sueldo" class="sueldo-valor">$ 0</strong>
+                </div>
+                <button type="button" id="btn-confirmar-club" class="btn-login-esport disabled" disabled>ACEPTAR OFERTA</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="../scripts/storage.js"></script>
+    <script src="../scripts/data-clubes.js"></script>
+    <script src="../scripts/elegir-club.js"></script>
+</body>
+</html>
