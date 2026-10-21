@@ -1,6 +1,7 @@
 package com.auditoriria_ies.futbol_memoria.models;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class IntentoPartido {
     @JoinColumn(name = "opcion_respuesta_id", foreignKey = @ForeignKey(name = "fk_intento_opcion_respuesta")) private OpcionRespuesta opcionRespuesta;
     @Column(name = "numero_intento", nullable = false) private Integer numeroIntento;
     @Column(name = "texto_respuesta", length = 255) private String textoRespuesta;
+    @JsonIgnore
     @Column(name = "es_correcta", nullable = false, columnDefinition = "TINYINT(1)") private Boolean esCorrecta;
     @Column(name = "tiempo_respuesta_segundos", nullable = false, columnDefinition = "SMALLINT UNSIGNED") private Integer tiempoRespuestaSegundos;
     @Column(name = "tipo_comodin", nullable = false, columnDefinition = "ENUM('ninguno','doble','penal','cincuenta') DEFAULT 'ninguno'") private String tipoComodin = "ninguno";

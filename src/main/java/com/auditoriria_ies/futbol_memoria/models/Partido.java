@@ -40,4 +40,5 @@ public class Partido {
     @Column(name = "fecha_creacion", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP") private LocalDateTime fechaCreacion;
     @UpdateTimestamp
     @Column(name = "fecha_actualizacion", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP") private LocalDateTime fechaActualizacion;
+
 }

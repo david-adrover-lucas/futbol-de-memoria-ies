@@ -1,6 +1,7 @@
 package com.auditoriria_ies.futbol_memoria.models;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class Usuario {
     private String correoElectronico;
 
     @Column(name = "hash_contrasena", nullable = false, length = 255)
+    @JsonIgnore
     private String hashContrasena;
 
     @CreationTimestamp

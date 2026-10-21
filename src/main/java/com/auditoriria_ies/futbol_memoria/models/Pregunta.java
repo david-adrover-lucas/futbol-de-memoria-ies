@@ -1,6 +1,7 @@
 package com.auditoriria_ies.futbol_memoria.models;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "pregunta", indexes = @Index(name = "idx_pregunta_nivel_activa", columnList = "nivel_dificultad_id, esta_activa"))
@@ -29,13 +32,20 @@ public class Pregunta {
     private String tipoPregunta = "opcion_multiple";
 
     @Column(name = "respuesta_numerica", precision = 10, scale = 2)
+    @JsonIgnore
     private BigDecimal respuestaNumerica;
 
     @Column(name = "tolerancia_numerica", nullable = false, precision = 10, scale = 2, columnDefinition = "DECIMAL(10,2) DEFAULT 0.00")
+    @JsonIgnore
     private BigDecimal toleranciaNumerica = BigDecimal.ZERO;
 
     @Column(name = "esta_activa", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
     private Boolean estaActiva = true;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "pregunta", fetch = FetchType.LAZY)
+    @OrderBy("ordenOpcion ASC")
+    private List<OpcionRespuesta> opciones = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "fecha_creacion", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

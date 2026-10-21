@@ -1,6 +1,7 @@
 package com.auditoriria_ies.futbol_memoria.models;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class OpcionRespuesta {
     @Column(name = "opcion_respuesta_id", nullable = false, updatable = false)
     private Long opcionRespuestaId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "pregunta_id", nullable = false, foreignKey = @ForeignKey(name = "fk_opcion_pregunta"))
     private Pregunta pregunta;
@@ -30,6 +32,7 @@ public class OpcionRespuesta {
     private String textoOpcion;
 
     @Column(name = "es_correcta", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    @JsonIgnore
     private Boolean esCorrecta = false;
 
     @CreationTimestamp
