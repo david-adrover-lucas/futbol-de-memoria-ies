@@ -78,6 +78,9 @@
     --size-answer-min: 4rem;
     --size-answer-mobile-min: 3.5rem;
     --size-answer-badge: 2.5rem;
+    --layout-max-width: 120rem;
+    --header-height: clamp(7.5rem, 13vw, 10.5rem);
+    --header-gap: clamp(var(--space-2), 1.5vw, var(--space-6));
     --shadow-card: 0 1rem 2.25rem rgb(0 0 0 / 38%);
     --shadow-control: inset 0 1px var(--color-highlight), 0 0.4rem 1rem var(--color-shadow);
     --shadow-gold-control: inset 0 1px var(--color-highlight-strong), var(--shadow-gold-glow);
