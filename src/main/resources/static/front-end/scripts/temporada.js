@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const session = window.FDM.session.requireUser();
     if (!session) return;
     const api = window.FDM.services;
-    const playButton = document.getElementById("btn-season-play");
     const title = document.querySelector(".screen-title-plate");
     const tableWrap = document.querySelector(".season-table-wrap");
     const calendarInfo = document.getElementById("season-calendar-info");
@@ -24,37 +23,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) { alert(error.message); return; }
 
     document.getElementById("btn-season-menu").addEventListener("click", () => window.location.assign("menu.html"));
-    playButton.addEventListener("click", async () => {
-        playButton.disabled = true;
-        try {
-            if (calendar.esFechaLibre) {
-                await api.calendarioService.avanzar(session.usuarioId);
-                window.location.reload();
-                return;
-            }
-            const codigo = calendar.codigoCompeticionActual;
-            let fixture;
-            if (codigo === "temporada") {
-                fixture = await api.temporadaService.siguientePartido(session.usuarioId);
-            } else {
-                await api.torneoService.iniciar(session.usuarioId, codigo);
-                fixture = await api.torneoService.partido(session.usuarioId, codigo);
-            }
-            const game = fixture.partidoId ? { partidoId: fixture.partidoId }
-                : await api.partidoService.iniciar(session.usuarioId, codigo,
-                    codigo === "temporada" ? { temporadaFixtureId: fixture.fixtureId } : { torneoFixtureId: fixture.fixtureId });
-            window.FDM.session.set({ ...session, carreraId: carrera.carreraId, carrera,
-                competicionCodigo: codigo, partidoActualId: game.partidoId });
-            window.location.assign(`partido.html?competicion=${encodeURIComponent(codigo)}`);
-        } catch (error) { alert(error.message); playButton.disabled = false; }
-    });
-
     function renderCalendar(data) {
         const competition = data.nombreCompeticionActual || data.codigoCompeticionActual;
         const round = data.nombreRondaActual ? ` · ${data.nombreRondaActual}` : "";
         title.textContent = `TEMPORADA ${data.numeroTemporada} · FECHA ${data.fechaActual}/${data.totalFechas}`;
         calendarInfo.textContent = `${competition}${round}${data.esFechaLibre ? " · Fecha libre: se simularán los partidos de CPU" : " · Juega tu partido"}`;
-        playButton.textContent = data.esFechaLibre ? "AVANZAR FECHA" : `JUGAR ${competition}`;
     }
 
     function renderHeader(data) {

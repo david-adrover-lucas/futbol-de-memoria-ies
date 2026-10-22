@@ -1,11 +1,14 @@
 /* Ajustes finales compartidos por todas las pantallas. */
-:where(button, input:not([type="checkbox"]):not([type="radio"]), select, [role="button"]) {
-    min-height: var(--size-touch-target);
-}
-
 :where(button, input, select, textarea, a[href], [role="button"], [tabindex]):focus-visible {
     outline: var(--focus-outline-width) solid var(--color-focus);
     outline-offset: var(--focus-outline-offset);
+}
+
+@media (max-width: 600px), (pointer: coarse) {
+    :where(button, input:not([type="checkbox"]):not([type="radio"]), select, [role="button"]) {
+        min-height: var(--size-touch-target);
+        min-width: var(--size-touch-target);
+    }
 }
 
 @media (hover: none) {

@@ -28,7 +28,10 @@ public class ApiExceptionHandler {
         return response(HttpStatus.BAD_REQUEST, message);
     }
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String,String>> conflict(DataIntegrityViolationException e) { return response(HttpStatus.CONFLICT, "La operación entra en conflicto con datos existentes"); }
+    public ResponseEntity<Map<String,String>> conflict(DataIntegrityViolationException e) {
+        logger.error("Conflicto de integridad en una solicitud de la API", e);
+        return response(HttpStatus.CONFLICT, "La operación entra en conflicto con datos existentes");
+    }
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String,String>> invalidArgument(IllegalArgumentException e) { return response(HttpStatus.BAD_REQUEST, e.getMessage()); }
     @ExceptionHandler(ConstraintViolationException.class)

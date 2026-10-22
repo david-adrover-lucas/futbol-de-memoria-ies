@@ -5,10 +5,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const panel = document.getElementById("menu-secondary-panel");
     const panelTitle = document.getElementById("menu-panel-title");
     const panelBody = document.getElementById("menu-panel-body");
+    const playButton = document.getElementById("btn-menu-play");
+    const calendarInfo = document.getElementById("menu-calendar-info");
     let [carrera, estadisticas] = await Promise.all([
         api.carreraService.obtener(session.usuarioId), api.estadisticaService.obtener(session.usuarioId)
     ]).catch((error) => { alert(error.message); return [null, null]; });
     if (!carrera) return;
+    let calendar;
+    try {
+        calendar = await api.calendarioService.actual(session.usuarioId);
+        renderCalendar(calendar);
+    } catch (error) {
+        playButton.disabled = true;
+        playButton.textContent = "CALENDARIO NO DISPONIBLE";
+        calendarInfo.textContent = error.message;
+    }
     window.FDM.session.set({ ...session, carreraId: carrera.carreraId, carrera });
     renderPerfil(carrera);
 
@@ -16,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelectorAll(".menu-btn").forEach((item) => item.classList.remove("active"));
         button.classList.add("active");
         if (button.dataset.action === "jugar") {
-            window.location.assign("temporada.html");
+            await jugarOAvanzarFecha(button);
             return;
         }
         if (button.dataset.action) {
@@ -33,6 +44,45 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.FDM.session.clear();
         window.location.assign("../index.html");
     });
+
+    async function jugarOAvanzarFecha(button) {
+        if (!calendar) return;
+        button.disabled = true;
+        try {
+            if (calendar.esFechaLibre) {
+                await api.calendarioService.avanzar(session.usuarioId);
+                window.location.reload();
+                return;
+            }
+            const codigo = calendar.codigoCompeticionActual;
+            let fixture;
+            if (codigo === "temporada") {
+                fixture = await api.temporadaService.siguientePartido(session.usuarioId);
+            } else {
+                await api.torneoService.iniciar(session.usuarioId, codigo);
+                fixture = await api.torneoService.partido(session.usuarioId, codigo);
+            }
+            const game = fixture.partidoId ? { partidoId: fixture.partidoId }
+                : await api.partidoService.iniciar(session.usuarioId, codigo,
+                    codigo === "temporada" ? { temporadaFixtureId: fixture.fixtureId } : { torneoFixtureId: fixture.fixtureId });
+            window.FDM.session.set({ ...session, carreraId: carrera.carreraId, carrera,
+                competicionCodigo: codigo, partidoActualId: game.partidoId });
+            window.location.assign(`partido.html?competicion=${encodeURIComponent(codigo)}`);
+        } catch (error) {
+            alert(error.message);
+            button.disabled = false;
+        }
+    }
+
+    function renderCalendar(data) {
+        const competition = data.nombreCompeticionActual || data.codigoCompeticionActual || "Competición";
+        const round = data.nombreRondaActual ? ` · ${data.nombreRondaActual}` : "";
+        const date = `Temporada ${data.numeroTemporada} · Fecha ${data.fechaActual}/${data.totalFechas}`;
+        calendarInfo.textContent = data.esFechaLibre
+            ? `${date} · Fecha libre: al avanzar se simulan los partidos de CPU.`
+            : `${date} · ${competition}${round}`;
+        playButton.textContent = data.esFechaLibre ? "AVANZAR FECHA" : `JUGAR ${competition}`;
+    }
 
     async function abrirPanel(key) {
         panelBody.replaceChildren();

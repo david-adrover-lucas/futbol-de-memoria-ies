@@ -23,7 +23,7 @@ public class CalendarioFecha {
     @Column(name = "numero_fecha", nullable = false)
     private Integer numeroFecha;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "codigo_competicion", nullable = false)
+    @JoinColumn(name = "codigo_competicion", referencedColumnName = "codigo", nullable = false)
     private Competicion competicion;
     @Column(name = "numero_ronda", nullable = false)
     private Integer numeroRonda;

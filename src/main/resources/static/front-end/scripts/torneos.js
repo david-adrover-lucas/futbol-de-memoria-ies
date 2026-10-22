@@ -10,6 +10,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selection = document.getElementById("tour-select");
     const bracket = document.getElementById("tour-bracket");
     const teams = document.getElementById("tour-bracket-teams");
+    const roundTabs = document.createElement("nav");
+    roundTabs.className = "tour-round-tabs";
+    roundTabs.setAttribute("aria-label", "Seleccionar ronda");
+    roundTabs.setAttribute("role", "tablist");
+    teams.before(roundTabs);
     let activeCode = null;
 
     try {
@@ -80,18 +85,52 @@ document.addEventListener("DOMContentLoaded", async () => {
         champion.textContent = data.campeon ? `CAMPEÓN: ${data.campeon.nombre}`
             : data.estado === "sin_iniciar" ? "La llave y los resultados aparecerán al avanzar las fechas del calendario." : "";
         teams.replaceChildren();
+        roundTabs.replaceChildren();
         if (!data.fixtures.length) return;
 
         const roundNames = ["", "OCTAVOS", "CUARTOS", "SEMIFINAL", "FINAL"];
+        const renderedRounds = [];
         for (let round = 1; round <= 4; round += 1) {
             const fixtures = data.fixtures.filter((item) => item.ronda === round);
             if (!fixtures.length) continue;
+            renderedRounds.push(round);
             const column = document.createElement("section");
             column.className = `tour-round tour-round--${["", "octavos", "cuartos", "semis", "final"][round]}`;
+            column.id = `tour-round-${round}`;
+            column.setAttribute("role", "tabpanel");
+            column.setAttribute("aria-label", roundNames[round]);
+            column.setAttribute("aria-labelledby", `tour-round-tab-${round}`);
             const title = document.createElement("h3"); title.textContent = roundNames[round]; column.appendChild(title);
             fixtures.forEach((fixture) => column.appendChild(renderFixture(fixture)));
             teams.appendChild(column);
         }
+        const selectedRound = renderedRounds.includes(data.rondaActual) ? data.rondaActual : renderedRounds[0];
+        renderedRounds.forEach((round) => {
+            const tab = document.createElement("button");
+            tab.type = "button";
+            tab.className = "tour-round-tab";
+            tab.id = `tour-round-tab-${round}`;
+            tab.setAttribute("role", "tab");
+            tab.setAttribute("aria-controls", `tour-round-${round}`);
+            tab.setAttribute("aria-selected", String(round === selectedRound));
+            tab.tabIndex = round === selectedRound ? 0 : -1;
+            tab.textContent = roundNames[round];
+            tab.addEventListener("click", () => selectRound(round));
+            roundTabs.appendChild(tab);
+        });
+        selectRound(selectedRound);
+    }
+
+    function selectRound(round) {
+        teams.querySelectorAll(".tour-round").forEach((section) => {
+            const active = section.id === `tour-round-${round}`;
+            section.classList.toggle("is-active", active);
+        });
+        roundTabs.querySelectorAll("[role=tab]").forEach((tab) => {
+            const active = tab.id === `tour-round-tab-${round}`;
+            tab.setAttribute("aria-selected", String(active));
+            tab.tabIndex = active ? 0 : -1;
+        });
     }
 
     function renderFixture(fixture) {
