@@ -1,0 +1,67 @@
+/* Ajustes finales compartidos por todas las pantallas. */
+:where(button, input:not([type="checkbox"]):not([type="radio"]), select, [role="button"]) {
+    min-height: var(--size-touch-target);
+}
+
+:where(button, input, select, textarea, a[href], [role="button"], [tabindex]):focus-visible {
+    outline: var(--focus-outline-width) solid var(--color-focus);
+    outline-offset: var(--focus-outline-offset);
+}
+
+@media (hover: none) {
+    :where(
+        .btn-login-esport,
+        .btn-small-esport,
+        .menu-btn,
+        .menu-footer-btn,
+        .menu-panel-close,
+        .tour-big-btn,
+        .profile-btn,
+        .wildcard-btn,
+        .answer-btn,
+        .avatar-card,
+        .club-slot-card
+    ):hover:not(:active) {
+        transform: none;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+    :where(.menu-screen, .career-screen, .profile-screen, .match-screen, .result-screen) {
+        min-height: 100svh;
+    }
+
+    :where(.menu-header, .career-header, #torneos-body .tour-header, .profile-top) {
+        min-height: 6rem;
+        margin-top: max(var(--space-2), env(safe-area-inset-top));
+    }
+
+    #elegir-club-body .grid-clubes-scroll {
+        max-height: 42svh;
+    }
+
+    #temporada-body .season-table-scroll {
+        max-height: 40svh;
+    }
+}
+
+@media (forced-colors: active) {
+    :where(button, input, select, textarea, a[href], [role="button"]):focus-visible {
+        outline-color: Highlight;
+    }
+
+    :where(.answer-btn, .club-slot-card, .tour-match, .season-table-wrap) {
+        border: 1px solid CanvasText;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto;
+        animation-duration: 0.01ms;
+        animation-iteration-count: 1;
+        transition-duration: 0.01ms;
+    }
+}
