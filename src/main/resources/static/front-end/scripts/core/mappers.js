@@ -30,7 +30,8 @@
     } : null;
     const fixture = (value) => value ? {
         ...value, fixtureId: Number(value.fixtureId), equipoLocal: equipo(value.equipoLocal),
-        equipoVisitante: equipo(value.equipoVisitante), partidoId: value.partidoId == null ? null : Number(value.partidoId)
+        equipoVisitante: equipo(value.equipoVisitante), partidoId: value.partidoId == null ? null : Number(value.partidoId),
+        equipoGanadorId: value.equipoGanadorId == null ? null : Number(value.equipoGanadorId)
     } : null;
     const temporada = (value) => value ? {
         ...value, fixtures: (value.fixtures || []).map(fixture),

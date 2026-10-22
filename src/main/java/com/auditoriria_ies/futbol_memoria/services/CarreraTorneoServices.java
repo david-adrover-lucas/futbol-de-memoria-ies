@@ -20,23 +20,26 @@ public class CarreraTorneoServices {
     private final ClasificacionServices clasificacionServices;
     private final CalendarioFechaRepository calendarioRepository;
     private final CarreraTemporadaRepository temporadaRepository;
+    private final TandaPenalesRepository tandaPenalesRepository;
 
     public CarreraTorneoServices(CarreraServices carreraServices, CarreraTorneoRepository torneoRepository,
                                  TorneoFixtureRepository fixtureRepository, EquipoRepository equipoRepository,
                                  CompeticionServices competicionServices, ClasificacionServices clasificacionServices,
-                                 CalendarioFechaRepository calendarioRepository, CarreraTemporadaRepository temporadaRepository) {
+                                 CalendarioFechaRepository calendarioRepository, CarreraTemporadaRepository temporadaRepository,
+                                 TandaPenalesRepository tandaPenalesRepository) {
         this.carreraServices = carreraServices; this.torneoRepository = torneoRepository;
         this.fixtureRepository = fixtureRepository; this.equipoRepository = equipoRepository;
         this.competicionServices = competicionServices;
         this.clasificacionServices = clasificacionServices;
         this.calendarioRepository = calendarioRepository;
         this.temporadaRepository = temporadaRepository;
+        this.tandaPenalesRepository = tandaPenalesRepository;
     }
 
     public record EquipoVista(Long equipoId, String codigoExterno, String nombre, String apodo, Integer prestigio, String rutaEscudo) {}
     public record FixtureVista(Long fixtureId, Integer ronda, Integer numeroPartido, EquipoVista equipoLocal,
                                EquipoVista equipoVisitante, Integer golesLocal, Integer golesVisitante,
-                               String estado, Long partidoId, boolean esPartidoDelUsuario) {}
+                               String estado, Long partidoId, boolean esPartidoDelUsuario, Long equipoGanadorId) {}
     public record TorneoVista(Long torneoId, String codigoCompeticion, Integer numeroTemporada,
                               Integer rondaActual, String estado, EquipoVista campeon,
                               List<FixtureVista> fixtures) {}
@@ -191,8 +194,19 @@ public class CarreraTorneoServices {
     }
 
     private List<Equipo> ganadores(List<TorneoFixture> ronda) {
-        return ronda.stream().map(f -> f.getGolesLocal() > f.getGolesVisitante()
-                ? f.getEquipoLocal() : f.getEquipoVisitante()).toList();
+        return ronda.stream().map(f -> Optional.ofNullable(ganadorFixture(f))
+                .orElseThrow(() -> new ReglaNegocioException("No se pudo determinar el ganador del partido " + f.getTorneoFixtureId()))).toList();
+    }
+
+    private Equipo ganadorFixture(TorneoFixture fixture) {
+        if (!"finalizado".equals(fixture.getEstado())) return null;
+        Equipo ganadorPenales = null;
+        if (Objects.equals(fixture.getGolesLocal(), fixture.getGolesVisitante()) && fixture.getPartido() != null) {
+            ganadorPenales = tandaPenalesRepository.findByPartidoPartidoId(fixture.getPartido().getPartidoId())
+                    .map(TandaPenales::getEquipoGanador).orElse(null);
+        }
+        return TorneoRules.ganador(fixture.getEquipoLocal(), fixture.getEquipoVisitante(),
+                fixture.getGolesLocal(), fixture.getGolesVisitante(), ganadorPenales);
     }
 
     private CarreraTorneo crearTorneo(Carrera carrera, String codigo) {
@@ -295,19 +309,20 @@ public class CarreraTorneoServices {
     }
     private TorneoVista vista(CarreraTorneo torneo, Carrera carrera) {
         List<TorneoFixture> fixtures = fixtureRepository.findByTorneoCarreraTorneoIdOrderByRondaAscNumeroPartidoAsc(torneo.getCarreraTorneoId());
-        Equipo campeon = fixtures.stream().filter(f -> f.getRonda() == 4 && "finalizado".equals(f.getEstado()))
-                .findFirst().map(f -> f.getGolesLocal() > f.getGolesVisitante() ? f.getEquipoLocal() : f.getEquipoVisitante())
-                .orElse(null);
+        Equipo campeon = fixtures.stream().filter(f -> f.getRonda() == 4).map(this::ganadorFixture)
+                .filter(Objects::nonNull).findFirst().orElse(null);
         return new TorneoVista(torneo.getCarreraTorneoId(), torneo.getCodigoCompeticion(), torneo.getNumeroTemporada(),
                 torneo.getRondaActual(), torneo.getEstado(), campeon == null ? null : equipoVista(campeon), fixtures
                 .stream().map(f -> fixtureVista(f, torneo.getEquipoParticipante() == null ? null : torneo.getEquipoParticipante().getEquipoId())).toList());
     }
 
     private FixtureVista fixtureVista(TorneoFixture f, Long equipoUsuario) {
+        Equipo ganador = ganadorFixture(f);
         return new FixtureVista(f.getTorneoFixtureId(), f.getRonda(), f.getNumeroPartido(), equipoVista(f.getEquipoLocal()),
                 equipoVista(f.getEquipoVisitante()), f.getGolesLocal(), f.getGolesVisitante(), f.getEstado(),
                 f.getPartido() == null ? null : f.getPartido().getPartidoId(),
-                equipoUsuario != null && (f.getEquipoLocal().getEquipoId().equals(equipoUsuario) || f.getEquipoVisitante().getEquipoId().equals(equipoUsuario)));
+                equipoUsuario != null && (f.getEquipoLocal().getEquipoId().equals(equipoUsuario) || f.getEquipoVisitante().getEquipoId().equals(equipoUsuario)),
+                ganador == null ? null : ganador.getEquipoId());
     }
     private EquipoVista equipoVista(Equipo e) { return new EquipoVista(e.getEquipoId(), e.getCodigoExterno(), e.getNombre(), e.getApodo(), e.getPrestigio(), e.getRutaEscudo()); }
 }

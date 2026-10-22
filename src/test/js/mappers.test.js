@@ -46,10 +46,12 @@ test("mapper de torneo conserva el estado de consulta y normaliza el campeon", (
     const value = window.FDM.mappers.torneo({
         torneoId: null, codigoCompeticion: "libertadores", numeroTemporada: 2,
         rondaActual: 4, estado: "eliminado",
-        campeon: { equipoId: 12, nombre: "River Plate", prestigio: 5 }, fixtures: []
+        campeon: { equipoId: 12, nombre: "River Plate", prestigio: 5 },
+        fixtures: [{ fixtureId: 2, equipoGanadorId: "12", equipoLocal: { equipoId: "12", nombre: "River Plate" } }]
     });
     assert.equal(value.torneoId, null);
     assert.equal(value.estado, "eliminado");
     assert.equal(value.campeon.equipoId, 12);
     assert.equal(value.campeon.nombre, "River Plate");
+    assert.equal(value.fixtures[0].equipoGanadorId, 12);
 });

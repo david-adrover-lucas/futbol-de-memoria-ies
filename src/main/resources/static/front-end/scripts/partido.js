@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.assign("resultado-partido.html");
     }
     function esEliminatoriaEmpatada(partido) {
-        return ["libertadores", "sudamericana"].includes(partido?.competicion?.codigo)
+        return ["nacional", "libertadores", "sudamericana"].includes(partido?.competicion?.codigo)
             && partido.golesLocal === partido.golesVisitante;
     }
     async function openPenalties(partido) {

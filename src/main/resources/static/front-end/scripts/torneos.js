@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!status) { status = document.createElement("small"); status.className = "tour-select-status"; button.appendChild(status); }
         status.textContent = !data || data.estado === "sin_iniciar" ? "SIN RESULTADOS"
             : data.campeon ? `CAMPEÓN: ${data.campeon.nombre}`
-                : data.estado === "eliminado" ? "TU EQUIPO ELIMINADO · CPU EN CURSO"
+            : data.estado === "eliminado" ? (data.campeon ? "TU EQUIPO ELIMINADO · TORNEO FINALIZADO" : "TU EQUIPO ELIMINADO · CPU EN CURSO")
                     : `RONDA ${data.rondaActual} DE 4`;
     }
 
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const state = {
             sin_iniciar: "SIN RESULTADOS GUARDADOS",
             en_curso: `RONDA ${data.rondaActual} DE 4 · EN CURSO`,
-            eliminado: "TU EQUIPO ELIMINADO · TORNEO EN SIMULACIÓN",
+            eliminado: data.campeon ? "TU EQUIPO ELIMINADO · TORNEO FINALIZADO" : "TU EQUIPO ELIMINADO · TORNEO EN SIMULACIÓN",
             campeon: "TORNEO FINALIZADO"
         };
         document.getElementById("tour-bracket-round").textContent = state[data.estado] || data.estado.toUpperCase();
@@ -102,9 +102,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         score.textContent = fixture.estado === "finalizado" || fixture.estado === "pendiente_penales"
             ? `${fixture.golesLocal} - ${fixture.golesVisitante}${fixture.estado === "pendiente_penales" ? " · PEN" : ""}` : "VS";
         const right = document.createElement("strong"); right.textContent = fixture.equipoVisitante.nombre;
-        if (fixture.estado === "finalizado" && fixture.golesLocal !== fixture.golesVisitante) {
-            (fixture.golesLocal > fixture.golesVisitante ? left : right).classList.add("is-winner");
-            (fixture.golesLocal > fixture.golesVisitante ? right : left).classList.add("is-eliminated");
+        if (fixture.equipoGanadorId != null || (fixture.estado === "finalizado" && fixture.golesLocal !== fixture.golesVisitante)) {
+            const localGana = fixture.equipoGanadorId != null
+                ? fixture.equipoGanadorId === fixture.equipoLocal.equipoId
+                : fixture.golesLocal > fixture.golesVisitante;
+            (localGana ? left : right).classList.add("is-winner");
+            (localGana ? right : left).classList.add("is-eliminated");
         }
         article.append(left, score, right);
         return article;
