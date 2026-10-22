@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta name="api-base-url" content="/api">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futbol de Memoria - Partido</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../ui-system.css">
 </head>
 <body id="partido-body">
     <main class="match-screen" aria-label="Partido de trivia">
@@ -44,10 +46,10 @@
         </div>
     </main>
 
-    <script src="../scripts/storage.js"></script>
-    <script src="../scripts/data-clubes.js"></script>
-    <script src="../scripts/data-preguntas.js"></script>
-    <script src="../scripts/engine-partido.js"></script>
+    <script src="../scripts/core/api-client.js"></script>
+    <script src="../scripts/core/session.js"></script>
+    <script src="../scripts/core/mappers.js"></script>
+    <script src="../scripts/core/services.js"></script>
     <script src="../scripts/partido.js"></script>
 </body>
 </html>

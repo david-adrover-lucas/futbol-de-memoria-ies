@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta name="api-base-url" content="/api">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futbol de Memoria - Menu</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../ui-system.css">
 </head>
 <body id="menu-body">
     <main class="menu-screen" aria-label="Menu principal">
@@ -28,7 +30,7 @@
 
                     <div class="menu-dt-meta-col">
                         <span id="menu-dt-province" class="menu-dt-meta">--</span>
-                        <span id="menu-dt-age" class="menu-dt-meta">-- AÑOS</span>
+                        <span id="menu-dt-age" class="menu-dt-meta">-- AÃ‘OS</span>
                     </div>
                 </div>
             </div>
@@ -72,9 +74,10 @@
         </div>
     </main>
 
-    <script src="../scripts/storage.js"></script>
-    <script src="../scripts/data-clubes.js"></script>
-    <script src="../scripts/experiencia.js"></script>
+    <script src="../scripts/core/api-client.js"></script>
+    <script src="../scripts/core/session.js"></script>
+    <script src="../scripts/core/mappers.js"></script>
+    <script src="../scripts/core/services.js"></script>
     <script src="../scripts/menu.js"></script>
 </body>
 </html>

@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta name="api-base-url" content="/api">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol de Memoria - Login</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./ui-system.css">
+</head>
+<body>
+    <div id="splash-screen" class="screen-container">
+        <div class="loading-container">
+            <h2 id="loading-text" class="text-cargando">CARGANDO RECURSOS...</h2>
+        </div>
+    </div>
+
+    <div id="login-screen" class="screen-container hidden">
+        <form id="login-form" class="login-form-container">
+            <input type="text" id="username" class="login-input-field" placeholder="INGRESA TU DT / USUARIO" required autocomplete="username">
+            <input type="password" id="password" class="login-input-field" placeholder="CONTRASENA" required>
+            <input type="email" id="email" class="login-input-field hidden" placeholder="CORREO ELECTRONICO" autocomplete="email">
+            <button type="submit" id="login-btn" class="btn-login-esport">LOGIN</button>
+            <button type="button" id="register-mode-btn" class="btn-small-esport">CREAR CUENTA</button>
+        </form>
+    </div>
+
+    <script src="./scripts/core/api-client.js"></script>
+    <script src="./scripts/core/session.js"></script>
+    <script src="./scripts/core/mappers.js"></script>
+    <script src="./scripts/core/services.js"></script>
+    <script src="./scripts/app.js"></script>
+</body>
+</html>

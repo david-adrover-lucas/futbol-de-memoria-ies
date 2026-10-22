@@ -61,6 +61,9 @@ public class CarreraServices {
     }
 
     @Transactional
+    public Carrera guardarCarrera(Carrera carrera) { return carreraRepository.save(carrera); }
+
+    @Transactional
     public Carrera cambiarEquipoActual(Long carreraId, Long nuevoEquipoId) {
         Carrera carrera = buscarCarrera(carreraId);
         var equipo = equipoServices.obtenerEquipoPorId(nuevoEquipoId);

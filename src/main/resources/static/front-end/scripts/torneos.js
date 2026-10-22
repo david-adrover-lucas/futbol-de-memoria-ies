@@ -1,282 +1,83 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const storage = window.FDM.storage;
-    const dt = storage.getDT();
-    const club = storage.getClub();
-    const bracket = document.getElementById("tour-bracket");
-    const select = document.getElementById("tour-select");
-    const teams = document.getElementById("tour-bracket-teams");
-    const bracketTitle = document.getElementById("tour-bracket-title");
-    const bracketLogo = document.getElementById("tour-bracket-logo");
-    const bracketCup = document.getElementById("tour-bracket-cup");
-    const bracketRound = document.getElementById("tour-bracket-round");
-    const pageTitle = document.querySelector(".tour-page-title");
-
-    const torneosConfig = {
-        libertadores: {
-            titulo: "LIBERTADORES",
-            logo: "../assets/logo-libertadores.png",
-            copa: "../assets/copa-libertadores.png",
-            ronda: "Octavos de Final"
-        },
-        sudamericana: {
-            titulo: "SUDAMERICANA",
-            logo: "../assets/logo-sudamericana.png",
-            copa: "../assets/copa-sudamericana.png",
-            ronda: "Octavos de Final"
-        },
-        nacional: {
-            titulo: "NACIONAL",
-            logo: "../assets/logo-nacional.png",
-            copa: "../assets/copa-nacional.png",
-            ronda: "Octavos de Final"
-        }
+document.addEventListener("DOMContentLoaded", async () => {
+    const session = window.FDM.session.requireUser();
+    if (!session) return;
+    const config = {
+        libertadores: { title: "LIBERTADORES", logo: "../assets/logo-libertadores.png", cup: "../assets/copa-libertadores.png" },
+        sudamericana: { title: "SUDAMERICANA", logo: "../assets/logo-sudamericana.png", cup: "../assets/copa-sudamericana.png" },
+        nacional: { title: "NACIONAL", logo: "../assets/logo-nacional.png", cup: "../assets/copa-nacional.png" }
     };
+    const selection = document.getElementById("tour-select");
+    const bracket = document.getElementById("tour-bracket");
+    const teams = document.getElementById("tour-bracket-teams");
+    let activeCode = null;
 
-    document.getElementById("tour-dt-avatar").src = dt.avatarSrc || "../assets/avatar-1.png";
-    document.getElementById("tour-dt-name").textContent = `${dt.nombre || "DT"} ${dt.apellido || ""}`.trim().toUpperCase();
-    document.getElementById("tour-dt-stars").textContent = "★".repeat(dt.estrellas || 1) + "☆".repeat(5 - (dt.estrellas || 1));
-    document.getElementById("tour-club-name").textContent = (club.name || "CLUB").toUpperCase();
-    document.getElementById("tour-club-badge").src = club.escudo || "../assets/Boca_escudo.png";
+    try { renderHeader(await window.FDM.services.carreraService.obtener(session.usuarioId)); }
+    catch (error) { alert(error.message); return; }
 
-    actualizarAccesos();
-
-    document.querySelectorAll(".tour-big-btn").forEach((button) => {
-        button.addEventListener("click", () => {
-            if (button.classList.contains("locked")) return;
-            abrirLlave(button.dataset.torneo);
-        });
-    });
-
+    document.querySelectorAll(".tour-big-btn").forEach((button) => button.addEventListener("click", async () => {
+        const code = button.dataset.torneo;
+        button.disabled = true;
+        try {
+            const tournament = await window.FDM.services.torneoService.iniciar(session.usuarioId, code);
+            activeCode = code; renderTournament(tournament);
+        } catch (error) { alert(error.message); }
+        finally { button.disabled = false; }
+    }));
     document.getElementById("btn-tour-menu").addEventListener("click", () => {
         if (!bracket.classList.contains("hidden")) {
-            volverASeleccion();
+            bracket.classList.add("hidden"); selection.classList.remove("hidden");
+            document.querySelector(".tour-page-title").classList.remove("hidden");
             return;
         }
-        window.location.href = "menu.html";
+        window.location.assign("menu.html");
+    });
+    document.getElementById("btn-tour-play").addEventListener("click", async () => {
+        if (!activeCode) return alert("Seleccioná una copa para ver su llave.");
+        try {
+            const fixture = await window.FDM.services.torneoService.partido(session.usuarioId, activeCode);
+            const game = fixture.partidoId ? { partidoId: fixture.partidoId }
+                : await window.FDM.services.partidoService.iniciar(session.usuarioId, activeCode, { torneoFixtureId: fixture.fixtureId });
+            window.FDM.session.set({ ...session, competicionCodigo: activeCode, partidoActualId: game.partidoId });
+            window.location.assign(`partido.html?competicion=${encodeURIComponent(activeCode)}`);
+        } catch (error) { alert(error.message); }
     });
 
-    document.getElementById("btn-tour-play").addEventListener("click", () => {
-        window.location.href = "partido.html";
-    });
+    function renderHeader(carrera) {
+        document.getElementById("tour-dt-avatar").src = `../assets/avatar-${carrera.numeroAvatar || 1}.png`;
+        document.getElementById("tour-dt-name").textContent = `${carrera.nombreDt} ${carrera.apellidoDt}`.toUpperCase();
+        document.getElementById("tour-dt-stars").textContent = "★".repeat(carrera.estrellas) + "☆".repeat(5 - carrera.estrellas);
+        document.getElementById("tour-club-name").textContent = carrera.equipoActual?.nombre?.toUpperCase() || "SIN EQUIPO";
+        document.getElementById("tour-club-badge").src = carrera.equipoActual?.rutaEscudo ? `../assets/${carrera.equipoActual.rutaEscudo}` : "../assets/logo-futbolmemoria.png";
+    }
 
-    teams.addEventListener("scroll", actualizarEncabezadosFixture, { passive: true });
-
-    function actualizarAccesos() {
-        const posicion = posicionEnTemporada(club.id);
-        const btnLibertadores = document.querySelector('[data-torneo="libertadores"]');
-
-        if (!btnLibertadores) return;
-
-        if (posicion > 0 && posicion <= 6) {
-            btnLibertadores.classList.remove("locked");
-            btnLibertadores.querySelector("img")?.remove();
+    function renderTournament(data) {
+        selection.classList.add("hidden"); bracket.classList.remove("hidden");
+        document.querySelector(".tour-page-title").classList.add("hidden");
+        const meta = config[data.codigoCompeticion];
+        document.getElementById("tour-bracket-title").textContent = `${meta.title} · TEMPORADA ${data.numeroTemporada}`;
+        document.getElementById("tour-bracket-round").textContent = data.estado === "en_curso" ? `RONDA ${data.rondaActual} DE 4` : data.estado.toUpperCase();
+        document.getElementById("tour-bracket-logo").src = meta.logo;
+        document.getElementById("tour-bracket-cup").src = meta.cup;
+        teams.replaceChildren();
+        const roundNames = ["", "OCTAVOS", "CUARTOS", "SEMIFINAL", "FINAL"];
+        for (let round = 1; round <= 4; round += 1) {
+            const fixtures = data.fixtures.filter((item) => item.ronda === round);
+            if (!fixtures.length) continue;
+            const column = document.createElement("section"); column.className = `tour-round tour-round--${["", "octavos", "cuartos", "semis", "final"][round]}`;
+            const title = document.createElement("h3"); title.textContent = roundNames[round]; column.appendChild(title);
+            fixtures.forEach((fixture) => column.appendChild(renderFixture(fixture)));
+            teams.appendChild(column);
         }
     }
 
-    function posicionEnTemporada(clubId) {
-        const tabla = obtenerTablaTemporada();
-        const index = tabla.findIndex((item) => item.id === clubId);
-        return index >= 0 ? index + 1 : -1;
-    }
-
-    function obtenerTablaTemporada() {
-        let temporada = storage.read(storage.KEYS.temporada, null);
-
-        if (!temporada) {
-            temporada = generarTemporadaDefault(club);
-            storage.write(storage.KEYS.temporada, temporada);
-        }
-
-        return temporada.tabla;
-    }
-
-    function generarTemporadaDefault(clubActual) {
-        const tabla = window.FDM.clubes.argentinos.map((item) => {
-            const pj = item.id === clubActual.id ? 0 : Math.floor(Math.random() * 8) + 3;
-            const pg = Math.floor(Math.random() * Math.max(1, pj));
-            const pe = Math.floor(Math.random() * Math.max(1, pj - pg));
-            const pp = Math.max(0, pj - pg - pe);
-            const gf = pg * 2 + Math.floor(Math.random() * 8);
-            const gc = pp * 2 + Math.floor(Math.random() * 8);
-
-            return {
-                ...item,
-                pj,
-                pg,
-                pe,
-                pp,
-                gf,
-                gc,
-                dg: gf - gc,
-                pts: pg * 3 + pe
-            };
-        }).sort((a, b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf);
-
-        return { fecha: 1, tabla };
-    }
-
-    function clubDesdeTabla(fila) {
-        return window.FDM.clubes.byId(fila.id);
-    }
-
-    function armarParticipantes(torneo) {
-        const tabla = obtenerTablaTemporada();
-        const { internacionales } = window.FDM.clubes;
-
-        if (torneo === "nacional") {
-            return tabla.slice(0, 16).map(clubDesdeTabla);
-        }
-
-        if (torneo === "libertadores") {
-            const argentinos = tabla.slice(0, 6).map(clubDesdeTabla);
-            return mezclarLlave([...argentinos, ...internacionales.libertadores]).slice(0, 16);
-        }
-
-        if (torneo === "sudamericana") {
-            const argentinos = tabla.slice(6, 12).map(clubDesdeTabla);
-            return mezclarLlave([...argentinos, ...internacionales.sudamericana]).slice(0, 16);
-        }
-
-        return [];
-    }
-
-    function mezclarLlave(lista) {
-        const copia = [...lista];
-
-        for (let i = copia.length - 1; i > 0; i -= 1) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [copia[i], copia[j]] = [copia[j], copia[i]];
-        }
-
-        return copia;
-    }
-
-    function crearEquipo(item) {
-        if (!item || item.pending) {
-            return `
-                <span class="tour-team tour-team--pending">
-                    <span class="tour-team-badge">?</span>
-                    <strong class="tour-team-code">${item?.codigo || "POR DEFINIR"}</strong>
-                </span>
-            `;
-        }
-
-        return `
-            <span class="tour-team">
-                <span class="tour-team-badge" aria-hidden="true">
-                    <img src="${item.escudo}" alt="">
-                </span>
-                <strong class="tour-team-code">${item.codigo || codigo(item.name)}</strong>
-            </span>
-        `;
-    }
-
-    function crearPartido(local, visitante, numero) {
-        const match = document.createElement("article");
-        match.className = "tour-match";
-        match.innerHTML = `
-            ${crearEquipo(local)}
-            <span class="tour-vs">VS</span>
-            ${crearEquipo(visitante)}
-            <span class="tour-match-label">P${numero}</span>
-        `;
-        return match;
-    }
-
-    function crearRonda(nombre, partidos, claseExtra = "") {
-        const column = document.createElement("section");
-        column.className = `tour-round ${claseExtra}`.trim();
-        column.innerHTML = `<h3>${nombre}</h3>`;
-        partidos.forEach((partido) => column.appendChild(partido));
-        return column;
-    }
-
-    function crearPlaceholder(texto) {
-        return {
-            name: texto,
-            codigo: texto,
-            escudo: "",
-            pending: true
-        };
-    }
-
-    function armarLlave(participantes) {
-        const octavosIzquierda = [];
-        const octavosDerecha = [];
-
-        for (let i = 0; i < 4; i += 1) {
-            octavosIzquierda.push(crearPartido(participantes[i * 2], participantes[i * 2 + 1], i + 1));
-        }
-
-        for (let i = 4; i < 8; i += 1) {
-            octavosDerecha.push(crearPartido(participantes[i * 2], participantes[i * 2 + 1], i + 1));
-        }
-
-        const cuartosIzquierda = [
-            crearPartido(crearPlaceholder("G1"), crearPlaceholder("G2"), 9),
-            crearPartido(crearPlaceholder("G3"), crearPlaceholder("G4"), 10)
-        ];
-        const cuartosDerecha = [
-            crearPartido(crearPlaceholder("G5"), crearPlaceholder("G6"), 11),
-            crearPartido(crearPlaceholder("G7"), crearPlaceholder("G8"), 12)
-        ];
-        const semiIzquierda = [
-            crearPartido(crearPlaceholder("G9"), crearPlaceholder("G10"), 13)
-        ];
-        const semiDerecha = [
-            crearPartido(crearPlaceholder("G11"), crearPlaceholder("G12"), 14)
-        ];
-        const final = [
-            crearPartido(crearPlaceholder("G13"), crearPlaceholder("G14"), 15)
-        ];
-
-        teams.appendChild(crearRonda("OCTAVOS", octavosIzquierda, "tour-round--octavos"));
-        teams.appendChild(crearRonda("CUARTOS", cuartosIzquierda, "tour-round--cuartos"));
-        teams.appendChild(crearRonda("SEMIFINAL", semiIzquierda, "tour-round--semis"));
-        teams.appendChild(crearRonda("FINAL", final, "tour-round--final"));
-        teams.appendChild(crearRonda("SEMIFINAL", semiDerecha, "tour-round--semis"));
-        teams.appendChild(crearRonda("CUARTOS", cuartosDerecha, "tour-round--cuartos"));
-        teams.appendChild(crearRonda("OCTAVOS", octavosDerecha, "tour-round--octavos"));
-    }
-
-    function abrirLlave(torneo) {
-        const config = torneosConfig[torneo];
-        const participantes = armarParticipantes(torneo);
-
-        storage.write(storage.KEYS.torneos, {
-            activo: torneo,
-            ronda: config.ronda,
-            participantes
-        });
-
-        select.classList.add("hidden");
-        bracket.classList.remove("hidden");
-        if (pageTitle) pageTitle.classList.add("hidden");
-        bracketTitle.textContent = config.titulo;
-        if (bracketRound) bracketRound.textContent = "OCTAVOS A FINAL";
-        bracketLogo.src = config.logo;
-        bracketLogo.alt = config.titulo;
-        bracketCup.src = config.copa;
-        bracketCup.alt = `Copa ${config.titulo}`;
-        teams.innerHTML = "";
-        teams.scrollTop = 0;
-        actualizarEncabezadosFixture();
-        armarLlave(participantes);
-    }
-
-    function volverASeleccion() {
-        bracket.classList.add("hidden");
-        select.classList.remove("hidden");
-        if (pageTitle) pageTitle.classList.remove("hidden");
-        teams.innerHTML = "";
-        teams.classList.remove("is-scrolled");
-    }
-
-    function codigo(nombre) {
-        return nombre.slice(0, 3).toUpperCase();
-    }
-
-    function actualizarEncabezadosFixture() {
-        teams.classList.toggle("is-scrolled", teams.scrollTop > 2);
+    function renderFixture(fixture) {
+        const article = document.createElement("article"); article.className = "tour-match";
+        if (fixture.esPartidoDelUsuario) article.classList.add("my-club");
+        const left = document.createElement("strong"); left.textContent = fixture.equipoLocal.nombre;
+        const score = document.createElement("span"); score.className = "tour-vs";
+        score.textContent = fixture.estado === "finalizado" ? `${fixture.golesLocal} - ${fixture.golesVisitante}` : "VS";
+        const right = document.createElement("strong"); right.textContent = fixture.equipoVisitante.nombre;
+        article.append(left, score, right);
+        return article;
     }
 });

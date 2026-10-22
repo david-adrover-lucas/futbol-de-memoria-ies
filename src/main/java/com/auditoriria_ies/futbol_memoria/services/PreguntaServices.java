@@ -28,7 +28,8 @@ public class PreguntaServices {
         if (cantidad == null || cantidad < 1 || cantidad > 10) throw new ReglaNegocioException("La cantidad de preguntas debe estar entre 1 y 10");
         validarNivelMaximo(nivelMaximo);
         Set<Long> excluidas = preguntasExcluidas == null ? Set.of() : preguntasExcluidas;
-        List<Pregunta> elegibles = filtrarPreguntasActivasPorDificultad(nivelMaximo, excluidas);
+        // Stream.toList() devuelve una lista inmutable; shuffle necesita una lista modificable.
+        List<Pregunta> elegibles = new ArrayList<>(filtrarPreguntasActivasPorDificultad(nivelMaximo, excluidas));
         if (elegibles.size() < cantidad) throw new RecursoNoEncontradoException("No hay suficientes preguntas activas para este partido");
         Collections.shuffle(elegibles);
         return new ArrayList<>(elegibles.subList(0, cantidad));

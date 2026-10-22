@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Local environment values (keep .env.example versioned)
+.env
+.env.*
+!.env.example

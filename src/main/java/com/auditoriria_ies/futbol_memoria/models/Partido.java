@@ -26,6 +26,12 @@ public class Partido {
     @JoinColumn(name = "equipo_local_id", nullable = false, foreignKey = @ForeignKey(name = "fk_partido_equipo_local")) private Equipo equipoLocal;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "equipo_visitante_id", nullable = false, foreignKey = @ForeignKey(name = "fk_partido_equipo_visitante")) private Equipo equipoVisitante;
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @OneToOne(mappedBy = "partido", fetch = FetchType.LAZY)
+    private TemporadaFixture temporadaFixture;
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @OneToOne(mappedBy = "partido", fetch = FetchType.LAZY)
+    private TorneoFixture torneoFixture;
     @Column(nullable = false, columnDefinition = "ENUM('en_curso','finalizado','abandonado') DEFAULT 'en_curso'") private String estado = "en_curso";
     @Column(name = "goles_local", nullable = false, columnDefinition = "SMALLINT UNSIGNED DEFAULT 0") private Integer golesLocal = 0;
     @Column(name = "goles_visitante", nullable = false, columnDefinition = "SMALLINT UNSIGNED DEFAULT 0") private Integer golesVisitante = 0;

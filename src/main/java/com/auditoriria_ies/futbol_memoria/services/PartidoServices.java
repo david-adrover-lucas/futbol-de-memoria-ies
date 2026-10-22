@@ -30,13 +30,16 @@ public class PartidoServices {
     private final PreguntaServices preguntaServices;
     private final OpcionRespuestaServices opcionServices;
     private final IntentoPartidoServices intentoServices;
+    private final TemporadaServices temporadaServices;
+    private final CarreraTorneoServices torneoServices;
 
     public PartidoServices(PartidoRepository partidoRepository, PartidoPreguntaRepository partidoPreguntaRepository,
                            PartidoComodinRepository partidoComodinRepository,
                            CarreraServices carreraServices, CompeticionServices competicionServices,
                            EquipoServices equipoServices, NivelDificultadServices nivelServices,
                            PreguntaServices preguntaServices, OpcionRespuestaServices opcionServices,
-                           IntentoPartidoServices intentoServices) {
+                           IntentoPartidoServices intentoServices, TemporadaServices temporadaServices,
+                           CarreraTorneoServices torneoServices) {
         this.partidoRepository = partidoRepository;
         this.partidoPreguntaRepository = partidoPreguntaRepository;
         this.partidoComodinRepository = partidoComodinRepository;
@@ -47,15 +50,35 @@ public class PartidoServices {
         this.preguntaServices = preguntaServices;
         this.opcionServices = opcionServices;
         this.intentoServices = intentoServices;
+        this.temporadaServices = temporadaServices;
+        this.torneoServices = torneoServices;
     }
 
     @Transactional
     public Partido iniciarPartido(Long usuarioId, String codigoCompeticion) {
+        return iniciarPartido(usuarioId, codigoCompeticion, null, null);
+    }
+
+    @Transactional
+    public Partido iniciarPartido(Long usuarioId, String codigoCompeticion, Long temporadaFixtureId, Long torneoFixtureId) {
+        if (temporadaFixtureId != null && torneoFixtureId != null) throw new ReglaNegocioException("Un partido solo puede pertenecer a una competición");
         Carrera carrera = carreraServices.obtenerCarreraActivaPorUsuario(usuarioId);
         if (carrera.getEquipoActual() == null) throw new ReglaNegocioException("La carrera todavía no tiene un equipo asignado");
         Competicion competicion = competicionServices.obtenerEntidadPorCodigo(codigoCompeticion);
         competicionServices.validarQueLaCompeticionEsteHabilitada(competicion, carrera);
-        Equipo rival = equipoServices.buscarRivalAleatorioExcluyendoEquipo(carrera.getEquipoActual().getEquipoId(), null, null, null);
+        Equipo rival;
+        TemporadaFixture temporadaFixture = null;
+        TorneoFixture torneoFixture = null;
+        if (temporadaFixtureId != null) {
+            if (!"temporada".equals(codigoCompeticion)) throw new ReglaNegocioException("El fixture indicado no corresponde a la temporada");
+            temporadaFixture = temporadaServices.validarYObtenerFixture(temporadaFixtureId, usuarioId);
+            rival = temporadaFixture.getEquipoVisitante();
+        } else if (torneoFixtureId != null) {
+            torneoFixture = torneoServices.validarYObtenerFixture(torneoFixtureId, usuarioId, codigoCompeticion);
+            rival = torneoFixture.getEquipoVisitante();
+        } else {
+            rival = equipoServices.buscarRivalAleatorioExcluyendoEquipo(carrera.getEquipoActual().getEquipoId(), null, null, null);
+        }
         equipoServices.validarQueLosEquiposSeanDistintos(carrera.getEquipoActual().getEquipoId(), rival.getEquipoId());
 
         int nivelMaximo = nivelServices.calcularNivelMaximoDePregunta(rival.getPrestigio(), competicionServices.obtenerModificadorDeDificultad(competicion));
@@ -77,6 +100,8 @@ public class PartidoServices {
         partido.setVariacionExperiencia(0);
         partido.setIniciadoEn(LocalDateTime.now());
         partido = partidoRepository.save(partido);
+        if (temporadaFixture != null) temporadaServices.asignarFixture(temporadaFixture, partido);
+        if (torneoFixture != null) torneoServices.asignarFixture(torneoFixture, partido);
 
         List<PartidoPregunta> asignaciones = new ArrayList<>();
         for (int i = 0; i < preguntas.size(); i++) {
@@ -119,6 +144,13 @@ public class PartidoServices {
         OpcionRespuesta distractor = comodinCincuenta.get().getOpcionDistractor();
         if (distractor == null) throw new ReglaNegocioException("El comodín no tiene un distractor persistido");
         return List.of(correcta, distractor).stream().sorted(Comparator.comparing(OpcionRespuesta::getOrdenOpcion)).toList();
+    }
+
+    public List<String> listarTiposDeComodinUsados(Long usuarioId, Long partidoId) {
+        Partido partido = buscarPartido(partidoId);
+        validarPropiedadDelPartido(usuarioId, partido);
+        return partidoComodinRepository.findByPartidoPartidoId(partidoId).stream()
+                .map(PartidoComodin::getTipoComodin).toList();
     }
 
     @Transactional
@@ -239,6 +271,8 @@ public class PartidoServices {
         partido.setDuracionSegundos(Math.toIntExact(Math.min(duracion, Integer.MAX_VALUE)));
         partidoRepository.save(partido);
         carreraServices.aplicarExperienciaPorResultado(partidoId);
+        temporadaServices.registrarResultado(partido);
+        torneoServices.registrarResultado(partido);
         return partido;
     }
 

@@ -1,197 +1,144 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const storage = window.FDM.storage;
-    const engine = window.FDM.enginePartido;
-    let partido = engine.crearPartido();
-    let timer = 15;
-    let intervalId = null;
+document.addEventListener("DOMContentLoaded", async () => {
+    const session = window.FDM.session.requireUser();
+    if (!session) return;
+    const api = window.FDM.services.partidoService;
+    const params = new URLSearchParams(window.location.search);
+    const competition = params.get("competicion") || session.competicionCodigo || "temporada";
+    const ui = {
+        local: document.getElementById("score-local-goals"), away: document.getElementById("score-away-goals"),
+        localCode: document.getElementById("score-local-code"), awayCode: document.getElementById("score-away-code"),
+        period: document.getElementById("score-period"), cup: document.getElementById("score-cup"), competition: document.getElementById("score-competition"),
+        question: document.getElementById("question-text"), answers: document.getElementById("answers-grid"), timer: document.getElementById("question-timer")
+    };
+    let game = null;
+    let question = null;
+    let options = [];
+    let interval = null;
+    let startedAt = 0;
+    let seconds = 15;
+    let busy = false;
 
-    const scoreLocal = document.getElementById("score-local-goals");
-    const scoreAway = document.getElementById("score-away-goals");
-    const scoreLocalCode = document.getElementById("score-local-code");
-    const scoreAwayCode = document.getElementById("score-away-code");
-    const scorePeriod = document.getElementById("score-period");
-    const scoreCup = document.getElementById("score-cup");
-    const scoreCompetition = document.getElementById("score-competition");
-    const questionText = document.getElementById("question-text");
-    const answersGrid = document.getElementById("answers-grid");
-    const questionTimer = document.getElementById("question-timer");
-    const eventLayer = document.getElementById("match-event-layer");
+    try {
+        if (session.partidoActualId) {
+            try { game = await api.estado(session.usuarioId, session.partidoActualId); }
+            catch (error) { if (error.status !== 404) throw error; }
+        }
+        if (!game || game.estado !== "en_curso") {
+            game = await api.iniciar(session.usuarioId, competition);
+            window.FDM.session.set({ ...session, partidoActualId: game.partidoId, competicionCodigo: competition, comodinesUsados: [] });
+        }
+        await loadQuestion();
+    } catch (error) { alert(error.message); window.location.assign("menu.html"); return; }
 
-    scoreLocalCode.textContent = codigo(partido.club.name);
-    scoreAwayCode.textContent = codigo(partido.rival.name);
-    scoreCup.src = partido.competicion?.copa || copaActiva();
-    scoreCup.alt = partido.competicion?.nombre || "Competicion";
-    scoreCompetition.textContent = (partido.competicion?.nombre || "Temporada").toUpperCase();
-
-    document.querySelectorAll(".wildcard-btn[data-wildcard]").forEach((button) => {
-        button.addEventListener("click", () => {
-            const tipo = button.dataset.wildcard;
-            partido = engine.usarComodin(partido, tipo);
-            button.disabled = !partido.comodines[tipo];
-
-            mostrarEvento(partido.ultimoEvento);
-            if (tipo === "cincuenta") ocultarDosIncorrectas();
-            if (tipo === "penal") render();
-        });
+    document.querySelectorAll(".wildcard-btn[data-wildcard]").forEach((button) => button.addEventListener("click", async () => {
+        if (busy || !question) return;
+        busy = true;
+        try {
+            await api.comodin(session.usuarioId, game.partidoId, button.dataset.wildcard);
+            await loadQuestion();
+        } catch (error) { alert(error.message); }
+        finally { busy = false; }
+    }));
+    document.getElementById("btn-exit-match").addEventListener("click", async () => {
+        if (!confirm("¿Finalizar y guardar este partido?")) return;
+        stopTimer();
+        try { await api.finalizar(session.usuarioId, game.partidoId); finish(); }
+        catch (error) { alert(error.message); }
     });
 
-    document.getElementById("btn-exit-match").addEventListener("click", () => {
-        window.location.href = "menu.html";
-    });
-
-    render();
-
-    function render() {
-        if (partido.estado === "finalizado") {
-            storage.write(storage.KEYS.ultimoPartido, partido);
-            window.location.href = "resultado-partido.html";
+    async function loadQuestion() {
+        stopTimer();
+        game = await api.estado(session.usuarioId, game.partidoId);
+        const assignment = await api.pregunta(session.usuarioId, game.partidoId);
+        if (!assignment) {
+            await api.finalizar(session.usuarioId, game.partidoId);
+            finish();
             return;
         }
-
-        const pregunta = partido.preguntas[partido.preguntaActual];
-        timer = 15;
-        scoreLocal.textContent = partido.golesLocal;
-        scoreAway.textContent = partido.golesRival;
-        scorePeriod.innerHTML = `${partido.preguntaActual < 5 ? "PT" : "ST"}&nbsp;&nbsp;${partido.tiempo}`;
-        questionText.textContent = pregunta.texto;
-        questionText.classList.toggle("is-penalty-question", pregunta.tipo === "penal");
-        document.body.classList.toggle("match-penalty-mode", pregunta.tipo === "penal");
-        answersGrid.innerHTML = "";
-
-        if (pregunta.tipo === "penal") {
-            renderPenalInput();
-        } else {
-            pregunta.opciones.forEach((opcion, index) => {
-                const button = document.createElement("button");
-                button.type = "button";
-                button.className = "answer-btn";
-                button.innerHTML = `<span>${String.fromCharCode(65 + index)}</span><strong>${opcion}</strong>`;
-                button.addEventListener("click", () => elegirRespuesta(index));
-                answersGrid.appendChild(button);
-            });
-        }
-
+        question = assignment.pregunta;
+        options = question.tipoPregunta === "opcion_multiple" ? await api.opciones(session.usuarioId, game.partidoId) : [];
+        const used = await api.comodinesUsados(session.usuarioId, game.partidoId);
+        const competitor = game.competicion || {};
+        ui.local.textContent = game.golesLocal;
+        ui.away.textContent = game.golesVisitante;
+        ui.localCode.textContent = abbrev(game.equipoLocal?.nombre);
+        ui.awayCode.textContent = abbrev(game.equipoVisitante?.nombre);
+        ui.competition.textContent = (competitor.nombre || competition).toUpperCase();
+        ui.cup.alt = competitor.nombre || "Competición";
+        ui.cup.src = `../assets/copa-${competition}.png`;
+        ui.period.textContent = `PREGUNTA ${assignment.numeroPregunta}`;
+        ui.question.textContent = question.textoPregunta;
+        ui.question.classList.toggle("is-penalty-question", question.tipoPregunta === "penal_numerico");
+        document.body.classList.toggle("match-penalty-mode", question.tipoPregunta === "penal_numerico");
+        ui.answers.replaceChildren();
+        if (question.tipoPregunta === "penal_numerico") renderNumeric();
+        else options.forEach((option, index) => renderOption(option, index));
         document.querySelectorAll(".wildcard-btn[data-wildcard]").forEach((button) => {
-            button.disabled = pregunta.tipo === "penal" || !partido.comodines[button.dataset.wildcard];
+            button.disabled = used.includes(button.dataset.wildcard) || question.tipoPregunta !== "opcion_multiple";
         });
-
-        arrancarTimer();
+        startedAt = new Date(assignment.preguntaIniciadaEn).getTime();
+        seconds = Math.max(0, 15 - Math.floor((Date.now() - startedAt) / 1000));
+        startTimer();
     }
 
-    function renderPenalInput() {
+    function renderOption(option, index) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "answer-btn";
+        const letter = document.createElement("span"); letter.textContent = String.fromCharCode(65 + index);
+        const label = document.createElement("strong"); label.textContent = option.textoOpcion;
+        button.append(letter, label);
+        button.addEventListener("click", () => submit({ preguntaId: question.preguntaId, opcionRespuestaId: option.opcionRespuestaId }));
+        ui.answers.appendChild(button);
+    }
+
+    function renderNumeric() {
         const form = document.createElement("form");
         form.className = "penalty-answer";
-        form.innerHTML = `
-            <label for="penalty-input">Respuesta de aproximacion</label>
-            <div>
-                <input id="penalty-input" type="number" inputmode="numeric" autocomplete="off" placeholder="0">
-                <button type="submit">PATEAR</button>
-            </div>
-        `;
+        form.innerHTML = '<label for="penalty-input">Respuesta de aproximación</label><div><input id="penalty-input" type="number" inputmode="decimal" step="any" required><button type="submit">PATEAR</button></div>';
         form.addEventListener("submit", (event) => {
             event.preventDefault();
-            const input = form.querySelector("input");
-            elegirRespuesta(input.value);
+            submit({ preguntaId: question.preguntaId, textoRespuesta: form.querySelector("input").value });
         });
-        answersGrid.appendChild(form);
+        ui.answers.appendChild(form);
         form.querySelector("input").focus();
     }
 
-    function elegirRespuesta(index) {
-        detenerTimer();
-        answersGrid.querySelectorAll("button, input").forEach((control) => {
-            control.disabled = true;
-        });
-        partido = engine.responder(partido, index);
-        scoreLocal.textContent = partido.golesLocal;
-        scoreAway.textContent = partido.golesRival;
-        mostrarEvento(partido.ultimoEvento);
-        setTimeout(render, 650);
+    async function submit(answer) {
+        if (busy) return;
+        busy = true; stopTimer(); disableAnswers(true);
+        try {
+            const elapsed = Math.min(15, Math.max(0, Math.ceil((Date.now() - startedAt) / 1000)));
+            game = await api.responder(session.usuarioId, game.partidoId, { ...answer, segundos: elapsed });
+            ui.local.textContent = game.golesLocal; ui.away.textContent = game.golesVisitante;
+            await new Promise((resolve) => window.setTimeout(resolve, 450));
+            await loadQuestion();
+        } catch (error) {
+            alert(error.message);
+            disableAnswers(false);
+            await loadQuestion().catch((loadError) => alert(loadError.message));
+        } finally { busy = false; }
     }
 
-    function arrancarTimer() {
-        detenerTimer();
-        questionTimer.textContent = `${timer} SEGUNDOS`;
-        intervalId = setInterval(() => {
-            timer -= 1;
-            questionTimer.textContent = `${timer} SEGUNDOS`;
-
-            if (timer <= 0) {
-                elegirRespuesta(-1);
+    function startTimer() {
+        ui.timer.textContent = `${seconds} SEGUNDOS`;
+        interval = window.setInterval(async () => {
+            seconds = Math.max(0, 15 - Math.floor((Date.now() - startedAt) / 1000));
+            ui.timer.textContent = `${seconds} SEGUNDOS`;
+            if (!seconds) {
+                stopTimer(); busy = true;
+                try { await loadQuestion(); }
+                catch (error) { alert(error.message); }
+                finally { busy = false; }
             }
-        }, 1000);
+        }, 250);
     }
-
-    function detenerTimer() {
-        if (intervalId) clearInterval(intervalId);
-        intervalId = null;
-    }
-
-    function ocultarDosIncorrectas() {
-        const pregunta = partido.preguntas[partido.preguntaActual];
-        if (pregunta.tipo === "penal") return;
-        const botones = [...answersGrid.querySelectorAll(".answer-btn")];
-        botones
-            .filter((_, index) => index !== pregunta.correcta)
-            .slice(0, 2)
-            .forEach((button) => {
-                button.disabled = true;
-                button.classList.add("answer-hidden");
-            });
-        mostrarEvento({
-            tipo: "comodin-5050",
-            titulo: "50/50 ACTIVADO",
-            detalle: "Dos respuestas incorrectas eliminadas"
-        });
-    }
-
-    function mostrarEvento(evento) {
-        if (!evento) return;
-
-        eventLayer.innerHTML = `
-            <div class="match-event-card match-event-${evento.tipo}">
-                <span>${evento.minuto || ""}</span>
-                <strong>${evento.titulo}</strong>
-                <em>${evento.detalle || ""}</em>
-            </div>
-        `;
-
-        eventLayer.classList.remove("is-visible");
-        document.body.classList.remove("match-score-flash", "match-danger-flash", "match-penalty-flash");
-        void eventLayer.offsetWidth;
-        eventLayer.classList.add("is-visible");
-
-        const dangerTypes = ["gol-rival", "gol-doble-rival", "penal-rival-gol"];
-        const penaltyTypes = ["penal-favor", "penal-rival", "penal-atajado", "penal-convertido", "penal-fallado"];
-        const bodyClass = dangerTypes.includes(evento.tipo)
-            ? "match-danger-flash"
-            : penaltyTypes.includes(evento.tipo)
-                ? "match-penalty-flash"
-                : "match-score-flash";
-        document.body.classList.add(bodyClass);
-
-        window.setTimeout(() => {
-            eventLayer.classList.remove("is-visible");
-            document.body.classList.remove(bodyClass);
-        }, 1150);
-    }
-
-    function codigo(nombre) {
-        return nombre
-            .replace(/Club Atletico|Juniors|Plate|Club/gi, "")
-            .trim()
-            .slice(0, 3)
-            .toUpperCase();
-    }
-
-    function copaActiva() {
-        const torneo = storage.read(storage.KEYS.torneos, null)?.activo;
-        const copas = {
-            libertadores: "../assets/copa-libertadores.png",
-            sudamericana: "../assets/copa-sudamericana.png",
-            nacional: "../assets/copa-nacional.png"
-        };
-
-        return copas[torneo] || "../assets/copa-libertadores.png";
+    function stopTimer() { if (interval) window.clearInterval(interval); interval = null; }
+    function disableAnswers(disabled) { ui.answers.querySelectorAll("button,input").forEach((item) => { item.disabled = disabled; }); }
+    function abbrev(name = "Equipo") { return name.replace(/club|atletico|juniors|plate/gi, "").trim().slice(0, 3).toUpperCase(); }
+    function finish() {
+        const current = window.FDM.session.get() || {};
+        window.FDM.session.set({ ...current, ultimoPartidoId: game.partidoId, partidoActualId: null });
+        window.location.assign("resultado-partido.html");
     }
 });
