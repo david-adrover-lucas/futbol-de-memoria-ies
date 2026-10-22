@@ -10,9 +10,10 @@ Con MariaDB/MySQL iniciado en XAMPP, ejecutar una sola vez y en este orden los s
 2. `extension_partidos.sql`
 3. `extension_carrera.sql`
 4. `extension_clasificacion.sql`
-5. `seed.sql`
+5. `extension_penales.sql`
+6. `seed.sql`
 
-Si la base ya estÃ¡ creada, aplicar solo `extension_clasificacion.sql` una vez; no repetir los scripts anteriores.
+Si la base ya existe, aplicá solo las extensiones que todavía no ejecutaste. Para esta fase, ejecutá `extension_penales.sql` una vez después de `extension_carrera.sql`.
 
 `seed.sql` carga los catálogos y preguntas; no volver a ejecutarlo sobre una base que ya tiene esos datos.
 

@@ -36,3 +36,13 @@ test("servicio de partido envía el fixture y normaliza el resultado", async () 
     assert.equal(game.partidoId, 9);
     assert.equal(game.golesLocal, 1);
 });
+
+test("servicio de penales usa los endpoints del backend y envía la respuesta vigente", async () => {
+    const { services, calls } = createServices();
+    await services.tandaPenalesService.iniciar(11, 35);
+    await services.tandaPenalesService.responder(11, 35, { preguntaId: 17, opcionRespuestaId: 2, segundos: 4 });
+    assert.equal(calls[0][0], "/usuarios/11/partidos/35/penales");
+    assert.equal(calls[0][1].method, "POST");
+    assert.equal(calls[1][0], "/usuarios/11/partidos/35/penales/respuestas");
+    assert.deepEqual(JSON.parse(JSON.stringify(calls[1][1].body)), { preguntaId: 17, opcionRespuestaId: 2, segundos: 4 });
+});

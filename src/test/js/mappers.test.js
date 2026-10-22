@@ -28,3 +28,16 @@ test("mapper de partido separa equipos y normaliza marcador", () => {
     assert.equal(model.golesVisitante, 1);
     assert.equal(model.equipoLocal.nombre, "Local");
 });
+
+test("mapper de tanda de penales normaliza marcador, pregunta y turnos", () => {
+    const tanda = window.FDM.mappers.tandaPenales({
+        partidoId: "35", estado: "en_curso", golesJugador: "2", golesRival: 1,
+        preguntaActual: { preguntaId: "17", opciones: [{ opcionRespuestaId: "4", ordenOpcion: "1", textoOpcion: "A" }] },
+        turnos: [{ numeroTurno: "3", rolJugador: "patea" }]
+    });
+    assert.equal(tanda.partidoId, 35);
+    assert.equal(tanda.golesJugador, 2);
+    assert.equal(tanda.preguntaActual.preguntaId, 17);
+    assert.equal(tanda.preguntaActual.opciones[0].opcionRespuestaId, 4);
+    assert.equal(tanda.turnos[0].numeroTurno, 3);
+});

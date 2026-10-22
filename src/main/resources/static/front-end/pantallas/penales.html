@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta name="api-base-url" content="/api">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fútbol de Memoria - Penales</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../ui-system.css">
+</head>
+<body id="partido-body" class="shootout-body">
+    <main class="match-screen" aria-label="Tanda de penales">
+        <section class="match-scoreboard" aria-live="polite">
+            <b id="shootout-phase" class="score-competition">TANDA DE PENALES</b>
+            <div class="score-mainline">
+                <strong id="shootout-local-code">LOC</strong>
+                <span id="shootout-player-score">0</span>
+                <img src="../assets/copa-libertadores.png" alt="">
+                <span id="shootout-rival-score">0</span>
+                <strong id="shootout-away-code">RIV</strong>
+            </div>
+            <em id="shootout-round">TURNO 1 DE 10</em>
+        </section>
+
+        <section class="question-stage shootout-question-stage">
+            <div id="shootout-role" class="shootout-role">PATEÁS</div>
+            <div id="shootout-timer" class="match-timer">15 SEGUNDOS</div>
+            <h1 id="shootout-question" class="match-question">CARGANDO PREGUNTA</h1>
+            <div id="shootout-answers" class="answers-grid"></div>
+        </section>
+    </main>
+
+    <script src="../scripts/core/api-client.js"></script>
+    <script src="../scripts/core/session.js"></script>
+    <script src="../scripts/core/mappers.js"></script>
+    <script src="../scripts/core/services.js"></script>
+    <script src="../scripts/penales.js"></script>
+</body>
+</html>

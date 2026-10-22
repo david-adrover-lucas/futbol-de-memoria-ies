@@ -13,5 +13,7 @@ public final class ApiRequests {
     public record CambiarEquipo(@NotNull Long equipoId) {}
     public record Respuesta(@NotNull Long preguntaId, Long opcionRespuestaId, String textoRespuesta,
             @NotNull @Min(0) @Max(15) Integer segundos) {}
+    public record RespuestaPenal(@NotNull Long preguntaId, Long opcionRespuestaId, String textoRespuesta,
+            @NotNull @Min(0) @Max(15) Integer segundos) {}
     public record Comodin(@NotBlank String tipoComodin) {}
 }

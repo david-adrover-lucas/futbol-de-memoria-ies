@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const session = window.FDM.session.requireUser();
     if (!session || !session.ultimoPartidoId) { window.location.replace("menu.html"); return; }
-    const { partidoService, carreraService, estadisticaService } = window.FDM.services;
+    const { partidoService, tandaPenalesService, carreraService, estadisticaService } = window.FDM.services;
     try {
         const [game, carrera, estadisticas, comodines] = await Promise.all([
             partidoService.estado(session.usuarioId, session.ultimoPartidoId),
@@ -9,7 +9,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             estadisticaService.obtener(session.usuarioId),
             partidoService.comodinesUsados(session.usuarioId, session.ultimoPartidoId)
         ]);
-        const result = game.golesLocal > game.golesVisitante ? "victoria" : game.golesLocal < game.golesVisitante ? "derrota" : "empate";
+        let tanda = null;
+        if (["libertadores", "sudamericana"].includes(game.competicion?.codigo)
+            && game.golesLocal === game.golesVisitante) {
+            try { tanda = await tandaPenalesService.obtener(session.usuarioId, game.partidoId); }
+            catch (error) { if (error.status !== 400 && error.status !== 404) throw error; }
+        }
+        const result = tanda?.estado === "finalizada"
+            ? (tanda.equipoGanadorId === game.equipoLocal?.equipoId ? "victoria" : "derrota")
+            : game.golesLocal > game.golesVisitante ? "victoria" : game.golesLocal < game.golesVisitante ? "derrota" : "empate";
         document.body.classList.add(`result-${result}`);
         const delta = Number(game.variacionExperiencia) || 0;
         const stars = Math.max(1, Number(carrera.estrellas) || 1);
@@ -27,6 +35,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("result-away-badge").textContent = game.respuestasIncorrectas;
         document.getElementById("result-shots-local").textContent = game.golesLocal;
         document.getElementById("result-shots-away").textContent = game.golesVisitante;
+        if (tanda?.estado === "finalizada") {
+            const penales = document.getElementById("result-penalties");
+            penales.textContent = `PENALES ${tanda.golesJugador} - ${tanda.golesRival}`;
+            penales.classList.remove("hidden");
+        }
         document.getElementById("result-wild-local").textContent = comodines.length;
         document.getElementById("result-wild-away").textContent = "—";
         document.getElementById("result-stars").textContent = "★".repeat(stars) + "☆".repeat(5 - stars);

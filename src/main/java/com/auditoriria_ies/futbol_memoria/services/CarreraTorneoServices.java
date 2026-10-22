@@ -101,16 +101,47 @@ public class CarreraTorneoServices {
     public void registrarResultado(Partido partido) {
         fixtureRepository.findByPartidoPartidoId(partido.getPartidoId()).ifPresent(fixture -> {
             fixture.setGolesLocal(partido.getGolesLocal()); fixture.setGolesVisitante(partido.getGolesVisitante());
+            if (Objects.equals(partido.getGolesLocal(), partido.getGolesVisitante())) {
+                fixture.setEstado("pendiente_penales");
+                fixtureRepository.save(fixture);
+                return;
+            }
             fixture.setEstado("finalizado"); fixtureRepository.save(fixture);
+            resolverGanadorFixture(fixture, partido.getGolesLocal() > partido.getGolesVisitante()
+                    ? fixture.getEquipoLocal() : fixture.getEquipoVisitante());
+        });
+    }
+
+    @Transactional
+    public void registrarGanadorPorPenales(Long partidoId, Long equipoGanadorId) {
+        TorneoFixture fixture = fixtureRepository.findByPartidoPartidoId(partidoId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("El partido no pertenece a una eliminatoria"));
+        if (!"pendiente_penales".equals(fixture.getEstado())) {
+            if ("finalizado".equals(fixture.getEstado())) return;
+            throw new ReglaNegocioException("La eliminatoria no está esperando una tanda de penales");
+        }
+        Equipo ganador = fixture.getEquipoLocal().getEquipoId().equals(equipoGanadorId)
+                ? fixture.getEquipoLocal() : fixture.getEquipoVisitante().getEquipoId().equals(equipoGanadorId)
+                ? fixture.getEquipoVisitante() : null;
+        if (ganador == null) throw new ReglaNegocioException("El ganador de los penales no pertenece a este partido");
+        fixture.setEstado("finalizado");
+        fixtureRepository.save(fixture);
+        resolverGanadorFixture(fixture, ganador);
+    }
+
+    private void resolverGanadorFixture(TorneoFixture fixture, Equipo ganadorFixture) {
             CarreraTorneo torneo = fixture.getTorneo();
-            boolean ganaUsuario = partido.getGolesLocal() > partido.getGolesVisitante();
+            boolean ganaUsuario = ganadorFixture.getEquipoId().equals(torneo.getEquipoParticipante().getEquipoId());
             if (!ganaUsuario) { torneo.setEstado("eliminado"); torneoRepository.save(torneo); return; }
             if (torneo.getRondaActual() >= 4) { torneo.setEstado("campeon"); torneoRepository.save(torneo); return; }
             List<TorneoFixture> ronda = fixtureRepository.findByTorneoCarreraTorneoIdAndRondaOrderByNumeroPartido(torneo.getCarreraTorneoId(), torneo.getRondaActual());
-            List<Equipo> ganadores = ronda.stream().map(f -> f.getGolesLocal() > f.getGolesVisitante() ? f.getEquipoLocal() : f.getEquipoVisitante()).toList();
+            List<Equipo> ganadores = ronda.stream().map(f -> {
+                if (f.getEquipoLocal().getEquipoId().equals(ganadorFixture.getEquipoId())) return ganadorFixture;
+                if (f.getEquipoVisitante().getEquipoId().equals(ganadorFixture.getEquipoId())) return ganadorFixture;
+                return f.getGolesLocal() > f.getGolesVisitante() ? f.getEquipoLocal() : f.getEquipoVisitante();
+            }).toList();
             torneo.setRondaActual(torneo.getRondaActual() + 1); torneoRepository.save(torneo);
             crearRonda(torneo, ganadores, torneo.getRondaActual(), torneo.getEquipoParticipante());
-        });
     }
 
     private CarreraTorneo crearTorneo(Carrera carrera, String codigo) {

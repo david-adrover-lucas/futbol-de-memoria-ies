@@ -37,6 +37,11 @@
         finalizar: (usuarioId, partidoId) => api.request(`/usuarios/${id(usuarioId)}/partidos/${id(partidoId)}/finalizar`, { method: "POST" }).then(map.partido),
         historial: (usuarioId, partidoId) => api.request(`/usuarios/${id(usuarioId)}/partidos/${id(partidoId)}/intentos`)
     };
+    const tandaPenalesService = {
+        iniciar: (usuarioId, partidoId) => api.request(`/usuarios/${id(usuarioId)}/partidos/${id(partidoId)}/penales`, { method: "POST" }).then(map.tandaPenales),
+        obtener: (usuarioId, partidoId) => api.request(`/usuarios/${id(usuarioId)}/partidos/${id(partidoId)}/penales`).then(map.tandaPenales),
+        responder: (usuarioId, partidoId, respuesta) => api.request(`/usuarios/${id(usuarioId)}/partidos/${id(partidoId)}/penales/respuestas`, { method: "POST", body: respuesta }).then(map.tandaPenales)
+    };
     const estadisticaService = {
         obtener: (usuarioId) => api.request(`/usuarios/${id(usuarioId)}/estadisticas`),
         historial: (usuarioId, competicionId) => api.request(`/usuarios/${id(usuarioId)}/historial${competicionId ? `?competicionId=${id(competicionId)}` : ""}`).then(items => items.map(map.partido)),
@@ -57,5 +62,5 @@
     };
 
     window.FDM = window.FDM || {};
-    window.FDM.services = { authService, usuarioService, carreraService, equipoService, competicionService, partidoService, estadisticaService, temporadaService, torneoService, catalogoService };
+    window.FDM.services = { authService, usuarioService, carreraService, equipoService, competicionService, partidoService, tandaPenalesService, estadisticaService, temporadaService, torneoService, catalogoService };
 })();

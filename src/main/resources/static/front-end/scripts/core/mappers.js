@@ -43,7 +43,17 @@
             tipoPregunta: value.pregunta.tipoPregunta || "opcion_multiple"
         } : null
     } : null;
+    const tandaPenales = (value) => value ? {
+        ...value, partidoId: Number(value.partidoId), numeroTurnoActual: Number(value.numeroTurnoActual),
+        golesJugador: Number(value.golesJugador) || 0, golesRival: Number(value.golesRival) || 0,
+        equipoGanadorId: value.equipoGanadorId == null ? null : Number(value.equipoGanadorId),
+        preguntaActual: value.preguntaActual ? {
+            ...value.preguntaActual, preguntaId: Number(value.preguntaActual.preguntaId),
+            opciones: (value.preguntaActual.opciones || []).map(opcion)
+        } : null,
+        turnos: (value.turnos || []).map(turno => ({ ...turno, numeroTurno: Number(turno.numeroTurno) }))
+    } : null;
 
     window.FDM = window.FDM || {};
-    window.FDM.mappers = { equipo, carrera, competicion, opcion, partido, fixture, temporada, torneo, partidoPregunta };
+    window.FDM.mappers = { equipo, carrera, competicion, opcion, partido, fixture, temporada, torneo, partidoPregunta, tandaPenales };
 })();

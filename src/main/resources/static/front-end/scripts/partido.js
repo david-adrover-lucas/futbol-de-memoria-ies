@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const session = window.FDM.session.requireUser();
     if (!session) return;
     const api = window.FDM.services.partidoService;
+    const penalesApi = window.FDM.services.tandaPenalesService;
     const params = new URLSearchParams(window.location.search);
     const competition = params.get("competicion") || session.competicionCodigo || "temporada";
     const ui = {
@@ -23,6 +24,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             try { game = await api.estado(session.usuarioId, session.partidoActualId); }
             catch (error) { if (error.status !== 404) throw error; }
         }
+        if (game && game.estado === "finalizado" && esEliminatoriaEmpatada(game)) {
+            await openPenalties(game);
+            return;
+        }
         if (!game || game.estado !== "en_curso") {
             game = await api.iniciar(session.usuarioId, competition);
             window.FDM.session.set({ ...session, partidoActualId: game.partidoId, competicionCodigo: competition, comodinesUsados: [] });
@@ -42,7 +47,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("btn-exit-match").addEventListener("click", async () => {
         if (!confirm("¿Finalizar y guardar este partido?")) return;
         stopTimer();
-        try { await api.finalizar(session.usuarioId, game.partidoId); finish(); }
+        try {
+            game = await api.finalizar(session.usuarioId, game.partidoId);
+            if (esEliminatoriaEmpatada(game)) await openPenalties(game); else finish();
+        }
         catch (error) { alert(error.message); }
     });
 
@@ -51,8 +59,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         game = await api.estado(session.usuarioId, game.partidoId);
         const assignment = await api.pregunta(session.usuarioId, game.partidoId);
         if (!assignment) {
-            await api.finalizar(session.usuarioId, game.partidoId);
-            finish();
+            game = await api.finalizar(session.usuarioId, game.partidoId);
+            if (esEliminatoriaEmpatada(game)) await openPenalties(game); else finish();
             return;
         }
         question = assignment.pregunta;
@@ -140,5 +148,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         const current = window.FDM.session.get() || {};
         window.FDM.session.set({ ...current, ultimoPartidoId: game.partidoId, partidoActualId: null });
         window.location.assign("resultado-partido.html");
+    }
+    function esEliminatoriaEmpatada(partido) {
+        return ["libertadores", "sudamericana"].includes(partido?.competicion?.codigo)
+            && partido.golesLocal === partido.golesVisitante;
+    }
+    async function openPenalties(partido) {
+        try {
+            await penalesApi.iniciar(session.usuarioId, partido.partidoId);
+            const current = window.FDM.session.get() || {};
+            window.FDM.session.set({ ...current, partidoActualId: partido.partidoId, ultimoPartidoId: null });
+            window.location.assign("penales.html");
+        } catch (error) { alert(error.message); }
     }
 });

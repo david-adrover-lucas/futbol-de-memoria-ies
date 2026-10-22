@@ -1980,6 +1980,53 @@ html, body {
     object-fit: contain;
 }
 
+/* La tanda conserva el marcador del partido y presenta su propio tanteador. */
+.shootout-question-stage {
+    bottom: clamp(76px, 8vh, 112px);
+}
+
+.shootout-role {
+    width: fit-content;
+    min-width: min(300px, 70vw);
+    margin: 0 auto -4px;
+    padding: 8px 20px;
+    border: 1px solid rgba(255, 210, 79, 0.86);
+    border-radius: 999px;
+    background: rgba(4, 12, 22, 0.92);
+    color: #ffd24f;
+    font-family: 'Arial Black', Impact, sans-serif;
+    font-size: clamp(1rem, 1.8vw, 1.8rem);
+    text-align: center;
+    text-shadow: 0 0 12px rgba(255, 210, 79, 0.7);
+    box-shadow: 0 0 18px rgba(255, 210, 79, 0.28);
+}
+
+.shootout-body .match-scoreboard {
+    border-color: rgba(255, 210, 79, 0.8);
+    box-shadow: inset 0 0 22px rgba(255, 210, 79, 0.16), 0 0 16px rgba(255, 210, 79, 0.46), 0 10px 18px rgba(0, 0, 0, 0.42);
+}
+
+.result-penalties {
+    grid-column: 1 / -1;
+    color: #ffd24f;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+@media (max-width: 980px) {
+    .shootout-body .match-scoreboard {
+        left: 50%;
+        right: auto;
+        top: 20px;
+        width: min(540px, 92vw);
+        transform: translateX(-50%);
+    }
+
+    .shootout-question-stage {
+        bottom: 26px;
+    }
+}
+
 #resultado-body {
     background-image:
         radial-gradient(circle at 50% 44%, rgba(74, 220, 255, 0.14), transparent 28%),

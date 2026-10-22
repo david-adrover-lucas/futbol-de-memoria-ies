@@ -34,6 +34,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("btn-tour-play").addEventListener("click", async () => {
         if (!activeCode) return alert("Seleccioná una copa para ver su llave.");
         try {
+            const currentSession = window.FDM.session.get() || {};
+            if (currentSession.partidoActualId && currentSession.competicionCodigo === activeCode) {
+                window.location.assign(`partido.html?competicion=${encodeURIComponent(activeCode)}`);
+                return;
+            }
             const fixture = await window.FDM.services.torneoService.partido(session.usuarioId, activeCode);
             const game = fixture.partidoId ? { partidoId: fixture.partidoId }
                 : await window.FDM.services.partidoService.iniciar(session.usuarioId, activeCode, { torneoFixtureId: fixture.fixtureId });
