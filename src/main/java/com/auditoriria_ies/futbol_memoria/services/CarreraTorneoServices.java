@@ -17,13 +17,15 @@ public class CarreraTorneoServices {
     private final TorneoFixtureRepository fixtureRepository;
     private final EquipoRepository equipoRepository;
     private final CompeticionServices competicionServices;
+    private final ClasificacionServices clasificacionServices;
 
     public CarreraTorneoServices(CarreraServices carreraServices, CarreraTorneoRepository torneoRepository,
                                  TorneoFixtureRepository fixtureRepository, EquipoRepository equipoRepository,
-                                 CompeticionServices competicionServices) {
+                                 CompeticionServices competicionServices, ClasificacionServices clasificacionServices) {
         this.carreraServices = carreraServices; this.torneoRepository = torneoRepository;
         this.fixtureRepository = fixtureRepository; this.equipoRepository = equipoRepository;
         this.competicionServices = competicionServices;
+        this.clasificacionServices = clasificacionServices;
     }
 
     public record EquipoVista(Long equipoId, String codigoExterno, String nombre, String apodo, Integer prestigio, String rutaEscudo) {}
@@ -38,6 +40,7 @@ public class CarreraTorneoServices {
         Carrera carrera = carreraServices.obtenerCarreraActivaPorUsuario(usuarioId);
         Competicion comp = competicionServices.obtenerCompeticionPorCodigo(codigo);
         if (!"copa".equals(comp.getTipoCompeticion())) throw new ReglaNegocioException("La competición seleccionada no es una copa");
+        validarClasificacionInternacional(carrera, codigo);
         CarreraTorneo torneo = torneoRepository.findByCarreraCarreraIdAndNumeroTemporadaAndCodigoCompeticion(
                 carrera.getCarreraId(), carrera.getNumeroTemporada(), codigo).orElseGet(() -> crearTorneo(carrera, codigo));
         List<TorneoFixture> ronda = fixtureRepository.findByTorneoCarreraTorneoIdAndRondaOrderByNumeroPartido(torneo.getCarreraTorneoId(), torneo.getRondaActual());
@@ -71,6 +74,7 @@ public class CarreraTorneoServices {
     @Transactional
     public TorneoFixture validarYObtenerFixture(Long fixtureId, Long usuarioId, String codigo) {
         Carrera carrera = carreraServices.obtenerCarreraActivaPorUsuario(usuarioId);
+        validarClasificacionInternacional(carrera, codigo);
         TorneoFixture fixture = fixtureRepository.findByTorneoFixtureIdAndTorneoCarreraCarreraId(fixtureId, carrera.getCarreraId())
                 .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró ese partido de copa"));
         if (!codigo.equals(fixture.getTorneo().getCodigoCompeticion())) throw new ReglaNegocioException("El fixture pertenece a otra copa");
@@ -80,6 +84,14 @@ public class CarreraTorneoServices {
             throw new ReglaNegocioException("El fixture no corresponde al equipo actual de la carrera");
         }
         return fixture;
+    }
+
+    private void validarClasificacionInternacional(Carrera carrera, String codigo) {
+        if (!"libertadores".equals(codigo) && !"sudamericana".equals(codigo)) return;
+        if (!clasificacionServices.estaClasificadoParaTemporada(carrera.getCarreraId(),
+                carrera.getNumeroTemporada(), carrera.getEquipoActual().getEquipoId(), codigo)) {
+            throw new ReglaNegocioException("Tu equipo no está clasificado a este torneo internacional en esta temporada");
+        }
     }
 
     @Transactional

@@ -19,13 +19,16 @@ public class TemporadaServices {
     private final CarreraTemporadaRepository temporadaRepository;
     private final TemporadaFixtureRepository fixtureRepository;
     private final EquipoRepository equipoRepository;
+    private final ClasificacionServices clasificacionServices;
 
     public TemporadaServices(CarreraServices carreraServices, CarreraTemporadaRepository temporadaRepository,
-                             TemporadaFixtureRepository fixtureRepository, EquipoRepository equipoRepository) {
+                             TemporadaFixtureRepository fixtureRepository, EquipoRepository equipoRepository,
+                             ClasificacionServices clasificacionServices) {
         this.carreraServices = carreraServices;
         this.temporadaRepository = temporadaRepository;
         this.fixtureRepository = fixtureRepository;
         this.equipoRepository = equipoRepository;
+        this.clasificacionServices = clasificacionServices;
     }
 
     public record EquipoVista(Long equipoId, String codigoExterno, String nombre, String apodo, Integer prestigio, String rutaEscudo) {}
@@ -60,6 +63,7 @@ public class TemporadaServices {
                 temporada = temporadaRepository.save(temporada);
             } else {
                 temporada.setEstado("finalizada");
+                clasificarTemporadaFinalizada(temporada, jornada);
                 temporadaRepository.save(temporada);
                 carrera.setNumeroTemporada(carrera.getNumeroTemporada() + 1);
                 carreraServices.guardarCarrera(carrera);
@@ -99,7 +103,25 @@ public class TemporadaServices {
             fixture.setGolesVisitante(partido.getGolesVisitante());
             fixture.setEstado("finalizado");
             fixtureRepository.save(fixture);
+            if (fixture.getJornada() == JORNADAS) {
+                CarreraTemporada temporada = fixture.getTemporada();
+                List<TemporadaFixture> jornadaFinal = fixtureRepository.findByTemporadaCarreraTemporadaIdAndJornadaOrderByNumeroPartido(
+                        temporada.getCarreraTemporadaId(), JORNADAS);
+                clasificarTemporadaFinalizada(temporada, jornadaFinal);
+                temporada.setEstado("finalizada");
+                temporadaRepository.save(temporada);
+            }
         });
+    }
+
+    private void clasificarTemporadaFinalizada(CarreraTemporada temporada, List<TemporadaFixture> jornadaFinal) {
+        Long equipoId = temporada.getCarrera().getEquipoActual().getEquipoId();
+        int posicionFinal = vista(temporada, jornadaFinal).tabla().stream()
+                .filter(posicion -> posicion.equipo().equipoId().equals(equipoId))
+                .mapToInt(PosicionVista::posicion)
+                .findFirst()
+                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el equipo en la tabla final"));
+        clasificacionServices.clasificarAlCerrar(temporada, posicionFinal);
     }
 
     private CarreraTemporada buscarOCrearTemporada(Carrera carrera) {

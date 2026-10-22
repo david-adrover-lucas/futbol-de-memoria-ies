@@ -9,7 +9,10 @@ Con MariaDB/MySQL iniciado en XAMPP, ejecutar una sola vez y en este orden los s
 1. `schema.sql`
 2. `extension_partidos.sql`
 3. `extension_carrera.sql`
-4. `seed.sql`
+4. `extension_clasificacion.sql`
+5. `seed.sql`
+
+Si la base ya estÃ¡ creada, aplicar solo `extension_clasificacion.sql` una vez; no repetir los scripts anteriores.
 
 `seed.sql` carga los catálogos y preguntas; no volver a ejecutarlo sobre una base que ya tiene esos datos.
 
@@ -33,6 +36,10 @@ Abrir `http://localhost:8080/front-end/index.html`. El archivo `.env.example` do
 - `static/front-end/scripts/core`: cliente HTTP, sesión, mappers y servicios frontend.
 - `src/main/resources/db/manual`: scripts SQL manuales.
 - `src/test/js`: pruebas de cliente HTTP, servicios y mappers (Node.js integrado, sin paquetes adicionales).
+
+## Clasificación internacional
+
+Al cerrar la temporada se guarda una clasificación única por carrera y temporada. Los cortes y porcentajes iniciales están en `src/main/resources/application.properties`; para ajustar las probabilidades, cambiar `juego.clasificacion.probabilidad-*` antes de iniciar Spring.
 
 ## Pruebas
 
