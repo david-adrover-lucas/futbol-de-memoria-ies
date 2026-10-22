@@ -1,0 +1,8 @@
+/* Punto de entrada único. Las hojas actuales se conservan durante la migración. */
+@layer reset, legacy, tokens, base, layout, components, pages, utilities;
+
+@import url("./base/reset.css") layer(reset);
+@import url("../style.css") layer(legacy);
+@import url("../ui-system.css") layer(legacy);
+@import url("./tokens.css") layer(tokens);
+@import url("./base/typography.css") layer(base);
