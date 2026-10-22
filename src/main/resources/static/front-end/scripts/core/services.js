@@ -56,11 +56,15 @@
         iniciar: (usuarioId, codigo) => api.request(`/usuarios/${id(usuarioId)}/torneos/${id(codigo)}`, { method: "POST" }).then(map.torneo),
         partido: (usuarioId, codigo) => api.request(`/usuarios/${id(usuarioId)}/torneos/${id(codigo)}/partido`, { method: "POST" }).then(map.fixture)
     };
+    const calendarioService = {
+        actual: (usuarioId) => api.request(`/usuarios/${id(usuarioId)}/calendario`),
+        avanzar: (usuarioId) => api.request(`/usuarios/${id(usuarioId)}/calendario/avanzar`, { method: "POST" })
+    };
     const catalogoService = {
         niveles: () => api.request("/niveles-dificultad"),
         competiciones: () => competicionService.listar()
     };
 
     window.FDM = window.FDM || {};
-    window.FDM.services = { authService, usuarioService, carreraService, equipoService, competicionService, partidoService, tandaPenalesService, estadisticaService, temporadaService, torneoService, catalogoService };
+    window.FDM.services = { authService, usuarioService, carreraService, equipoService, competicionService, partidoService, tandaPenalesService, estadisticaService, temporadaService, torneoService, calendarioService, catalogoService };
 })();

@@ -16,14 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelectorAll(".menu-btn").forEach((item) => item.classList.remove("active"));
         button.classList.add("active");
         if (button.dataset.action === "jugar") {
-            button.disabled = true;
-            try {
-                const fixture = await api.temporadaService.siguientePartido(session.usuarioId);
-                const game = fixture.partidoId ? { partidoId: fixture.partidoId }
-                    : await api.partidoService.iniciar(session.usuarioId, "temporada", { temporadaFixtureId: fixture.fixtureId });
-                window.FDM.session.set({ ...session, competicionCodigo: "temporada", partidoActualId: game.partidoId });
-                window.location.assign("partido.html?competicion=temporada");
-            } catch (error) { alert(error.message); button.disabled = false; }
+            window.location.assign("temporada.html");
             return;
         }
         if (button.dataset.action) {

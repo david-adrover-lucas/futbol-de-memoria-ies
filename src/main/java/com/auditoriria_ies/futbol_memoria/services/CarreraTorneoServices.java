@@ -18,14 +18,19 @@ public class CarreraTorneoServices {
     private final EquipoRepository equipoRepository;
     private final CompeticionServices competicionServices;
     private final ClasificacionServices clasificacionServices;
+    private final CalendarioFechaRepository calendarioRepository;
+    private final CarreraTemporadaRepository temporadaRepository;
 
     public CarreraTorneoServices(CarreraServices carreraServices, CarreraTorneoRepository torneoRepository,
                                  TorneoFixtureRepository fixtureRepository, EquipoRepository equipoRepository,
-                                 CompeticionServices competicionServices, ClasificacionServices clasificacionServices) {
+                                 CompeticionServices competicionServices, ClasificacionServices clasificacionServices,
+                                 CalendarioFechaRepository calendarioRepository, CarreraTemporadaRepository temporadaRepository) {
         this.carreraServices = carreraServices; this.torneoRepository = torneoRepository;
         this.fixtureRepository = fixtureRepository; this.equipoRepository = equipoRepository;
         this.competicionServices = competicionServices;
         this.clasificacionServices = clasificacionServices;
+        this.calendarioRepository = calendarioRepository;
+        this.temporadaRepository = temporadaRepository;
     }
 
     public record EquipoVista(Long equipoId, String codigoExterno, String nombre, String apodo, Integer prestigio, String rutaEscudo) {}
@@ -41,10 +46,14 @@ public class CarreraTorneoServices {
         Competicion comp = competicionServices.obtenerCompeticionPorCodigo(codigo);
         if (!"copa".equals(comp.getTipoCompeticion())) throw new ReglaNegocioException("La competición seleccionada no es una copa");
         validarClasificacionInternacional(carrera, codigo);
+        validarEventoCalendarioActual(carrera, codigo);
         CarreraTorneo torneo = torneoRepository.findByCarreraCarreraIdAndNumeroTemporadaAndCodigoCompeticion(
                 carrera.getCarreraId(), carrera.getNumeroTemporada(), codigo).orElseGet(() -> crearTorneo(carrera, codigo));
         List<TorneoFixture> ronda = fixtureRepository.findByTorneoCarreraTorneoIdAndRondaOrderByNumeroPartido(torneo.getCarreraTorneoId(), torneo.getRondaActual());
-        if (ronda.isEmpty() && "en_curso".equals(torneo.getEstado())) ronda = crearRonda(torneo, participantesIniciales(carrera), 1);
+        if (ronda.isEmpty() && "en_curso".equals(torneo.getEstado())) {
+            ronda = crearRonda(torneo, participantesIniciales(carrera, codigo, true), 1);
+        }
+        simularPartidosCPU(ronda, torneo.getEquipoParticipante());
         return vista(torneo, carrera);
     }
 
@@ -79,6 +88,7 @@ public class CarreraTorneoServices {
                 .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró ese partido de copa"));
         if (!codigo.equals(fixture.getTorneo().getCodigoCompeticion())) throw new ReglaNegocioException("El fixture pertenece a otra copa");
         if (!"pendiente".equals(fixture.getEstado()) || fixture.getPartido() != null) throw new ReglaNegocioException("El partido de copa ya fue iniciado o finalizado");
+        validarEventoCalendarioActual(carrera, codigo);
         if (!fixture.getEquipoLocal().getEquipoId().equals(carrera.getEquipoActual().getEquipoId())
                 || !fixture.getTorneo().getEquipoParticipante().getEquipoId().equals(carrera.getEquipoActual().getEquipoId())) {
             throw new ReglaNegocioException("El fixture no corresponde al equipo actual de la carrera");
@@ -109,6 +119,7 @@ public class CarreraTorneoServices {
             fixture.setEstado("finalizado"); fixtureRepository.save(fixture);
             resolverGanadorFixture(fixture, partido.getGolesLocal() > partido.getGolesVisitante()
                     ? fixture.getEquipoLocal() : fixture.getEquipoVisitante());
+            completarFechaTorneo(fixture);
         });
     }
 
@@ -127,37 +138,91 @@ public class CarreraTorneoServices {
         fixture.setEstado("finalizado");
         fixtureRepository.save(fixture);
         resolverGanadorFixture(fixture, ganador);
+        completarFechaTorneo(fixture);
+    }
+
+    @Transactional
+    public void simularRonda(Long usuarioId, Integer numeroTemporada, String codigo, Integer rondaEsperada) {
+        Carrera carrera = carreraServices.obtenerCarreraActivaPorUsuario(usuarioId);
+        Long carreraId = carrera.getCarreraId();
+        CarreraTorneo torneo = torneoRepository.findByCarreraCarreraIdAndNumeroTemporadaAndCodigoCompeticion(
+                carreraId, numeroTemporada, codigo).orElseGet(() -> crearTorneoSimulado(carrera, codigo));
+        if (torneo.getRondaActual() != rondaEsperada) {
+            if (torneo.getRondaActual() > rondaEsperada || "campeon".equals(torneo.getEstado())) return;
+            throw new ReglaNegocioException("La ronda del torneo no coincide con el calendario");
+        }
+        if (torneo.getEquipoParticipante() != null && "en_curso".equals(torneo.getEstado()))
+            throw new ReglaNegocioException("Tu equipo debe jugar su partido antes de simular esta ronda");
+        List<TorneoFixture> ronda = fixtureRepository.findByTorneoCarreraTorneoIdAndRondaOrderByNumeroPartido(
+                torneo.getCarreraTorneoId(), rondaEsperada);
+        simularPartidosCPU(ronda, null);
+        if (rondaEsperada >= 4) {
+            if (torneo.getEquipoParticipante() == null) torneo.setEstado("campeon");
+            torneoRepository.save(torneo);
+            return;
+        }
+        torneo.setRondaActual(rondaEsperada + 1);
+        torneoRepository.save(torneo);
+        crearRonda(torneo, ganadores(ronda), torneo.getRondaActual(), null);
     }
 
     private void resolverGanadorFixture(TorneoFixture fixture, Equipo ganadorFixture) {
-            CarreraTorneo torneo = fixture.getTorneo();
-            boolean ganaUsuario = ganadorFixture.getEquipoId().equals(torneo.getEquipoParticipante().getEquipoId());
-            if (!ganaUsuario) { torneo.setEstado("eliminado"); torneoRepository.save(torneo); return; }
-            if (torneo.getRondaActual() >= 4) { torneo.setEstado("campeon"); torneoRepository.save(torneo); return; }
-            List<TorneoFixture> ronda = fixtureRepository.findByTorneoCarreraTorneoIdAndRondaOrderByNumeroPartido(torneo.getCarreraTorneoId(), torneo.getRondaActual());
-            List<Equipo> ganadores = ronda.stream().map(f -> {
-                if (f.getEquipoLocal().getEquipoId().equals(ganadorFixture.getEquipoId())) return ganadorFixture;
-                if (f.getEquipoVisitante().getEquipoId().equals(ganadorFixture.getEquipoId())) return ganadorFixture;
-                return f.getGolesLocal() > f.getGolesVisitante() ? f.getEquipoLocal() : f.getEquipoVisitante();
-            }).toList();
-            torneo.setRondaActual(torneo.getRondaActual() + 1); torneoRepository.save(torneo);
-            crearRonda(torneo, ganadores, torneo.getRondaActual(), torneo.getEquipoParticipante());
+        CarreraTorneo torneo = fixture.getTorneo();
+        Equipo participante = torneo.getEquipoParticipante();
+        if (participante == null) throw new ReglaNegocioException("El fixture no tiene equipo participante del usuario");
+        boolean ganaUsuario = ganadorFixture.getEquipoId().equals(participante.getEquipoId());
+        if (torneo.getRondaActual() >= 4) {
+            torneo.setEstado(ganaUsuario ? "campeon" : "eliminado");
+            torneoRepository.save(torneo);
+            return;
+        }
+        List<TorneoFixture> ronda = fixtureRepository.findByTorneoCarreraTorneoIdAndRondaOrderByNumeroPartido(
+                torneo.getCarreraTorneoId(), torneo.getRondaActual());
+        List<Equipo> ganadores = ganadores(ronda);
+        torneo.setRondaActual(torneo.getRondaActual() + 1);
+        torneo.setEstado(ganaUsuario ? "en_curso" : "eliminado");
+        torneoRepository.save(torneo);
+        crearRonda(torneo, ganadores, torneo.getRondaActual(), ganaUsuario ? participante : null);
+    }
+
+    private List<Equipo> ganadores(List<TorneoFixture> ronda) {
+        return ronda.stream().map(f -> f.getGolesLocal() > f.getGolesVisitante()
+                ? f.getEquipoLocal() : f.getEquipoVisitante()).toList();
     }
 
     private CarreraTorneo crearTorneo(Carrera carrera, String codigo) {
-        CarreraTorneo torneo = new CarreraTorneo(); torneo.setCarrera(carrera); torneo.setCodigoCompeticion(codigo);
-        torneo.setEquipoParticipante(carrera.getEquipoActual());
+        return crearTorneo(carrera, codigo, carrera.getEquipoActual());
+    }
+
+    private CarreraTorneo crearTorneo(Carrera carrera, String codigo, Equipo participante) {
+        CarreraTorneo torneo = new CarreraTorneo();
+        torneo.setCarrera(carrera); torneo.setCodigoCompeticion(codigo); torneo.setEquipoParticipante(participante);
         torneo.setNumeroTemporada(carrera.getNumeroTemporada()); torneo.setRondaActual(1); torneo.setEstado("en_curso");
         return torneoRepository.save(torneo);
     }
 
-    private List<Equipo> participantesIniciales(Carrera carrera) {
-        List<Equipo> equipos = new ArrayList<>(equipoRepository.findAll());
-        equipos.removeIf(e -> e.getEquipoId().equals(carrera.getEquipoActual().getEquipoId()));
-        Collections.shuffle(equipos);
-        if (equipos.size() < 15) throw new ReglaNegocioException("La base necesita al menos 16 equipos para crear una copa");
-        List<Equipo> participantes = new ArrayList<>(); participantes.add(carrera.getEquipoActual()); participantes.addAll(equipos.subList(0, 15));
-        Collections.shuffle(participantes.subList(1, participantes.size()));
+    private CarreraTorneo crearTorneoSimulado(Carrera carrera, String codigo) {
+        CarreraTorneo torneo = crearTorneo(carrera, codigo, null);
+        crearRonda(torneo, participantesIniciales(carrera, codigo, false), 1, null);
+        return torneo;
+    }
+
+    private List<Equipo> participantesIniciales(Carrera carrera, String codigo, boolean incluirUsuario) {
+        List<Equipo> candidatos = new ArrayList<>(equipoRepository.findAll());
+        if ("libertadores".equals(codigo) || "sudamericana".equals(codigo)) {
+            candidatos.removeIf(e -> !Boolean.TRUE.equals(e.getEsInternacional()));
+        } else {
+            candidatos.removeIf(e -> !"Argentina".equalsIgnoreCase(e.getPais()));
+        }
+        Equipo usuario = carrera.getEquipoActual();
+        if (incluirUsuario) candidatos.removeIf(e -> e.getEquipoId().equals(usuario.getEquipoId()));
+        Collections.shuffle(candidatos);
+        int necesarios = incluirUsuario ? 15 : 16;
+        if (candidatos.size() < necesarios) throw new ReglaNegocioException("La base no tiene suficientes equipos para completar la copa");
+        List<Equipo> participantes = new ArrayList<>();
+        if (incluirUsuario) participantes.add(usuario);
+        participantes.addAll(candidatos.subList(0, necesarios));
+        if (incluirUsuario && participantes.size() > 2) Collections.shuffle(participantes.subList(1, participantes.size()));
         return participantes;
     }
 
@@ -167,37 +232,73 @@ public class CarreraTorneoServices {
 
     private List<TorneoFixture> crearRonda(CarreraTorneo torneo, List<Equipo> participantes, int ronda, Equipo equipoUsuario) {
         if (participantes.size() < 2 || participantes.size() % 2 != 0) throw new ReglaNegocioException("No se pudo completar la llave de la copa");
-        Carrera carrera = torneo.getCarrera();
-        Long userTeam = equipoUsuario.getEquipoId();
         List<Equipo> lista = new ArrayList<>(participantes);
-        int userIndex = -1;
-        for (int i = 0; i < lista.size(); i++) if (lista.get(i).getEquipoId().equals(userTeam)) userIndex = i;
-        if (userIndex < 0) throw new ReglaNegocioException("Tu equipo ya no está en la llave de la copa");
-        Collections.swap(lista, 0, userIndex);
-        if (lista.size() > 2) Collections.shuffle(lista.subList(2, lista.size()));
+        if (equipoUsuario != null) {
+            int indice = -1;
+            for (int i = 0; i < lista.size(); i++) if (lista.get(i).getEquipoId().equals(equipoUsuario.getEquipoId())) indice = i;
+            if (indice < 0) throw new ReglaNegocioException("Tu equipo ya no está en la llave de la copa");
+            Collections.swap(lista, 0, indice);
+            if (lista.size() > 2) Collections.shuffle(lista.subList(2, lista.size()));
+        } else Collections.shuffle(lista);
         List<TorneoFixture> fixtures = new ArrayList<>();
         for (int i = 0; i < lista.size(); i += 2) {
             TorneoFixture fixture = new TorneoFixture(); fixture.setTorneo(torneo); fixture.setRonda(ronda);
             fixture.setNumeroPartido(i / 2 + 1); fixture.setEquipoLocal(lista.get(i)); fixture.setEquipoVisitante(lista.get(i + 1));
-            if (i != 0) { fixture.setGolesLocal(ThreadLocalRandom.current().nextInt(5)); fixture.setGolesVisitante(ThreadLocalRandom.current().nextInt(5));
-                if (Objects.equals(fixture.getGolesLocal(), fixture.getGolesVisitante())) fixture.setGolesLocal(fixture.getGolesLocal() + 1);
-                fixture.setEstado("finalizado"); }
             fixtures.add(fixture);
         }
         return fixtureRepository.saveAll(fixtures);
     }
 
+    private void simularPartidosCPU(List<TorneoFixture> fixtures, Equipo equipoUsuario) {
+        for (TorneoFixture fixture : fixtures) {
+            if (!"pendiente".equals(fixture.getEstado())) continue;
+            boolean perteneceAlUsuario = equipoUsuario != null && (fixture.getEquipoLocal().getEquipoId().equals(equipoUsuario.getEquipoId())
+                    || fixture.getEquipoVisitante().getEquipoId().equals(equipoUsuario.getEquipoId()));
+            if (perteneceAlUsuario) continue;
+            boolean localGana = ThreadLocalRandom.current().nextDouble() < probabilidadVictoriaLocal(
+                    fixture.getEquipoLocal(), fixture.getEquipoVisitante());
+            int golesGanador = ThreadLocalRandom.current().nextInt(1, 5);
+            int golesPerdedor = ThreadLocalRandom.current().nextInt(golesGanador);
+            fixture.setGolesLocal(localGana ? golesGanador : golesPerdedor);
+            fixture.setGolesVisitante(localGana ? golesPerdedor : golesGanador);
+            fixture.setEstado("finalizado");
+        }
+        fixtureRepository.saveAll(fixtures);
+    }
+
+    private double probabilidadVictoriaLocal(Equipo local, Equipo visitante) {
+        return Math.max(0.25, Math.min(0.75, 0.50 + (local.getPrestigio() - visitante.getPrestigio()) * 0.075));
+    }
+
+    private void validarEventoCalendarioActual(Carrera carrera, String codigo) {
+        CarreraTemporada temporada = temporadaRepository.findByCarreraCarreraIdAndNumeroTemporada(
+                        carrera.getCarreraId(), carrera.getNumeroTemporada())
+                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la temporada actual"));
+        CalendarioFecha evento = calendarioRepository.findFirstByTemporadaCarreraTemporadaIdAndEstadoOrderByNumeroFechaAsc(
+                        temporada.getCarreraTemporadaId(), "pendiente")
+                .orElseThrow(() -> new ReglaNegocioException("La temporada no tiene una fecha pendiente"));
+        if (!codigo.equals(evento.getCompeticion().getCodigo())) throw new ReglaNegocioException("Esta competición no corresponde a la fecha actual del calendario");
+    }
+
+    private void completarFechaTorneo(TorneoFixture fixture) {
+        CarreraTemporada temporada = temporadaRepository.findByCarreraCarreraIdAndNumeroTemporada(
+                        fixture.getTorneo().getCarrera().getCarreraId(), fixture.getTorneo().getNumeroTemporada())
+                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la temporada del torneo"));
+        calendarioRepository.findByTemporadaCarreraTemporadaIdAndCompeticionCodigoAndNumeroRonda(
+                        temporada.getCarreraTemporadaId(), fixture.getTorneo().getCodigoCompeticion(), fixture.getRonda())
+                .ifPresent(fecha -> { fecha.setEstado("completada"); fecha.setCompletadaEn(java.time.LocalDateTime.now()); calendarioRepository.save(fecha); });
+    }
     private TorneoVista vista(CarreraTorneo torneo, Carrera carrera) {
         return new TorneoVista(torneo.getCarreraTorneoId(), torneo.getCodigoCompeticion(), torneo.getNumeroTemporada(),
                 torneo.getRondaActual(), torneo.getEstado(), fixtureRepository.findByTorneoCarreraTorneoIdOrderByRondaAscNumeroPartidoAsc(torneo.getCarreraTorneoId())
-                .stream().map(f -> fixtureVista(f, torneo.getEquipoParticipante().getEquipoId())).toList());
+                .stream().map(f -> fixtureVista(f, torneo.getEquipoParticipante() == null ? null : torneo.getEquipoParticipante().getEquipoId())).toList());
     }
 
     private FixtureVista fixtureVista(TorneoFixture f, Long equipoUsuario) {
         return new FixtureVista(f.getTorneoFixtureId(), f.getRonda(), f.getNumeroPartido(), equipoVista(f.getEquipoLocal()),
                 equipoVista(f.getEquipoVisitante()), f.getGolesLocal(), f.getGolesVisitante(), f.getEstado(),
                 f.getPartido() == null ? null : f.getPartido().getPartidoId(),
-                f.getEquipoLocal().getEquipoId().equals(equipoUsuario) || f.getEquipoVisitante().getEquipoId().equals(equipoUsuario));
+                equipoUsuario != null && (f.getEquipoLocal().getEquipoId().equals(equipoUsuario) || f.getEquipoVisitante().getEquipoId().equals(equipoUsuario)));
     }
     private EquipoVista equipoVista(Equipo e) { return new EquipoVista(e.getEquipoId(), e.getCodigoExterno(), e.getNombre(), e.getApodo(), e.getPrestigio(), e.getRutaEscudo()); }
 }

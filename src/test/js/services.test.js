@@ -46,3 +46,12 @@ test("servicio de penales usa los endpoints del backend y envía la respuesta vi
     assert.equal(calls[1][0], "/usuarios/11/partidos/35/penales/respuestas");
     assert.deepEqual(JSON.parse(JSON.stringify(calls[1][1].body)), { preguntaId: 17, opcionRespuestaId: 2, segundos: 4 });
 });
+
+test("calendarioService consulta y avanza una fecha mediante la API", async () => {
+    const { services, calls } = createServices();
+    await services.calendarioService.actual(7);
+    await services.calendarioService.avanzar(7);
+    assert.equal(calls[0][0], "/usuarios/7/calendario");
+    assert.equal(calls[1][0], "/usuarios/7/calendario/avanzar");
+    assert.equal(calls[1][1].method, "POST");
+});

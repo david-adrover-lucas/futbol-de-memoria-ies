@@ -4,6 +4,7 @@ import com.auditoriria_ies.futbol_memoria.exceptions.ReglaNegocioException;
 import com.auditoriria_ies.futbol_memoria.exceptions.RecursoNoEncontradoException;
 import com.auditoriria_ies.futbol_memoria.models.*;
 import com.auditoriria_ies.futbol_memoria.repository.CarreraTemporadaRepository;
+import com.auditoriria_ies.futbol_memoria.repository.CalendarioFechaRepository;
 import com.auditoriria_ies.futbol_memoria.repository.EquipoRepository;
 import com.auditoriria_ies.futbol_memoria.repository.TemporadaFixtureRepository;
 import org.springframework.stereotype.Service;
@@ -20,15 +21,17 @@ public class TemporadaServices {
     private final TemporadaFixtureRepository fixtureRepository;
     private final EquipoRepository equipoRepository;
     private final ClasificacionServices clasificacionServices;
+    private final CalendarioFechaRepository calendarioRepository;
 
     public TemporadaServices(CarreraServices carreraServices, CarreraTemporadaRepository temporadaRepository,
                              TemporadaFixtureRepository fixtureRepository, EquipoRepository equipoRepository,
-                             ClasificacionServices clasificacionServices) {
+                             ClasificacionServices clasificacionServices, CalendarioFechaRepository calendarioRepository) {
         this.carreraServices = carreraServices;
         this.temporadaRepository = temporadaRepository;
         this.fixtureRepository = fixtureRepository;
         this.equipoRepository = equipoRepository;
         this.clasificacionServices = clasificacionServices;
+        this.calendarioRepository = calendarioRepository;
     }
 
     public record EquipoVista(Long equipoId, String codigoExterno, String nombre, String apodo, Integer prestigio, String rutaEscudo) {}
@@ -44,6 +47,13 @@ public class TemporadaServices {
     public TemporadaVista obtenerTemporada(Long usuarioId) {
         Carrera carrera = carreraServices.obtenerCarreraActivaPorUsuario(usuarioId);
         CarreraTemporada temporada = buscarOCrearTemporada(carrera);
+        CalendarioFecha evento = calendarioRepository.findFirstByTemporadaCarreraTemporadaIdAndEstadoOrderByNumeroFechaAsc(
+                        temporada.getCarreraTemporadaId(), "pendiente")
+                .orElseThrow(() -> new ReglaNegocioException("No hay una fecha pendiente en el calendario"));
+        if (!"temporada".equals(evento.getCompeticion().getCodigo()))
+            throw new ReglaNegocioException("La fecha actual corresponde a " + evento.getCompeticion().getNombre());
+        temporada.setJornadaActual(evento.getNumeroRonda());
+        temporadaRepository.save(temporada);
         List<TemporadaFixture> jornada = asegurarJornada(temporada);
         return vista(temporada, jornada);
     }
@@ -52,28 +62,22 @@ public class TemporadaServices {
     public FixtureVista obtenerPartidoSiguiente(Long usuarioId) {
         Carrera carrera = carreraServices.obtenerCarreraActivaPorUsuario(usuarioId);
         CarreraTemporada temporada = buscarOCrearTemporada(carrera);
+        CalendarioFecha evento = calendarioRepository.findFirstByTemporadaCarreraTemporadaIdAndEstadoOrderByNumeroFechaAsc(
+                        temporada.getCarreraTemporadaId(), "pendiente")
+                .orElseThrow(() -> new ReglaNegocioException("No hay una fecha pendiente en el calendario"));
+        if (!"temporada".equals(evento.getCompeticion().getCodigo()))
+            throw new ReglaNegocioException("La fecha actual corresponde a " + evento.getCompeticion().getNombre());
+        temporada.setJornadaActual(evento.getNumeroRonda());
+        temporadaRepository.save(temporada);
         List<TemporadaFixture> jornada = asegurarJornada(temporada);
         TemporadaFixture fixture = jornada.stream()
                 .filter(f -> f.getEquipoLocal().getEquipoId().equals(carrera.getEquipoActual().getEquipoId())
                         || f.getEquipoVisitante().getEquipoId().equals(carrera.getEquipoActual().getEquipoId()))
                 .findFirst().orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el partido de tu equipo en esta jornada"));
-        if ("finalizado".equals(fixture.getEstado())) {
-            if (temporada.getJornadaActual() < JORNADAS) {
-                temporada.setJornadaActual(temporada.getJornadaActual() + 1);
-                temporada = temporadaRepository.save(temporada);
-            } else {
-                temporada.setEstado("finalizada");
-                clasificarTemporadaFinalizada(temporada, jornada);
-                temporadaRepository.save(temporada);
-                carrera.setNumeroTemporada(carrera.getNumeroTemporada() + 1);
-                carreraServices.guardarCarrera(carrera);
-                temporada = buscarOCrearTemporada(carrera);
-            }
-            jornada = asegurarJornada(temporada);
-            fixture = jornada.stream().filter(f -> f.getEquipoLocal().getEquipoId().equals(carrera.getEquipoActual().getEquipoId())
-                    || f.getEquipoVisitante().getEquipoId().equals(carrera.getEquipoActual().getEquipoId())).findFirst()
-                    .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el próximo partido de temporada"));
-        }
+        if ("finalizado".equals(fixture.getEstado()))
+            throw new ReglaNegocioException("Esta jornada ya fue jugada. Avanza la fecha desde el calendario.");
+        if (!Objects.equals(fixture.getJornada(), evento.getNumeroRonda()))
+            throw new ReglaNegocioException("El partido no corresponde a la jornada indicada por el calendario");
         return fixtureVista(fixture, carrera.getEquipoActual().getEquipoId());
     }
 
@@ -83,6 +87,11 @@ public class TemporadaServices {
         TemporadaFixture fixture = fixtureRepository.findByTemporadaFixtureIdAndTemporadaCarreraCarreraId(fixtureId, carrera.getCarreraId())
                 .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró ese partido de temporada"));
         if (!"pendiente".equals(fixture.getEstado()) || fixture.getPartido() != null) throw new ReglaNegocioException("El partido de temporada ya fue iniciado o finalizado");
+        CalendarioFecha evento = calendarioRepository.findFirstByTemporadaCarreraTemporadaIdAndEstadoOrderByNumeroFechaAsc(
+                        fixture.getTemporada().getCarreraTemporadaId(), "pendiente")
+                .orElseThrow(() -> new ReglaNegocioException("No hay una fecha pendiente en el calendario"));
+        if (!"temporada".equals(evento.getCompeticion().getCodigo()) || !Objects.equals(evento.getNumeroRonda(), fixture.getJornada()))
+            throw new ReglaNegocioException("El fixture no corresponde a la fecha actual del calendario");
         if (!Objects.equals(fixture.getJornada(), fixture.getTemporada().getJornadaActual())) throw new ReglaNegocioException("El fixture no pertenece a la jornada actual");
         if (!Objects.equals(fixture.getEquipoLocal().getEquipoId(), carrera.getEquipoActual().getEquipoId())) {
             throw new ReglaNegocioException("El fixture no corresponde al equipo actual de la carrera");
@@ -103,6 +112,9 @@ public class TemporadaServices {
             fixture.setGolesVisitante(partido.getGolesVisitante());
             fixture.setEstado("finalizado");
             fixtureRepository.save(fixture);
+            calendarioRepository.findByTemporadaCarreraTemporadaIdAndCompeticionCodigoAndNumeroRonda(
+                            fixture.getTemporada().getCarreraTemporadaId(), "temporada", fixture.getJornada())
+                    .ifPresent(fecha -> { fecha.setEstado("completada"); fecha.setCompletadaEn(java.time.LocalDateTime.now()); calendarioRepository.save(fecha); });
             if (fixture.getJornada() == JORNADAS) {
                 CarreraTemporada temporada = fixture.getTemporada();
                 List<TemporadaFixture> jornadaFinal = fixtureRepository.findByTemporadaCarreraTemporadaIdAndJornadaOrderByNumeroPartido(

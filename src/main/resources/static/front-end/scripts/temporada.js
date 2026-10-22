@@ -1,38 +1,71 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const session = window.FDM.session.requireUser();
     if (!session) return;
+    const api = window.FDM.services;
     const playButton = document.getElementById("btn-season-play");
-    let temporada;
+    const title = document.querySelector(".screen-title-plate");
+    const tableWrap = document.querySelector(".season-table-wrap");
+    const calendarInfo = document.getElementById("season-calendar-info");
+    let calendar;
+    let carrera;
+
     try {
-        const carrera = await window.FDM.services.carreraService.obtener(session.usuarioId);
-        temporada = await window.FDM.services.temporadaService.obtener(session.usuarioId);
+        [carrera, calendar] = await Promise.all([
+            api.carreraService.obtener(session.usuarioId), api.calendarioService.actual(session.usuarioId)
+        ]);
         renderHeader(carrera);
-        renderTabla(temporada.tabla, carrera.equipoActual?.equipoId);
-        document.querySelector(".screen-title-plate").textContent = `TEMPORADA ${temporada.numeroTemporada} · JORNADA ${temporada.jornadaActual}/${temporada.jornadasTotales}`;
+        renderCalendar(calendar);
+        if (calendar.codigoCompeticionActual === "temporada") {
+            const temporada = await api.temporadaService.obtener(session.usuarioId);
+            renderTabla(temporada.tabla, carrera.equipoActual?.equipoId);
+        } else {
+            tableWrap.classList.add("hidden");
+        }
     } catch (error) { alert(error.message); return; }
 
     document.getElementById("btn-season-menu").addEventListener("click", () => window.location.assign("menu.html"));
     playButton.addEventListener("click", async () => {
         playButton.disabled = true;
         try {
-            const fixture = await window.FDM.services.temporadaService.siguientePartido(session.usuarioId);
-            let game;
-            if (fixture.partidoId) game = { partidoId: fixture.partidoId };
-            else game = await window.FDM.services.partidoService.iniciar(session.usuarioId, "temporada", { temporadaFixtureId: fixture.fixtureId });
-            window.FDM.session.set({ ...session, competicionCodigo: "temporada", partidoActualId: game.partidoId });
-            window.location.assign("partido.html?competicion=temporada");
+            if (calendar.esFechaLibre) {
+                await api.calendarioService.avanzar(session.usuarioId);
+                window.location.reload();
+                return;
+            }
+            const codigo = calendar.codigoCompeticionActual;
+            let fixture;
+            if (codigo === "temporada") {
+                fixture = await api.temporadaService.siguientePartido(session.usuarioId);
+            } else {
+                await api.torneoService.iniciar(session.usuarioId, codigo);
+                fixture = await api.torneoService.partido(session.usuarioId, codigo);
+            }
+            const game = fixture.partidoId ? { partidoId: fixture.partidoId }
+                : await api.partidoService.iniciar(session.usuarioId, codigo,
+                    codigo === "temporada" ? { temporadaFixtureId: fixture.fixtureId } : { torneoFixtureId: fixture.fixtureId });
+            window.FDM.session.set({ ...session, carreraId: carrera.carreraId, carrera,
+                competicionCodigo: codigo, partidoActualId: game.partidoId });
+            window.location.assign(`partido.html?competicion=${encodeURIComponent(codigo)}`);
         } catch (error) { alert(error.message); playButton.disabled = false; }
     });
 
-    function renderHeader(carrera) {
-        document.getElementById("season-dt-avatar").src = `../assets/avatar-${carrera.numeroAvatar || 1}.png`;
-        document.getElementById("season-dt-name").textContent = `${carrera.nombreDt} ${carrera.apellidoDt}`.toUpperCase();
-        document.getElementById("season-dt-age").textContent = `EDAD: ${carrera.edadDt}`;
-        document.getElementById("season-dt-province").textContent = `PROVINCIA: ${carrera.provincia}`;
-        document.getElementById("season-dt-stars").textContent = "★".repeat(carrera.estrellas) + "☆".repeat(5 - carrera.estrellas);
-        document.getElementById("season-club-name").textContent = carrera.equipoActual?.nombre?.toUpperCase() || "SIN EQUIPO";
-        document.getElementById("season-club-apodo").textContent = carrera.equipoActual?.apodo?.toUpperCase() || "";
-        document.getElementById("season-club-badge").src = carrera.equipoActual?.rutaEscudo ? `../assets/${carrera.equipoActual.rutaEscudo}` : "../assets/logo-futbolmemoria.png";
+    function renderCalendar(data) {
+        const competition = data.nombreCompeticionActual || data.codigoCompeticionActual;
+        const round = data.nombreRondaActual ? ` · ${data.nombreRondaActual}` : "";
+        title.textContent = `TEMPORADA ${data.numeroTemporada} · FECHA ${data.fechaActual}/${data.totalFechas}`;
+        calendarInfo.textContent = `${competition}${round}${data.esFechaLibre ? " · Fecha libre: se simularán los partidos de CPU" : " · Juega tu partido"}`;
+        playButton.textContent = data.esFechaLibre ? "AVANZAR FECHA" : `JUGAR ${competition}`;
+    }
+
+    function renderHeader(data) {
+        document.getElementById("season-dt-avatar").src = `../assets/avatar-${data.numeroAvatar || 1}.png`;
+        document.getElementById("season-dt-name").textContent = `${data.nombreDt} ${data.apellidoDt}`.toUpperCase();
+        document.getElementById("season-dt-age").textContent = `EDAD: ${data.edadDt}`;
+        document.getElementById("season-dt-province").textContent = `PROVINCIA: ${data.provincia}`;
+        document.getElementById("season-dt-stars").textContent = "★".repeat(data.estrellas) + "☆".repeat(5 - data.estrellas);
+        document.getElementById("season-club-name").textContent = data.equipoActual?.nombre?.toUpperCase() || "SIN EQUIPO";
+        document.getElementById("season-club-apodo").textContent = data.equipoActual?.apodo?.toUpperCase() || "";
+        document.getElementById("season-club-badge").src = data.equipoActual?.rutaEscudo ? `../assets/${data.equipoActual.rutaEscudo}` : "../assets/logo-futbolmemoria.png";
     }
 
     function renderTabla(rows, equipoId) {

@@ -17,8 +17,8 @@ public class CarreraTorneo {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "carrera_id", nullable = false)
     private Carrera carrera;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "equipo_participante_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipo_participante_id")
     private Equipo equipoParticipante;
     @Column(name = "codigo_competicion", nullable = false, length = 24)
     private String codigoCompeticion;
