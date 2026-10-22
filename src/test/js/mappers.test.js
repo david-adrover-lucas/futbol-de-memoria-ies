@@ -41,3 +41,15 @@ test("mapper de tanda de penales normaliza marcador, pregunta y turnos", () => {
     assert.equal(tanda.preguntaActual.opciones[0].opcionRespuestaId, 4);
     assert.equal(tanda.turnos[0].numeroTurno, 3);
 });
+
+test("mapper de torneo conserva el estado de consulta y normaliza el campeon", () => {
+    const value = window.FDM.mappers.torneo({
+        torneoId: null, codigoCompeticion: "libertadores", numeroTemporada: 2,
+        rondaActual: 4, estado: "eliminado",
+        campeon: { equipoId: 12, nombre: "River Plate", prestigio: 5 }, fixtures: []
+    });
+    assert.equal(value.torneoId, null);
+    assert.equal(value.estado, "eliminado");
+    assert.equal(value.campeon.equipoId, 12);
+    assert.equal(value.campeon.nombre, "River Plate");
+});

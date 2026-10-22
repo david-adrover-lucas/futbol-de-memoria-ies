@@ -38,7 +38,8 @@ public class CarreraTorneoServices {
                                EquipoVista equipoVisitante, Integer golesLocal, Integer golesVisitante,
                                String estado, Long partidoId, boolean esPartidoDelUsuario) {}
     public record TorneoVista(Long torneoId, String codigoCompeticion, Integer numeroTemporada,
-                              Integer rondaActual, String estado, List<FixtureVista> fixtures) {}
+                              Integer rondaActual, String estado, EquipoVista campeon,
+                              List<FixtureVista> fixtures) {}
 
     @Transactional
     public TorneoVista iniciarObtener(Long usuarioId, String codigo) {
@@ -59,9 +60,13 @@ public class CarreraTorneoServices {
 
     public TorneoVista obtener(Long usuarioId, String codigo) {
         Carrera carrera = carreraServices.obtenerCarreraActivaPorUsuario(usuarioId);
+        Competicion competicion = competicionServices.obtenerCompeticionPorCodigo(codigo);
+        if (!"copa".equals(competicion.getTipoCompeticion()))
+            throw new ReglaNegocioException("La competicion seleccionada no es una copa");
         CarreraTorneo torneo = torneoRepository.findByCarreraCarreraIdAndNumeroTemporadaAndCodigoCompeticion(
-                carrera.getCarreraId(), carrera.getNumeroTemporada(), codigo)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Todavía no participas en esta copa"));
+                carrera.getCarreraId(), carrera.getNumeroTemporada(), codigo).orElse(null);
+        if (torneo == null)
+            return new TorneoVista(null, codigo, carrera.getNumeroTemporada(), 0, "sin_iniciar", null, List.of());
         return vista(torneo, carrera);
     }
 
@@ -289,8 +294,12 @@ public class CarreraTorneoServices {
                 .ifPresent(fecha -> { fecha.setEstado("completada"); fecha.setCompletadaEn(java.time.LocalDateTime.now()); calendarioRepository.save(fecha); });
     }
     private TorneoVista vista(CarreraTorneo torneo, Carrera carrera) {
+        List<TorneoFixture> fixtures = fixtureRepository.findByTorneoCarreraTorneoIdOrderByRondaAscNumeroPartidoAsc(torneo.getCarreraTorneoId());
+        Equipo campeon = fixtures.stream().filter(f -> f.getRonda() == 4 && "finalizado".equals(f.getEstado()))
+                .findFirst().map(f -> f.getGolesLocal() > f.getGolesVisitante() ? f.getEquipoLocal() : f.getEquipoVisitante())
+                .orElse(null);
         return new TorneoVista(torneo.getCarreraTorneoId(), torneo.getCodigoCompeticion(), torneo.getNumeroTemporada(),
-                torneo.getRondaActual(), torneo.getEstado(), fixtureRepository.findByTorneoCarreraTorneoIdOrderByRondaAscNumeroPartidoAsc(torneo.getCarreraTorneoId())
+                torneo.getRondaActual(), torneo.getEstado(), campeon == null ? null : equipoVista(campeon), fixtures
                 .stream().map(f -> fixtureVista(f, torneo.getEquipoParticipante() == null ? null : torneo.getEquipoParticipante().getEquipoId())).toList());
     }
 

@@ -33,6 +33,8 @@ Abrir `http://localhost:8080/front-end/index.html`. Spring Boot no carga `.env` 
 
 La temporada tiene 29 jornadas de liga y cuatro rondas para cada copa. El endpoint `GET /api/usuarios/{usuarioId}/calendario` devuelve la fecha vigente; `POST /api/usuarios/{usuarioId}/calendario/avanzar` simula y guarda la ronda de CPU en fechas libres. El frontend muestra la accion disponible en la pantalla de temporada.
 
+La pantalla Torneos consulta los resultados guardados con `GET /api/usuarios/{usuarioId}/torneos/{codigo}`. Consultar no inicia un torneo ni altera resultados; las llaves y campeones aparecen a medida que se disputan o simulan sus fechas.
+
 ## Estructura
 
 - `src/main/java/.../controllers`, `services`, `repository`, `models`: API y persistencia.

@@ -55,3 +55,10 @@ test("calendarioService consulta y avanza una fecha mediante la API", async () =
     assert.equal(calls[1][0], "/usuarios/7/calendario/avanzar");
     assert.equal(calls[1][1].method, "POST");
 });
+
+test("la consulta de torneo usa GET y no inscribe ni inicia partidos", async () => {
+    const { services, calls } = createServices();
+    await services.torneoService.obtener(7, "libertadores");
+    assert.equal(calls[0][0], "/usuarios/7/torneos/libertadores");
+    assert.equal(calls[0][1], undefined);
+});

@@ -2591,6 +2591,15 @@ html, body {
     text-shadow: 0 0 7px rgba(255, 210, 79, 0.8), 0 2px 3px #000;
 }
 
+.tour-match .is-winner {
+    color: #ffe16b;
+    text-shadow: 0 0 8px rgba(255, 210, 79, 0.65), 0 2px 3px #000;
+}
+
+.tour-match .is-eliminated {
+    opacity: 0.58;
+}
+
 .tour-match-label {
     position: absolute;
     right: 5px;
@@ -2709,9 +2718,10 @@ html, body {
 
 #torneos-body .tour-big-btn {
     display: inline-flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(0.7rem, 1vw, 0.95rem);
+    gap: 7px;
     width: 100%;
     min-width: 0;
     height: clamp(66px, 9vh, 90px);
@@ -2728,6 +2738,24 @@ html, body {
     align-items: center;
     justify-content: center;
     width: auto;
+}
+
+#torneos-body .tour-select-status {
+    color: #a9f3ff;
+    font-family: Arial, sans-serif;
+    font-size: clamp(0.62rem, 0.9vw, 0.82rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-shadow: 0 2px 4px #000;
+}
+
+#torneos-body .tour-bracket-champion {
+    margin: 6px 0 0;
+    color: #ffe16b;
+    font-family: 'Arial Black', Impact, sans-serif;
+    font-size: clamp(0.62rem, 0.88vw, 0.94rem);
+    line-height: 1.15;
+    text-shadow: 0 2px 5px #000, 0 0 10px rgba(255, 210, 79, 0.6);
 }
 
 #torneos-body .tour-big-btn img {

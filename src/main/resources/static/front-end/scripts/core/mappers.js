@@ -36,7 +36,10 @@
         ...value, fixtures: (value.fixtures || []).map(fixture),
         tabla: (value.tabla || []).map(row => ({ ...row, equipo: equipo(row.equipo) }))
     } : null;
-    const torneo = (value) => value ? { ...value, fixtures: (value.fixtures || []).map(fixture) } : null;
+    const torneo = (value) => value ? {
+        ...value, torneoId: value.torneoId == null ? null : Number(value.torneoId),
+        campeon: equipo(value.campeon), fixtures: (value.fixtures || []).map(fixture)
+    } : null;
     const partidoPregunta = (value) => value ? {
         ...value, pregunta: value.pregunta ? {
             preguntaId: Number(value.pregunta.preguntaId), textoPregunta: value.pregunta.textoPregunta || "",
