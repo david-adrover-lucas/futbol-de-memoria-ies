@@ -98,10 +98,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const article = document.createElement("article"); article.className = "tour-match";
         if (fixture.esPartidoDelUsuario) article.classList.add("my-club");
         const left = document.createElement("strong"); left.textContent = fixture.equipoLocal.nombre;
+        left.title = fixture.equipoLocal.nombre;
         const score = document.createElement("span"); score.className = "tour-vs";
         score.textContent = fixture.estado === "finalizado" || fixture.estado === "pendiente_penales"
             ? `${fixture.golesLocal} - ${fixture.golesVisitante}${fixture.estado === "pendiente_penales" ? " · PEN" : ""}` : "VS";
         const right = document.createElement("strong"); right.textContent = fixture.equipoVisitante.nombre;
+        right.title = fixture.equipoVisitante.nombre;
         if (fixture.equipoGanadorId != null || (fixture.estado === "finalizado" && fixture.golesLocal !== fixture.golesVisitante)) {
             const localGana = fixture.equipoGanadorId != null
                 ? fixture.equipoGanadorId === fixture.equipoLocal.equipoId

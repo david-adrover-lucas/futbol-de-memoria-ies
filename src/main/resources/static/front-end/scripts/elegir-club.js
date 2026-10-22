@@ -50,15 +50,46 @@ document.addEventListener("DOMContentLoaded", async () => {
         card.type = "button";
         card.className = "club-slot-card";
         card.dataset.id = equipo.equipoId;
-        card.setAttribute("aria-label", equipo.nombre);
-        card.innerHTML = `<span class="club-badge-img club-badge-fallback">${escapeHtml(equipo.nombre.slice(0, 2).toUpperCase())}</span>`;
+        card.setAttribute("aria-label", `Seleccionar ${equipo.nombre}, ${equipo.prestigio} estrellas`);
+        card.setAttribute("aria-pressed", "false");
+
+        const badge = document.createElement("span");
+        badge.className = "club-slot-badge";
+        const imagePath = equipo.rutaEscudo ? `../assets/${equipo.rutaEscudo}` : "";
+        if (imagePath) {
+            const image = document.createElement("img");
+            image.className = "club-badge-img";
+            image.src = imagePath;
+            image.alt = "";
+            badge.appendChild(image);
+        } else {
+            const fallback = document.createElement("span");
+            fallback.className = "club-badge-img club-badge-fallback";
+            fallback.textContent = equipo.nombre.slice(0, 2).toUpperCase();
+            badge.appendChild(fallback);
+        }
+
+        const name = document.createElement("span");
+        name.className = "club-slot-name";
+        name.textContent = equipo.nombre;
+
+        const prestige = document.createElement("span");
+        prestige.className = "club-slot-stars";
+        prestige.textContent = "★".repeat(equipo.prestigio) + "☆".repeat(5 - equipo.prestigio);
+        prestige.setAttribute("aria-label", `${equipo.prestigio} de 5 estrellas`);
+
+        card.append(badge, name, prestige);
         card.addEventListener("click", () => mostrarEquipo(equipo));
         return card;
     }
 
     function mostrarEquipo(equipo) {
         seleccionado = equipo;
-        grid.querySelectorAll(".club-slot-card").forEach((card) => card.classList.toggle("selected", Number(card.dataset.id) === equipo.equipoId));
+        grid.querySelectorAll(".club-slot-card").forEach((card) => {
+            const selected = Number(card.dataset.id) === equipo.equipoId;
+            card.classList.toggle("selected", selected);
+            card.setAttribute("aria-pressed", String(selected));
+        });
         selectedName.textContent = equipo.nombre.toUpperCase();
         selectedApodo.textContent = `Apodo: ${equipo.apodo}`;
         document.getElementById("det-estadio").textContent = `País: ${equipo.pais}`;
@@ -81,7 +112,4 @@ document.addEventListener("DOMContentLoaded", async () => {
         confirmButton.classList.remove("disabled");
     }
 
-    function escapeHtml(value) {
-        return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
-    }
 });

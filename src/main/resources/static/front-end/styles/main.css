@@ -8,3 +8,4 @@
 @import url("./base/typography.css") layer(base);
 @import url("./layout/layout.css") layer(layout);
 @import url("./components/components.css") layer(components);
+@import url("./pages/pages.css") layer(pages);

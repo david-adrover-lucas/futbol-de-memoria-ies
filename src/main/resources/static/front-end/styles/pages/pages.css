@@ -1,0 +1,813 @@
+/* Menú: botones de navegación legibles y paneles con espacio propio. */
+#menu-body .menu-nav {
+    left: max(var(--space-4), env(safe-area-inset-left));
+    width: min(19rem, calc(100% - var(--space-8)));
+    gap: var(--space-2);
+}
+
+#menu-body .menu-btn {
+    min-height: 3rem;
+    height: auto;
+    padding: var(--space-3) var(--space-4);
+    font-size: clamp(var(--font-size-xs), 0.9vw, var(--font-size-sm));
+    line-height: var(--line-height-tight);
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+#menu-body .menu-secondary-panel {
+    width: min(48rem, calc(100% - 24rem));
+    min-height: 18rem;
+    max-height: min(64vh, 42rem);
+    aspect-ratio: auto;
+    padding: var(--space-6);
+    border: var(--border-width) solid color-mix(in srgb, var(--color-accent-cyan) 42%, var(--color-border));
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, var(--color-surface-raised), var(--color-surface));
+    box-shadow: var(--shadow-card), var(--shadow-cyan-glow);
+    filter: none;
+}
+
+#menu-body .menu-panel-content {
+    position: relative;
+    inset: auto;
+    height: 100%;
+    min-height: inherit;
+}
+
+#menu-body .menu-panel-content h1 {
+    color: var(--color-accent-cyan);
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-tight);
+    overflow-wrap: anywhere;
+}
+
+#menu-body .menu-panel-body {
+    min-height: 0;
+    gap: var(--space-2);
+}
+
+#menu-body .menu-info-row {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    gap: var(--space-3);
+    min-height: var(--size-touch-target);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    overflow-wrap: anywhere;
+}
+
+#menu-body .menu-footer-actions {
+    right: max(var(--space-4), env(safe-area-inset-right));
+    bottom: max(var(--space-4), env(safe-area-inset-bottom));
+    width: min(14rem, calc(100% - var(--space-8)));
+    gap: var(--space-2);
+}
+
+#menu-body .menu-footer-btn {
+    min-height: var(--size-touch-target);
+    height: auto;
+    font-size: var(--font-size-xs);
+}
+
+/* Selección de club: escudo, nombre y prestigio comparten una tarjeta seleccionable. */
+#elegir-club-body .club-stage {
+    box-sizing: border-box;
+    width: min(76rem, calc(100% - var(--space-8)));
+    min-height: 0;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: var(--space-6);
+    margin: auto;
+}
+
+#elegir-club-body .club-picker-panel,
+#elegir-club-body .club-detail-panel {
+    min-width: 0;
+    padding: clamp(var(--space-4), 2.2vw, var(--space-8));
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+}
+
+#elegir-club-body .club-picker-panel {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+#elegir-club-body .club-screen-title {
+    margin-bottom: var(--space-4);
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-tight);
+    overflow-wrap: anywhere;
+}
+
+#elegir-club-body .grid-clubes-scroll {
+    grid-template-columns: repeat(auto-fill, minmax(clamp(4.5rem, 7vw, 6.5rem), 1fr));
+    align-content: start;
+    justify-items: stretch;
+    gap: var(--space-2);
+    max-height: min(58vh, 42rem);
+    padding: var(--space-1);
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+#elegir-club-body .club-slot-card {
+    display: grid;
+    grid-template-rows: minmax(2.75rem, 1fr) auto auto;
+    align-content: center;
+    justify-items: center;
+    gap: var(--space-1);
+    min-width: 0;
+    min-height: var(--size-touch-target);
+    aspect-ratio: 1 / 1.18;
+    padding: var(--space-2);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: linear-gradient(155deg, var(--color-surface-raised), var(--color-surface));
+    box-shadow: var(--shadow-control);
+    filter: none;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: border-color var(--duration-fast), box-shadow var(--duration-fast), transform var(--duration-fast);
+}
+
+#elegir-club-body .club-slot-card::after {
+    content: none;
+}
+
+#elegir-club-body .club-slot-card .club-slot-badge {
+    display: grid;
+    place-items: center;
+    width: min(100%, 3.5rem);
+    min-width: 0;
+    aspect-ratio: 1;
+}
+
+#elegir-club-body .club-slot-card .club-badge-img {
+    position: static;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0.25rem 0.25rem var(--color-shadow));
+}
+
+#elegir-club-body .club-slot-card .club-badge-fallback {
+    display: grid;
+    place-items: center;
+    border: var(--border-width) solid var(--color-accent-cyan);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-accent-cyan);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+}
+
+#elegir-club-body .club-slot-name {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#elegir-club-body .club-slot-stars {
+    color: var(--color-accent-gold);
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+#elegir-club-body .club-slot-card.selected {
+    border-color: var(--color-accent-gold);
+    background: linear-gradient(155deg, var(--color-button-gold), var(--color-surface));
+    box-shadow: var(--shadow-gold-glow);
+    filter: none;
+    transform: translateY(-1px);
+}
+
+#elegir-club-body .club-slot-card:focus-visible {
+    outline: var(--focus-outline-width) solid var(--color-focus);
+    outline-offset: var(--focus-outline-offset);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    #elegir-club-body .club-slot-card:not(.selected):hover {
+        border-color: var(--color-accent-cyan);
+        box-shadow: var(--shadow-cyan-glow);
+        transform: translateY(-1px);
+    }
+}
+
+#elegir-club-body .club-detail-panel {
+    gap: var(--space-4);
+    overflow: visible;
+}
+
+#elegir-club-body .club-detail-top {
+    grid-template-columns: clamp(6rem, 12vw, 9rem) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-4);
+}
+
+#elegir-club-body .escudo-detalle-frame {
+    min-width: 0;
+    padding: var(--space-3);
+    border-color: color-mix(in srgb, var(--color-accent-cyan) 42%, var(--color-border));
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, var(--color-surface-raised), var(--color-surface));
+    box-shadow: var(--shadow-card), var(--shadow-cyan-glow);
+}
+
+#elegir-club-body .info-rapida-club h2 {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-tight);
+    overflow-wrap: anywhere;
+}
+
+#elegir-club-body .info-rapida-club p,
+#elegir-club-body .descripcion-club-texto {
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+    overflow-wrap: anywhere;
+}
+
+#elegir-club-body .descripcion-club-texto {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+#elegir-club-body .footer-detalle-club {
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+    gap: var(--space-3);
+    align-items: stretch;
+}
+
+#elegir-club-body #btn-confirmar-club {
+    width: auto;
+    min-width: min(11rem, 100%);
+    min-height: var(--size-touch-target);
+    height: auto;
+    padding-inline: var(--space-4);
+}
+
+/* Temporada: tabla con desplazamiento horizontal controlado para todas las columnas. */
+#temporada-body .season-screen {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    height: auto;
+    min-height: 100vh;
+    padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
+}
+
+#temporada-body .screen-title-plate {
+    width: min(100%, 52rem);
+    margin: var(--space-3) auto 0;
+    padding-inline: var(--space-3);
+    font-size: var(--font-size-h2);
+    overflow-wrap: anywhere;
+}
+
+#temporada-body .season-calendar-info {
+    width: min(calc(100% - var(--space-8)), 56rem);
+    max-width: none;
+    margin: 0 auto;
+    padding: var(--space-3) var(--space-4);
+    border-color: color-mix(in srgb, var(--color-accent-cyan) 52%, var(--color-border));
+    border-radius: var(--radius-md);
+    background: linear-gradient(145deg, var(--color-surface-raised), var(--color-surface));
+    box-shadow: var(--shadow-control);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-normal);
+    overflow-wrap: anywhere;
+}
+
+#temporada-body .season-table-wrap {
+    width: min(calc(100% - var(--space-8)), 72rem);
+    max-height: none;
+    padding: var(--space-3);
+    filter: none;
+}
+
+#temporada-body .season-legend {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin: 0 0 var(--space-3);
+    font-size: var(--font-size-xs);
+}
+
+#temporada-body .season-table-scroll {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: min(52vh, 34rem);
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+#temporada-body .season-table {
+    width: max(100%, 58rem);
+    color: var(--color-text-primary);
+    text-shadow: none;
+}
+
+#temporada-body .season-table th,
+#temporada-body .season-table td {
+    min-height: var(--size-touch-target);
+    height: auto;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-tight);
+}
+
+#temporada-body .season-table th:first-child,
+#temporada-body .season-table td:first-child {
+    width: 3.5rem;
+}
+
+#temporada-body .season-table th:nth-child(2),
+#temporada-body .season-table td:nth-child(2) {
+    width: 15rem;
+}
+
+#temporada-body .season-table td:nth-child(2) {
+    overflow-wrap: anywhere;
+}
+
+#temporada-body .season-table img {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: var(--space-2);
+}
+
+#temporada-body .season-table tr.my-club td {
+    background: color-mix(in srgb, var(--color-accent-gold) 16%, var(--color-surface));
+    box-shadow: inset 0 2px var(--color-accent-gold), inset 0 -2px var(--color-accent-gold);
+}
+
+#temporada-body .season-footer {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    width: min(calc(100% - var(--space-8)), 46rem);
+    margin: 0 auto;
+    padding: var(--space-2) 0 var(--space-4);
+}
+
+#temporada-body .season-footer .menu-footer-btn {
+    width: auto;
+    min-width: min(12rem, 100%);
+    flex: 0 1 auto;
+    padding-inline: var(--space-4);
+    font-size: var(--font-size-xs);
+}
+
+/* Torneos: selector con jerarquía y llave legible en escritorio. */
+#torneos-body .tournament-screen {
+    gap: var(--space-3);
+    min-height: 100vh;
+    overflow: visible;
+}
+
+#torneos-body .tour-page-title {
+    width: min(calc(100% - var(--space-8)), 42rem);
+    margin: var(--space-2) auto 0;
+    padding: 0;
+    font-size: var(--font-size-h1);
+    line-height: var(--line-height-tight);
+    overflow-wrap: anywhere;
+}
+
+#torneos-body .tour-select {
+    width: min(calc(100% - var(--space-8)), 36rem);
+    margin: auto;
+    gap: var(--space-3);
+}
+
+#torneos-body .tour-big-btn {
+    min-height: 5rem;
+    height: auto;
+    padding: var(--space-4);
+    border: var(--border-width) solid color-mix(in srgb, var(--color-accent-cyan) 50%, var(--color-border));
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, var(--color-surface-raised), var(--color-surface));
+    box-shadow: var(--shadow-card);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-tight);
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+#torneos-body .tour-select-status {
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-normal);
+    letter-spacing: normal;
+    overflow-wrap: anywhere;
+}
+
+#torneos-body .tour-bracket {
+    box-sizing: border-box;
+    width: min(calc(100% - var(--space-8)), 90rem);
+    max-height: none;
+    min-width: 0;
+    margin: 0 auto;
+    align-items: stretch;
+}
+
+#torneos-body .tour-bracket-canvas {
+    min-width: 0;
+    max-height: none;
+    padding: var(--space-4);
+    border: var(--border-width) solid color-mix(in srgb, var(--color-accent-cyan) 52%, var(--color-border));
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, var(--color-surface-raised), var(--color-surface));
+    box-shadow: var(--shadow-card);
+    filter: none;
+}
+
+#torneos-body .tour-bracket-heading {
+    grid-template-columns: minmax(3.5rem, 5rem) minmax(0, 1fr) minmax(3.5rem, 5rem);
+    gap: var(--space-3);
+    padding: 0 var(--space-2) var(--space-3);
+}
+
+#torneos-body .tour-bracket-title {
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-tight);
+    overflow-wrap: anywhere;
+}
+
+#torneos-body .tour-bracket-round,
+#torneos-body .tour-bracket-champion {
+    color: var(--color-accent-gold);
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-normal);
+    overflow-wrap: anywhere;
+}
+
+#torneos-body .tour-bracket-teams {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    gap: var(--space-3);
+    width: 100%;
+    height: min(56vh, 36rem);
+    min-height: 22rem;
+    padding: var(--space-1);
+}
+
+#torneos-body .tour-round {
+    grid-template-rows: auto repeat(8, minmax(0, 1fr));
+    gap: var(--space-2);
+}
+
+#torneos-body .tour-round h3 {
+    align-self: start;
+    padding: var(--space-2);
+    border-color: var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-accent-cyan);
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-tight);
+}
+
+#torneos-body .tour-match {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--space-1);
+    min-width: 0;
+    min-height: 3rem;
+    padding: var(--space-2);
+    border-radius: var(--radius-sm);
+    background: linear-gradient(145deg, var(--color-answer), var(--color-answer-deep));
+    box-shadow: var(--shadow-control);
+}
+
+#torneos-body .tour-match > strong {
+    min-width: 0;
+    overflow: hidden;
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-tight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#torneos-body .tour-vs {
+    color: var(--color-accent-gold);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+}
+
+#torneos-body .tour-match .is-winner {
+    color: var(--color-success);
+}
+
+#torneos-body .tour-match .is-eliminated {
+    color: var(--color-text-secondary);
+}
+
+/* Partido: superficies más limpias y opciones compatibles con texto de varias líneas. */
+#partido-body .match-scoreboard {
+    border: var(--border-width-strong) solid color-mix(in srgb, var(--color-accent-cyan) 72%, var(--color-border));
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, var(--color-surface-raised), var(--color-surface));
+    box-shadow: var(--shadow-card), var(--shadow-cyan-glow);
+    text-shadow: none;
+}
+
+#partido-body .score-mainline {
+    grid-template-columns: minmax(0, 1fr) auto minmax(3rem, 4.5rem) auto minmax(0, 1fr);
+}
+
+#partido-body .match-question {
+    min-width: 0;
+    height: auto;
+    border: var(--border-width) solid color-mix(in srgb, var(--color-accent-cyan) 48%, var(--color-border));
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, var(--color-surface-raised), var(--color-background));
+    box-shadow: var(--shadow-card), var(--shadow-cyan-glow);
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-normal);
+    overflow-wrap: anywhere;
+    text-shadow: none;
+    filter: none;
+}
+
+#partido-body .match-question.is-penalty-question {
+    border-color: var(--color-accent-gold);
+    background: linear-gradient(145deg, var(--color-button-gold), var(--color-surface));
+    color: var(--color-text-primary);
+    text-shadow: none;
+    animation: none;
+}
+
+#partido-body .match-timer {
+    width: min(100%, 24rem);
+    min-height: var(--size-touch-target);
+    height: auto;
+    margin: 0 auto var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: var(--border-width) solid color-mix(in srgb, var(--color-accent-cyan) 54%, var(--color-border));
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-accent-cyan);
+    font-size: var(--font-size-lg);
+    text-shadow: none;
+}
+
+#partido-body .wildcards-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+#partido-body .wildcard-btn {
+    box-sizing: border-box;
+    display: grid;
+    place-items: center;
+    min-width: var(--size-touch-target);
+    min-height: var(--size-touch-target);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: linear-gradient(145deg, var(--color-surface-raised), var(--color-surface));
+    box-shadow: var(--shadow-control);
+}
+
+#partido-body .wildcard-btn img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+@media (max-width: 980px) {
+    #elegir-club-body .club-stage {
+        grid-template-columns: minmax(0, 1fr);
+        width: min(48rem, calc(100% - var(--space-8)));
+        margin-block: var(--space-4);
+    }
+
+    #elegir-club-body .grid-clubes-scroll {
+        max-height: 38vh;
+    }
+
+    #menu-body .menu-secondary-panel {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        width: min(42rem, 100%);
+        margin: var(--space-4) auto 0;
+        transform: none;
+    }
+
+    #temporada-body .season-table-scroll {
+        max-height: 46vh;
+    }
+}
+
+@media (max-width: 760px) {
+    #partido-body .match-screen {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+        padding: var(--space-4);
+    }
+
+    #partido-body .match-scoreboard,
+    #partido-body .question-stage,
+    #partido-body .wildcards-row {
+        position: relative;
+        inset: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        transform: none;
+    }
+
+    #partido-body .match-scoreboard {
+        width: min(100%, 38rem);
+        margin-inline: auto;
+    }
+
+    #partido-body .question-stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        margin: auto 0;
+    }
+
+    #partido-body .answers-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #partido-body .wildcards-row {
+        margin-top: auto;
+        padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+
+    #torneos-body .tour-bracket {
+        width: calc(100% - var(--space-6));
+    }
+
+    #torneos-body .tour-bracket-canvas {
+        padding: var(--space-3);
+    }
+
+    #torneos-body .tour-bracket-teams {
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(16rem, 78vw);
+        align-items: stretch;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-x: contain;
+    }
+
+    #torneos-body .tour-round {
+        grid-template-rows: auto repeat(8, minmax(2.5rem, 1fr));
+        min-height: 24rem;
+        scroll-snap-align: start;
+    }
+
+    #torneos-body .tour-match {
+        min-height: 2.75rem;
+    }
+
+    #torneos-body .tour-match > strong {
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow-wrap: anywhere;
+    }
+
+    #temporada-body .season-table-scroll {
+        max-height: 52svh;
+    }
+
+    #temporada-body .season-footer {
+        justify-content: stretch;
+    }
+
+    #temporada-body .season-footer .menu-footer-btn {
+        flex: 1 1 12rem;
+    }
+}
+
+@media (max-width: 600px) {
+    #menu-body .menu-nav {
+        left: auto;
+        width: min(100%, 24rem);
+        margin-inline: auto;
+    }
+
+    #menu-body .menu-secondary-panel {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        max-height: 65vh;
+        min-height: 16rem;
+        margin: var(--space-4) auto 0;
+        padding: var(--space-4);
+        transform: none;
+    }
+
+    #menu-body .menu-footer-actions {
+        position: static;
+        width: min(100%, 24rem);
+        margin: var(--space-4) auto 0;
+    }
+
+    #elegir-club-body .club-stage {
+        width: 100%;
+        gap: var(--space-3);
+        margin: var(--space-3) auto;
+    }
+
+    #elegir-club-body .grid-clubes-scroll {
+        grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+        max-height: 36vh;
+    }
+
+    #elegir-club-body .club-detail-top {
+        grid-template-columns: minmax(4.5rem, 6rem) minmax(0, 1fr);
+        gap: var(--space-3);
+    }
+
+    #elegir-club-body .footer-detalle-club {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #elegir-club-body #btn-confirmar-club {
+        width: 100%;
+    }
+
+    #temporada-body .season-table-scroll {
+        max-height: 48svh;
+    }
+
+    #temporada-body .season-table {
+        width: 58rem;
+    }
+
+    #torneos-body .tour-select {
+        width: 100%;
+        margin-block: var(--space-3);
+    }
+
+    #partido-body .match-screen {
+        gap: var(--space-3);
+        padding: var(--space-3);
+    }
+
+    #partido-body .score-mainline {
+        gap: var(--space-1);
+        padding-inline: var(--space-2);
+    }
+
+    #partido-body .match-question {
+        min-height: auto;
+        padding: var(--space-4);
+        font-size: var(--font-size-lg);
+    }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+    #partido-body .match-screen {
+        min-height: 100svh;
+        padding-block: var(--space-2);
+    }
+
+    #partido-body .match-scoreboard {
+        min-height: 6rem;
+    }
+
+    #partido-body .wildcards-row {
+        gap: var(--space-2);
+    }
+
+    #elegir-club-body .club-stage {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        align-items: start;
+    }
+}
