@@ -1,0 +1,2051 @@
+/* Menú: botones de navegación legibles y paneles con espacio propio. */
+#menu-cuerpo .menu-navegacion {
+    left: max(var(--espacio-4), env(safe-area-inset-left));
+    width: min(19rem, calc(100% - var(--espacio-8)));
+    gap: var(--espacio-2);
+}
+
+#menu-cuerpo .menu-boton {
+    min-height: var(--tamano-boton-medio);
+    height: auto;
+    padding: var(--espacio-3) var(--espacio-4);
+    font-size: clamp(var(--tamano-texto-xs), 0.9vw, var(--tamano-texto-pequeno));
+    line-height: var(--alto-linea-ajustado);
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+#menu-cuerpo .menu-secundario-panel {
+    width: min(48rem, calc(100% - 24rem));
+    min-height: 10rem;
+    max-height: min(64vh, 25rem);
+    aspect-ratio: auto;
+    padding: var(--espacio-6);
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 42%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-elevada), var(--color-superficie));
+    box-shadow: var(--sombra-tarjeta), var(--sombra-cian-brillo);
+    filter: none;
+}
+
+#menu-cuerpo .menu-panel-contenido {
+    position: relative;
+    inset: auto;
+    height: 100%;
+    min-height: inherit;
+}
+
+#menu-cuerpo .menu-panel-contenido h1 {
+    color: var(--color-acento-cian);
+    font-size: var(--tamano-texto-h2);
+    line-height: var(--alto-linea-ajustado);
+    overflow-wrap: anywhere;
+}
+
+#menu-cuerpo .menu-panel-cuerpo {
+    min-height: 0;
+    gap: var(--espacio-2);
+}
+
+#menu-cuerpo .menu-informacion-fila {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    gap: var(--espacio-3);
+    min-height: var(--tamano-fila-compacto);
+    padding: var(--espacio-2) var(--espacio-3);
+    border-radius: var(--radio-pequeno);
+    overflow-wrap: anywhere;
+}
+
+#menu-cuerpo .menu-pie-acciones {
+    right: max(var(--espacio-4), env(safe-area-inset-right));
+    bottom: max(var(--espacio-4), env(safe-area-inset-bottom));
+    width: min(14rem, calc(100% - var(--espacio-8)));
+    gap: var(--espacio-2);
+}
+
+#menu-cuerpo .menu-pie-boton {
+    min-height: var(--tamano-boton-medio);
+    height: auto;
+    font-size: var(--tamano-texto-xs);
+}
+
+/* Selección de club: escudo, nombre y prestigio comparten una tarjeta seleccionable. */
+#elegir-club-cuerpo .zona-clubes {
+    box-sizing: border-box;
+    width: min(76rem, calc(100% - var(--espacio-8)));
+    min-height: 0;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: var(--espacio-6);
+    margin: auto;
+}
+
+#elegir-club-cuerpo .panel-selector-clubes,
+#elegir-club-cuerpo .panel-detalle-club {
+    min-width: 0;
+    padding: clamp(var(--espacio-4), 2.2vw, var(--espacio-8));
+    border-radius: var(--radio-grande);
+    backdrop-filter: blur(10px);
+}
+
+#elegir-club-cuerpo .panel-selector-clubes {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+#elegir-club-cuerpo .club-pantalla-titulo {
+    margin-bottom: var(--espacio-4);
+    font-size: var(--tamano-texto-h2);
+    line-height: var(--alto-linea-ajustado);
+    overflow-wrap: anywhere;
+}
+
+#elegir-club-cuerpo .grilla-clubes-desplazamiento {
+    grid-template-columns: repeat(auto-fill, minmax(clamp(4.5rem, 7vw, 6.5rem), 1fr));
+    align-content: start;
+    justify-items: stretch;
+    gap: var(--espacio-2);
+    max-height: min(58vh, 42rem);
+    padding: var(--espacio-1);
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+#elegir-club-cuerpo .tarjeta-casillero-club {
+    display: grid;
+    grid-template-rows: minmax(2.75rem, 1fr) auto auto;
+    align-content: center;
+    justify-items: center;
+    gap: var(--espacio-1);
+    min-width: 0;
+    min-height: var(--tamano-area-tactil);
+    aspect-ratio: 1 / 1.18;
+    padding: var(--espacio-2);
+    border: var(--ancho-borde) solid var(--color-borde);
+    border-radius: var(--radio-medio);
+    background: linear-gradient(155deg, var(--color-superficie-elevada), var(--color-superficie));
+    box-shadow: var(--sombra-control);
+    filter: none;
+    color: var(--color-texto-principal);
+    cursor: pointer;
+    transition: border-color var(--duracion-rapida), box-shadow var(--duracion-rapida), transform var(--duracion-rapida);
+}
+
+#elegir-club-cuerpo .tarjeta-casillero-club::after {
+    content: none;
+}
+
+#elegir-club-cuerpo .tarjeta-casillero-club .insignia-casillero-club {
+    display: grid;
+    place-items: center;
+    width: min(100%, 3.5rem);
+    min-width: 0;
+    aspect-ratio: 1;
+}
+
+#elegir-club-cuerpo .tarjeta-casillero-club .imagen-insignia-club {
+    position: static;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0.25rem 0.25rem var(--color-sombra));
+}
+
+#elegir-club-cuerpo .tarjeta-casillero-club .insignia-club-alternativa {
+    display: grid;
+    place-items: center;
+    border: var(--ancho-borde) solid var(--color-acento-cian);
+    border-radius: var(--radio-pastilla);
+    background: var(--color-superficie);
+    color: var(--color-acento-cian);
+    font-size: var(--tamano-texto-medio);
+    font-weight: var(--peso-fuente-negrita);
+}
+
+#elegir-club-cuerpo .nombre-casillero-club {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: var(--tamano-texto-xs);
+    font-weight: var(--peso-fuente-seminegrita);
+    line-height: var(--alto-linea-ajustado);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#elegir-club-cuerpo .estrellas-casillero-club {
+    color: var(--color-acento-dorado);
+    font-size: var(--tamano-texto-xs);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+#elegir-club-cuerpo .tarjeta-casillero-club.seleccionado {
+    border-color: var(--color-acento-dorado);
+    background: linear-gradient(155deg, var(--color-boton-dorado), var(--color-superficie));
+    box-shadow: var(--sombra-dorado-brillo);
+    filter: none;
+    transform: translateY(-1px);
+}
+
+#elegir-club-cuerpo .tarjeta-casillero-club:focus-visible {
+    outline: var(--ancho-contorno-enfoque) solid var(--color-enfoque);
+    outline-offset: var(--desplazamiento-contorno-enfoque);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    #elegir-club-cuerpo .tarjeta-casillero-club:not(.seleccionado):hover {
+        border-color: var(--color-acento-cian);
+        box-shadow: var(--sombra-cian-brillo);
+        transform: translateY(-1px);
+    }
+}
+
+#elegir-club-cuerpo .panel-detalle-club {
+    gap: var(--espacio-4);
+    overflow: visible;
+}
+
+#elegir-club-cuerpo .cabecera-detalle-club {
+    grid-template-columns: clamp(6rem, 12vw, 9rem) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--espacio-4);
+}
+
+#elegir-club-cuerpo .escudo-detalle-marco {
+    min-width: 0;
+    padding: var(--espacio-3);
+    border-color: color-mix(in srgb, var(--color-acento-cian) 42%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-elevada), var(--color-superficie));
+    box-shadow: var(--sombra-tarjeta), var(--sombra-cian-brillo);
+}
+
+#elegir-club-cuerpo .informacion-rapida-club h2 {
+    color: var(--color-texto-principal);
+    font-size: var(--tamano-texto-h2);
+    line-height: var(--alto-linea-ajustado);
+    overflow-wrap: anywhere;
+}
+
+#elegir-club-cuerpo .informacion-rapida-club p,
+#elegir-club-cuerpo .texto-descripcion-club {
+    color: var(--color-texto-secundario);
+    font-family: var(--fuente-cuerpo);
+    font-size: var(--tamano-texto-pequeno);
+    line-height: var(--alto-linea-normal);
+    overflow-wrap: anywhere;
+}
+
+#elegir-club-cuerpo .texto-descripcion-club {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+#elegir-club-cuerpo .pie-detalle-club {
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+    gap: var(--espacio-3);
+    align-items: stretch;
+}
+
+#elegir-club-cuerpo #boton-confirmar-club {
+    width: auto;
+    min-width: min(9rem, 100%);
+    min-height: var(--tamano-boton-medio);
+    height: auto;
+    padding-inline: var(--espacio-4);
+}
+
+/* Temporada: tabla con desplazamiento horizontal controlado para todas las columnas. */
+#temporada-cuerpo .pantalla-temporada {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-3);
+    height: auto;
+    min-height: 100vh;
+    padding-bottom: max(var(--espacio-3), env(safe-area-inset-bottom));
+}
+
+#temporada-cuerpo .placa-titulo-pantalla {
+    width: min(100%, 52rem);
+    margin: var(--espacio-3) auto 0;
+    padding-inline: var(--espacio-3);
+    font-size: var(--tamano-texto-h2);
+    overflow-wrap: anywhere;
+}
+
+#temporada-cuerpo .temporada-calendario-informacion {
+    width: min(calc(100% - var(--espacio-8)), 56rem);
+    max-width: none;
+    margin: 0 auto;
+    padding: var(--espacio-3) var(--espacio-4);
+    border-color: color-mix(in srgb, var(--color-acento-cian) 52%, var(--color-borde));
+    border-radius: var(--radio-medio);
+    background: linear-gradient(145deg, var(--color-superficie-elevada), var(--color-superficie));
+    box-shadow: var(--sombra-control);
+    color: var(--color-texto-principal);
+    line-height: var(--alto-linea-normal);
+    overflow-wrap: anywhere;
+}
+
+#temporada-cuerpo .contenedor-tabla-temporada {
+    width: min(calc(100% - var(--espacio-8)), 72rem);
+    max-height: none;
+    padding: var(--espacio-3);
+    filter: none;
+}
+
+#temporada-cuerpo .leyenda-temporada {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--espacio-2) var(--espacio-4);
+    margin: 0 0 var(--espacio-3);
+    font-size: var(--tamano-texto-xs);
+}
+
+#temporada-cuerpo .desplazamiento-tabla-temporada {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: min(52vh, 34rem);
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+#temporada-cuerpo .tabla-temporada {
+    width: max(100%, 58rem);
+    color: var(--color-texto-principal);
+    text-shadow: none;
+}
+
+#temporada-cuerpo .tabla-temporada th,
+#temporada-cuerpo .tabla-temporada td {
+    min-height: var(--tamano-area-tactil);
+    height: auto;
+    padding: var(--espacio-2) var(--espacio-3);
+    font-size: var(--tamano-texto-xs);
+    line-height: var(--alto-linea-ajustado);
+}
+
+#temporada-cuerpo .tabla-temporada th:first-child,
+#temporada-cuerpo .tabla-temporada td:first-child {
+    width: 3.5rem;
+}
+
+#temporada-cuerpo .tabla-temporada th:nth-child(2),
+#temporada-cuerpo .tabla-temporada td:nth-child(2) {
+    width: 15rem;
+}
+
+#temporada-cuerpo .tabla-temporada td:nth-child(2) {
+    overflow-wrap: anywhere;
+}
+
+#temporada-cuerpo .tabla-temporada img {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: var(--espacio-2);
+}
+
+#temporada-cuerpo .tabla-temporada tr.mi-club td {
+    background: color-mix(in srgb, var(--color-acento-dorado) 16%, var(--color-superficie));
+    box-shadow: inset 0 2px var(--color-acento-dorado), inset 0 -2px var(--color-acento-dorado);
+}
+
+#temporada-cuerpo .temporada-pie {
+    flex-wrap: wrap;
+    gap: var(--espacio-3);
+    width: min(calc(100% - var(--espacio-8)), 46rem);
+    margin: 0 auto;
+    padding: var(--espacio-2) 0 var(--espacio-4);
+}
+
+#temporada-cuerpo .temporada-pie .menu-pie-boton {
+    width: auto;
+    min-width: min(12rem, 100%);
+    flex: 0 1 auto;
+    padding-inline: var(--espacio-4);
+    font-size: var(--tamano-texto-xs);
+}
+
+/* Torneos: selector con jerarquía y llave legible en escritorio. */
+#torneos-cuerpo .torneo-pantalla {
+    gap: var(--espacio-3);
+    min-height: 100vh;
+    overflow: visible;
+}
+
+#torneos-cuerpo .titulo-pagina-torneo {
+    width: min(calc(100% - var(--espacio-8)), 42rem);
+    margin: var(--espacio-2) auto 0;
+    padding: 0;
+    font-size: var(--tamano-texto-h1);
+    line-height: var(--alto-linea-ajustado);
+    overflow-wrap: anywhere;
+}
+
+#torneos-cuerpo .selector-torneo {
+    width: min(calc(100% - var(--espacio-8)), 36rem);
+    margin: auto;
+    gap: var(--espacio-3);
+}
+
+#torneos-cuerpo .torneo-big-boton {
+    min-height: var(--tamano-boton-grande);
+    height: auto;
+    padding: var(--espacio-4);
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 50%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-elevada), var(--color-superficie));
+    box-shadow: var(--sombra-tarjeta);
+    color: var(--color-texto-principal);
+    font-size: var(--tamano-texto-grande);
+    line-height: var(--alto-linea-ajustado);
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+#torneos-cuerpo .estado-selector-torneo {
+    color: var(--color-texto-secundario);
+    font-family: var(--fuente-cuerpo);
+    font-size: var(--tamano-texto-xs);
+    line-height: var(--alto-linea-normal);
+    letter-spacing: normal;
+    overflow-wrap: anywhere;
+}
+
+#torneos-cuerpo .llave-torneo {
+    box-sizing: border-box;
+    width: min(calc(100% - var(--espacio-8)), 90rem);
+    max-height: none;
+    min-width: 0;
+    margin: 0 auto;
+    align-items: stretch;
+}
+
+#torneos-cuerpo .lienzo-llave-torneo {
+    min-width: 0;
+    max-height: none;
+    padding: var(--espacio-4);
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 52%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-elevada), var(--color-superficie));
+    box-shadow: var(--sombra-tarjeta);
+    filter: none;
+}
+
+#torneos-cuerpo .encabezado-llave-torneo {
+    grid-template-columns: minmax(3.5rem, 5rem) minmax(0, 1fr) minmax(3.5rem, 5rem);
+    gap: var(--espacio-3);
+    padding: 0 var(--espacio-2) var(--espacio-3);
+}
+
+#torneos-cuerpo .torneo-llave-titulo {
+    font-size: var(--tamano-texto-h2);
+    line-height: var(--alto-linea-ajustado);
+    overflow-wrap: anywhere;
+}
+
+#torneos-cuerpo .ronda-llave-torneo,
+#torneos-cuerpo .campeon-llave-torneo {
+    color: var(--color-acento-dorado);
+    font-family: var(--fuente-cuerpo);
+    font-size: var(--tamano-texto-xs);
+    line-height: var(--alto-linea-normal);
+    overflow-wrap: anywhere;
+}
+
+#torneos-cuerpo .equipos-llave-torneo {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    gap: var(--espacio-3);
+    width: 100%;
+    height: min(56vh, 36rem);
+    min-height: 22rem;
+    padding: var(--espacio-1);
+}
+
+#torneos-cuerpo .ronda-torneo {
+    grid-template-rows: auto repeat(8, minmax(0, 1fr));
+    gap: var(--espacio-2);
+}
+
+#torneos-cuerpo .ronda-torneo h3 {
+    align-self: start;
+    padding: var(--espacio-2);
+    border-color: var(--color-borde);
+    border-radius: var(--radio-pequeno);
+    color: var(--color-acento-cian);
+    font-size: var(--tamano-texto-xs);
+    line-height: var(--alto-linea-ajustado);
+}
+
+#torneos-cuerpo .partido-torneo {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--espacio-1);
+    min-width: 0;
+    min-height: 3rem;
+    padding: var(--espacio-2);
+    border-radius: var(--radio-pequeno);
+    background: linear-gradient(145deg, var(--color-respuesta), var(--color-respuesta-profundo));
+    box-shadow: var(--sombra-control);
+}
+
+#torneos-cuerpo .partido-torneo > strong {
+    min-width: 0;
+    overflow: hidden;
+    font-size: var(--tamano-texto-xs);
+    line-height: var(--alto-linea-ajustado);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#torneos-cuerpo .contra-torneo {
+    color: var(--color-acento-dorado);
+    font-size: var(--tamano-texto-xs);
+    white-space: nowrap;
+}
+
+#torneos-cuerpo .partido-torneo .es-ganador {
+    color: var(--color-exito);
+}
+
+#torneos-cuerpo .partido-torneo .es-eliminado {
+    color: var(--color-texto-secundario);
+}
+
+/* Partido: superficies más limpias y opciones compatibles con texto de varias líneas. */
+#partido-cuerpo .partido-marcador {
+    border: var(--ancho-borde-fuerte) solid color-mix(in srgb, var(--color-acento-cian) 72%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-elevada), var(--color-superficie));
+    box-shadow: var(--sombra-tarjeta), var(--sombra-cian-brillo);
+    text-shadow: none;
+}
+
+#partido-cuerpo .marcador-linea-principal {
+    grid-template-columns: minmax(0, 1fr) auto minmax(3rem, 4.5rem) auto minmax(0, 1fr);
+}
+
+#partido-cuerpo .partido-pregunta {
+    min-width: 0;
+    height: auto;
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 48%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-elevada), var(--color-fondo));
+    box-shadow: var(--sombra-tarjeta), var(--sombra-cian-brillo);
+    color: var(--color-texto-principal);
+    font-family: var(--fuente-titulos);
+    font-size: var(--tamano-texto-h2);
+    line-height: var(--alto-linea-normal);
+    overflow-wrap: anywhere;
+    text-shadow: none;
+    filter: none;
+}
+
+#partido-cuerpo .partido-pregunta.es-penal-pregunta {
+    border-color: var(--color-acento-dorado);
+    background: linear-gradient(145deg, var(--color-boton-dorado), var(--color-superficie));
+    color: var(--color-texto-principal);
+    text-shadow: none;
+    animation: none;
+}
+
+#partido-cuerpo .partido-temporizador {
+    width: min(100%, 24rem);
+    min-height: var(--tamano-area-tactil);
+    height: auto;
+    margin: 0 auto var(--espacio-2);
+    padding: var(--espacio-2) var(--espacio-4);
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 54%, var(--color-borde));
+    border-radius: var(--radio-pastilla);
+    background: var(--color-superficie);
+    color: var(--color-acento-cian);
+    font-size: var(--tamano-texto-grande);
+    text-shadow: none;
+}
+
+#partido-cuerpo .comodines-fila {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--espacio-3);
+}
+
+#partido-cuerpo .comodin-boton {
+    box-sizing: border-box;
+    display: grid;
+    place-items: center;
+    min-width: var(--tamano-area-tactil);
+    min-height: var(--tamano-area-tactil);
+    border: var(--ancho-borde) solid var(--color-borde);
+    border-radius: var(--radio-medio);
+    background: linear-gradient(145deg, var(--color-superficie-elevada), var(--color-superficie));
+    box-shadow: var(--sombra-control);
+}
+
+#partido-cuerpo .comodin-boton img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+@media (max-width: 980px) {
+    #elegir-club-cuerpo .zona-clubes {
+        grid-template-columns: minmax(0, 1fr);
+        width: min(48rem, calc(100% - var(--espacio-8)));
+        margin-block: var(--espacio-4);
+    }
+
+    #elegir-club-cuerpo .grilla-clubes-desplazamiento {
+        max-height: 38vh;
+    }
+
+    #menu-cuerpo .menu-secundario-panel {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        width: min(42rem, 100%);
+        margin: var(--espacio-4) auto 0;
+        transform: none;
+    }
+
+    #temporada-cuerpo .desplazamiento-tabla-temporada {
+        max-height: 46vh;
+    }
+}
+
+@media (max-width: 760px) {
+    #partido-cuerpo .partido-pantalla {
+        display: flex;
+        flex-direction: column;
+        gap: var(--espacio-4);
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+        padding: var(--espacio-4);
+    }
+
+    #partido-cuerpo .partido-marcador,
+    #partido-cuerpo .pregunta-zona,
+    #partido-cuerpo .comodines-fila {
+        position: relative;
+        inset: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        transform: none;
+    }
+
+    #partido-cuerpo .partido-marcador {
+        width: min(100%, 38rem);
+        margin-inline: auto;
+    }
+
+    #partido-cuerpo .pregunta-zona {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        margin: auto 0;
+    }
+
+    #partido-cuerpo .respuestas-grilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #partido-cuerpo .comodines-fila {
+        margin-top: auto;
+        padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+
+    #torneos-cuerpo .llave-torneo {
+        width: calc(100% - var(--espacio-6));
+    }
+
+    #torneos-cuerpo .lienzo-llave-torneo {
+        padding: var(--espacio-3);
+    }
+
+    #torneos-cuerpo .equipos-llave-torneo {
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(16rem, 78vw);
+        align-items: stretch;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-x: contain;
+    }
+
+    #torneos-cuerpo .ronda-torneo {
+        grid-template-rows: auto repeat(8, minmax(2.5rem, 1fr));
+        min-height: 24rem;
+        scroll-snap-align: start;
+    }
+
+    #torneos-cuerpo .partido-torneo {
+        min-height: 2.75rem;
+    }
+
+    #torneos-cuerpo .partido-torneo > strong {
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow-wrap: anywhere;
+    }
+
+    #temporada-cuerpo .desplazamiento-tabla-temporada {
+        max-height: 52svh;
+    }
+
+    #temporada-cuerpo .temporada-pie {
+        justify-content: stretch;
+    }
+
+    #temporada-cuerpo .temporada-pie .menu-pie-boton {
+        flex: 1 1 12rem;
+    }
+}
+
+@media (max-width: 600px) {
+    #menu-cuerpo .menu-navegacion {
+        left: auto;
+        width: min(100%, 24rem);
+        margin-inline: auto;
+    }
+
+    #menu-cuerpo .menu-secundario-panel {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        max-height: 65vh;
+        min-height: 16rem;
+        margin: var(--espacio-4) auto 0;
+        padding: var(--espacio-4);
+        transform: none;
+    }
+
+    #menu-cuerpo .menu-pie-acciones {
+        position: static;
+        width: min(100%, 24rem);
+        margin: var(--espacio-4) auto 0;
+    }
+
+    #elegir-club-cuerpo .zona-clubes {
+        width: 100%;
+        gap: var(--espacio-3);
+        margin: var(--espacio-3) auto;
+    }
+
+    #elegir-club-cuerpo .grilla-clubes-desplazamiento {
+        grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+        max-height: 36vh;
+    }
+
+    #elegir-club-cuerpo .cabecera-detalle-club {
+        grid-template-columns: minmax(4.5rem, 6rem) minmax(0, 1fr);
+        gap: var(--espacio-3);
+    }
+
+    #elegir-club-cuerpo .pie-detalle-club {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #elegir-club-cuerpo #boton-confirmar-club {
+        width: 100%;
+    }
+
+    #temporada-cuerpo .desplazamiento-tabla-temporada {
+        max-height: 48svh;
+    }
+
+    #temporada-cuerpo .tabla-temporada {
+        width: 58rem;
+    }
+
+    #torneos-cuerpo .selector-torneo {
+        width: 100%;
+        margin-block: var(--espacio-3);
+    }
+
+    #partido-cuerpo .partido-pantalla {
+        gap: var(--espacio-3);
+        padding: var(--espacio-3);
+    }
+
+    #partido-cuerpo .marcador-linea-principal {
+        gap: var(--espacio-1);
+        padding-inline: var(--espacio-2);
+    }
+
+    #partido-cuerpo .partido-pregunta {
+        min-height: auto;
+        padding: var(--espacio-4);
+        font-size: var(--tamano-texto-grande);
+    }
+}
+
+/* Copas: panel más compacto y el desplazamiento queda dentro de las rondas. */
+@media (min-width: 761px) {
+    #torneos-cuerpo .llave-torneo {
+        box-sizing: border-box;
+        width: min(calc(100% - 2rem), 78rem);
+        min-height: 0;
+        max-height: none;
+        flex: 0 1 auto;
+        margin: 0 auto;
+    }
+
+    #torneos-cuerpo .lienzo-llave-torneo {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        width: 100%;
+        height: min(64svh, 38rem);
+        max-height: calc(100svh - 13rem);
+        padding: var(--espacio-3);
+        overflow: hidden;
+    }
+
+    #torneos-cuerpo .encabezado-llave-torneo {
+        flex: 0 0 auto;
+        min-height: 5rem;
+        margin-bottom: var(--espacio-2);
+        padding-inline: var(--espacio-2);
+    }
+
+    #torneos-cuerpo .torneo-llave-logo,
+    #torneos-cuerpo .torneo-llave-copa {
+        height: 4.5rem;
+    }
+
+    #torneos-cuerpo .equipos-llave-torneo {
+        box-sizing: border-box;
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        overflow: auto;
+        scrollbar-gutter: stable;
+    }
+}
+
+@media (max-width: 760px) {
+    #torneos-cuerpo .llave-torneo {
+        box-sizing: border-box;
+        width: calc(100% - 1.25rem);
+        min-height: 0;
+        max-height: none;
+        flex: 0 1 auto;
+        margin: 0 auto;
+    }
+
+    #torneos-cuerpo .lienzo-llave-torneo {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        width: 100%;
+        max-height: 68svh;
+        padding: var(--espacio-2);
+        overflow: hidden;
+    }
+
+    #torneos-cuerpo .encabezado-llave-torneo {
+        flex: 0 0 auto;
+        grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
+        gap: var(--espacio-2);
+        min-height: 3.75rem;
+        margin-bottom: var(--espacio-2);
+        padding: 0 var(--espacio-1) var(--espacio-2);
+    }
+
+    #torneos-cuerpo .torneo-llave-logo,
+    #torneos-cuerpo .torneo-llave-copa {
+        height: 3.25rem;
+    }
+
+    #torneos-cuerpo .equipos-llave-torneo {
+        box-sizing: border-box;
+        flex: 0 1 auto;
+        width: 100%;
+        max-height: 48svh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-gutter: stable;
+        overscroll-behavior-y: contain;
+    }
+
+    #torneos-cuerpo .ronda-torneo {
+        min-height: 20rem;
+    }
+}
+
+/* Temporada: limita la tarjeta y conserva el scroll vertical y horizontal de la tabla. */
+@media (min-width: 761px) {
+    #temporada-cuerpo .contenedor-tabla-temporada {
+        box-sizing: border-box;
+        width: min(calc(100% - 2rem), 64rem);
+        flex: 0 1 auto;
+        min-height: 0;
+        max-height: 54vh;
+        padding: var(--espacio-3);
+    }
+
+    #temporada-cuerpo .desplazamiento-tabla-temporada {
+        box-sizing: border-box;
+        height: min(43vh, 26rem);
+        min-height: 0;
+        max-height: 43vh;
+        overflow: auto;
+        scrollbar-gutter: stable;
+    }
+}
+
+@media (max-width: 760px) {
+    #temporada-cuerpo .contenedor-tabla-temporada {
+        box-sizing: border-box;
+        width: calc(100% - 1.25rem);
+        flex: 0 1 auto;
+        min-height: 0;
+        max-height: 52svh;
+        padding: var(--espacio-2);
+    }
+
+    #temporada-cuerpo .leyenda-temporada {
+        margin: 0 0 var(--espacio-2);
+        gap: var(--espacio-1) var(--espacio-2);
+        font-size: var(--tamano-texto-xs);
+    }
+
+    #temporada-cuerpo .desplazamiento-tabla-temporada {
+        box-sizing: border-box;
+        width: 100%;
+        height: min(40svh, 22rem);
+        min-height: 0;
+        max-height: 40svh;
+        overflow: auto;
+        scrollbar-gutter: stable;
+        overscroll-behavior: contain;
+    }
+
+    #temporada-cuerpo .tabla-temporada {
+        width: 58rem;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+    #partido-cuerpo .partido-pantalla {
+        min-height: 100svh;
+        padding-block: var(--espacio-2);
+    }
+
+    #partido-cuerpo .partido-marcador {
+        min-height: 6rem;
+    }
+
+    #partido-cuerpo .comodines-fila {
+        gap: var(--espacio-2);
+    }
+
+    #elegir-club-cuerpo .zona-clubes {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        align-items: start;
+    }
+}
+
+/* Fase 2: menu, creacion del DT y seleccion de club. */
+#menu-cuerpo .menu-pantalla {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: var(--espacio-2) var(--espacio-4) var(--espacio-8);
+    overflow: visible;
+}
+
+#menu-cuerpo .menu-navegacion {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: min(54rem, 100%);
+    margin: var(--espacio-6) auto 0;
+    padding-inline: max(0px, env(safe-area-inset-left));
+    gap: var(--espacio-2);
+}
+
+#menu-cuerpo .menu-boton {
+    min-height: var(--tamano-boton-medio);
+    padding: var(--espacio-2) var(--espacio-3);
+    font-size: var(--tamano-texto-pequeno);
+    line-height: var(--alto-linea-ajustado);
+    white-space: normal;
+}
+
+#menu-cuerpo .menu-secundario-panel {
+    position: relative;
+    inset: auto;
+    width: min(48rem, 100%);
+    min-height: 0;
+    max-height: min(50vh, 36rem);
+    margin: var(--espacio-4) auto 0;
+    aspect-ratio: auto;
+    background: linear-gradient(145deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+    transform: none;
+}
+
+#menu-cuerpo .menu-pie-acciones {
+    right: max(var(--espacio-3), env(safe-area-inset-right));
+    bottom: max(var(--espacio-3), env(safe-area-inset-bottom));
+    width: min(12rem, calc(100% - var(--espacio-6)));
+    gap: var(--espacio-2);
+}
+
+#menu-cuerpo .menu-pie-boton {
+    min-height: var(--tamano-boton-medio);
+    padding: var(--espacio-2) var(--espacio-3);
+    font-size: var(--tamano-texto-xs);
+}
+
+#crear-entrenador-cuerpo {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: var(--espacio-4);
+}
+
+#crear-entrenador-cuerpo .crear-entrenador-contenedor {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: var(--espacio-16);
+    width: min(100%, 64rem);
+    max-width: var(--ancho-maximo-diseno);
+    margin: auto;
+}
+
+#crear-entrenador-cuerpo .panel-formulario,
+#crear-entrenador-cuerpo .panel-avatares {
+    width: 150%;
+    min-width: 0;
+    padding: var(--espacio-6);
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 35%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+    box-shadow: var(--sombra-tarjeta), inset 0 1px var(--color-resalte);
+}
+
+#crear-entrenador-cuerpo .panel-formulario {
+    max-width: 28rem;
+    justify-self: center;
+}
+
+#crear-entrenador-cuerpo .panel-avatares {
+    max-width: 36rem;
+}
+
+#crear-entrenador-cuerpo .titulo-pantalla {
+    margin: 0 0 var(--espacio-4);
+    font-size: var(--tamano-texto-h2);
+    letter-spacing: 0.04em;
+}
+
+#crear-entrenador-cuerpo .campos-interiores {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-3);
+    width: 100%;
+    max-width: 22rem;
+    margin: 0 auto;
+}
+
+#crear-entrenador-cuerpo .acceso-campo-campo {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: var(--tamano-boton-grande);
+    padding: var(--espacio-3);
+    border: var(--ancho-borde) solid var(--color-borde);
+    border-radius: var(--radio-medio);
+    background: rgb(7 17 31 / 78%);
+    color: var(--color-texto-principal);
+    font-family: var(--fuente-cuerpo);
+    font-size: var(--tamano-texto-medio);
+    text-align: center;
+    text-align-last: center;
+}
+
+#crear-entrenador-cuerpo .acceso-campo-campo::placeholder {
+    color: var(--color-texto-secundario);
+    font-size: var(--tamano-texto-pequeno);
+}
+
+#crear-entrenador-cuerpo #boton-continuar-entrenador {
+    min-width: min(12rem, 100%);
+    margin: var(--espacio-4) auto 0;
+}
+
+#crear-entrenador-cuerpo .fila-botones {
+    justify-content: center;
+    gap: var(--espacio-3);
+    margin-top: var(--espacio-3);
+}
+
+#crear-entrenador-cuerpo .fila-botones .boton-compacto-juego {
+    flex: 0 1 auto;
+    width: auto;
+    min-width: var(--tamano-boton-pequeno);
+}
+
+#crear-entrenador-cuerpo .grilla-avatares {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--espacio-3);
+}
+
+#crear-entrenador-cuerpo .avatar-marco {
+    width: clamp(4rem, 5vw, 5rem);
+    height: clamp(4rem, 5vw, 5rem);
+    padding: var(--espacio-1);
+}
+
+#elegir-club-cuerpo {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: var(--espacio-4);
+}
+
+#elegir-club-cuerpo .zona-clubes {
+    width: min(70rem, 100%);
+    min-height: 0;
+    gap: var(--espacio-4);
+    margin: auto;
+}
+
+#elegir-club-cuerpo .panel-selector-clubes,
+#elegir-club-cuerpo .panel-detalle-club {
+    padding: var(--espacio-4);
+    background: linear-gradient(145deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+    backdrop-filter: blur(4px);
+}
+
+#elegir-club-cuerpo .grilla-clubes-desplazamiento {
+    grid-template-columns: repeat(auto-fill, minmax(clamp(3.75rem, 5vw, 5rem), 1fr));
+    gap: var(--espacio-2);
+}
+
+#elegir-club-cuerpo .tarjeta-casillero-club {
+    background: linear-gradient(155deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+}
+
+#elegir-club-cuerpo .tarjeta-casillero-club.seleccionado {
+    background: linear-gradient(155deg, color-mix(in srgb, var(--color-boton-dorado) 88%, transparent), var(--color-superficie-panel));
+}
+
+#elegir-club-cuerpo .tarjeta-casillero-club .insignia-casillero-club {
+    width: min(100%, 2.75rem);
+}
+
+#elegir-club-cuerpo .insignia-club-alternativa {
+    background: var(--color-superficie-panel);
+}
+
+#elegir-club-cuerpo .cabecera-detalle-club {
+    grid-template-columns: clamp(4rem, 8vw, 6rem) minmax(0, 1fr);
+}
+
+#elegir-club-cuerpo .escudo-detalle-marco {
+    background: linear-gradient(145deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+}
+
+@media (max-width: 980px) {
+    #crear-entrenador-cuerpo .crear-entrenador-contenedor {
+        grid-template-columns: minmax(0, 1fr);
+        width: min(100%, 38rem);
+        gap: var(--espacio-1);
+    }
+
+    #crear-entrenador-cuerpo .panel-formulario,
+    #crear-entrenador-cuerpo .panel-avatares {
+        max-width: none;
+    }
+}
+
+@media (max-width: 760px) {
+    #menu-cuerpo .menu-navegacion {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: min(38rem, 100%);
+    }
+}
+
+@media (min-width: 601px) and (max-width: 980px) {
+    #crear-entrenador-cuerpo .crear-entrenador-contenedor {
+        width: min(100%, 38rem);
+        gap: var(--espacio-6);
+    }
+
+    #crear-entrenador-cuerpo .panel-formulario,
+    #crear-entrenador-cuerpo .panel-avatares {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        justify-self: stretch;
+    }
+
+    #crear-entrenador-cuerpo .avatar-marco {
+        width: clamp(4.5rem, 10vw, 6rem);
+        height: clamp(4.5rem, 10vw, 6rem);
+    }
+}
+
+@media (max-width: 600px) {
+    #crear-entrenador-cuerpo .crear-entrenador-contenedor {
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        gap: var(--espacio-16);
+    }
+
+    #crear-entrenador-cuerpo .panel-formulario,
+    #crear-entrenador-cuerpo .panel-avatares {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        justify-self: stretch;
+    }
+    #menu-cuerpo .menu-navegacion {
+        width: min(100%, 24rem);
+        margin-top: var(--espacio-4);
+    }
+
+    #menu-cuerpo .menu-secundario-panel {
+        min-height: 0;
+        max-height: none;
+    }
+
+    #menu-cuerpo .menu-pie-acciones {
+        width: min(100%, 24rem);
+        margin: var(--espacio-4) auto 0;
+    }
+
+    #crear-entrenador-cuerpo {
+        align-content: start;
+        padding: var(--espacio-3);
+    }
+
+    #crear-entrenador-cuerpo .crear-entrenador-contenedor {
+        gap: var(--espacio-1);
+    }
+
+    #crear-entrenador-cuerpo .panel-formulario,
+    #crear-entrenador-cuerpo .panel-avatares {
+        padding: var(--espacio-4);
+    }
+
+    #crear-entrenador-cuerpo .grilla-avatares {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #crear-entrenador-cuerpo .avatar-marco {
+        width: clamp(4rem, 18vw, 5rem);
+        height: clamp(4rem, 18vw, 5rem);
+    }
+
+    #elegir-club-cuerpo {
+        align-content: start;
+        padding: var(--espacio-5);
+    }
+
+    #elegir-club-cuerpo .zona-clubes {
+        width: 5%;
+        margin: 0 auto;
+    }
+
+    #elegir-club-cuerpo .panel-selector-clubes,
+    #elegir-club-cuerpo .panel-detalle-club {
+        padding: var(--espacio-3);
+    }
+
+    #elegir-club-cuerpo .grilla-clubes-desplazamiento {
+        grid-template-columns: repeat(auto-fill, minmax(9.75rem, 1fr));
+    }
+}
+
+/* Fase 3: el calendario se acciona desde el menu y las llaves usan pestañas en celular. */
+#menu-cuerpo .menu-calendario-informacion {
+    box-sizing: border-box;
+    width: min(54rem, 100%);
+    margin: var(--espacio-4) auto 0;
+    padding: var(--espacio-2) var(--espacio-3);
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 36%, var(--color-borde));
+    border-radius: var(--radio-medio);
+    background: var(--color-superficie-panel);
+    color: var(--color-texto-secundario);
+    font-size: var(--tamano-texto-pequeno);
+    line-height: var(--alto-linea-normal);
+    text-align: center;
+}
+
+#menu-cuerpo #boton-jugar-menu:disabled {
+    cursor: wait;
+    opacity: 0.72;
+}
+
+#temporada-cuerpo .temporada-pie {
+    justify-content: center;
+}
+
+#temporada-cuerpo .temporada-pie .menu-pie-boton {
+    min-width: min(12rem, 100%);
+}
+
+#torneos-cuerpo .pestanas-rondas-torneo {
+    display: none;
+}
+
+@media (max-width: 760px) {
+    #torneos-cuerpo .pestanas-rondas-torneo {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: var(--espacio-2);
+        width: 100%;
+        margin: 0 0 var(--espacio-3);
+        overflow-x: auto;
+        padding: 0 0 var(--espacio-1);
+        scrollbar-width: thin;
+    }
+
+    #torneos-cuerpo .pestana-ronda-torneo {
+        flex: 1 0 auto;
+        min-height: var(--tamano-boton-pequeno);
+        padding: var(--espacio-2) var(--espacio-3);
+        border: var(--ancho-borde) solid var(--color-borde);
+        border-radius: var(--radio-pequeno);
+        background: var(--color-superficie-panel);
+        color: var(--color-texto-secundario);
+        font: inherit;
+        font-size: var(--tamano-texto-xs);
+        cursor: pointer;
+    }
+
+    #torneos-cuerpo .pestana-ronda-torneo[aria-selected="true"] {
+        border-color: var(--color-acento-cian);
+        background: var(--color-superficie-panel-elevada);
+        color: var(--color-texto-principal);
+        box-shadow: 0 0 0 1px var(--color-acento-cian), var(--sombra-cian-brillo);
+    }
+
+    #torneos-cuerpo .pestana-ronda-torneo:focus-visible {
+        outline: 3px solid var(--color-acento-dorado);
+        outline-offset: 2px;
+    }
+
+    #torneos-cuerpo .equipos-llave-torneo {
+        display: block;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        overflow: visible;
+    }
+
+    #torneos-cuerpo .ronda-torneo {
+        display: none;
+        width: 100%;
+        min-height: 0;
+        grid-template-rows: auto repeat(8, minmax(2.5rem, auto));
+        scroll-snap-align: none;
+    }
+
+    #torneos-cuerpo .ronda-torneo.es-activo {
+        display: grid;
+    }
+}
+
+/* Fase 4: partido y resultado en zonas compactas, sin posicionamiento absoluto de contenido. */
+#partido-cuerpo .partido-pantalla {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+        "marcador"
+        "pregunta"
+        "comodines";
+    align-items: stretch;
+    justify-items: center;
+    gap: clamp(var(--espacio-2), 1.5vh, var(--espacio-4));
+    width: min(100%, 74rem);
+    height: 100vh;
+    height: 100svh;
+    min-height: 0;
+    margin-inline: auto;
+    padding: clamp(var(--espacio-3), 2vh, var(--espacio-6)) clamp(var(--espacio-3), 2vw, var(--espacio-6));
+    overflow: hidden;
+}
+
+#partido-cuerpo .partido-capa-evento {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+}
+
+#partido-cuerpo .partido-marcador {
+    position: relative;
+    inset: auto;
+    grid-area: marcador;
+    width: min(100%, 48rem);
+    min-height: 0;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#partido-cuerpo .marcador-linea-principal {
+    grid-template-columns: minmax(0, 1fr) auto clamp(2.5rem, 5vw, 4rem) auto minmax(0, 1fr);
+    gap: clamp(var(--espacio-1), 1vw, var(--espacio-3));
+    padding: var(--espacio-2) var(--espacio-3);
+}
+
+#partido-cuerpo .partido-marcador span,
+#partido-cuerpo .partido-marcador strong {
+    font-size: clamp(1rem, 2vw, 1.75rem);
+}
+
+#partido-cuerpo .partido-marcador img {
+    width: clamp(2.25rem, 5vw, 3.5rem);
+    height: clamp(2.25rem, 7vh, 4rem);
+}
+
+#partido-cuerpo .partido-marcador em {
+    min-width: 0;
+    margin: 0 auto var(--espacio-2);
+    padding: var(--espacio-1) var(--espacio-3);
+    font-size: var(--tamano-texto-pequeno);
+}
+
+#partido-cuerpo .pregunta-zona {
+    position: relative;
+    inset: auto;
+    grid-area: pregunta;
+    display: grid;
+    grid-template-rows: auto minmax(4.5rem, auto) minmax(0, 1fr);
+    align-content: center;
+    align-items: stretch;
+    gap: clamp(var(--espacio-2), 1.5vh, var(--espacio-4));
+    width: min(100%, 62rem);
+    min-width: 0;
+    margin: auto;
+    transform: none;
+}
+
+#partido-cuerpo .partido-temporizador {
+    width: fit-content;
+    min-height: var(--tamano-boton-pequeno);
+    margin: 0 auto;
+    padding: var(--espacio-1) var(--espacio-4);
+    font-size: var(--tamano-texto-pequeno);
+}
+
+#partido-cuerpo .partido-pregunta {
+    display: grid;
+    place-items: center;
+    min-height: 4.5rem;
+    margin: 0;
+    padding: var(--espacio-3) var(--espacio-5);
+    font-size: clamp(var(--tamano-texto-medio), 1.5vw, var(--tamano-texto-h2));
+}
+
+#partido-cuerpo .respuestas-grilla {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: center;
+    gap: clamp(var(--espacio-2), 1.3vh, var(--espacio-3));
+    width: 100%;
+}
+
+#partido-cuerpo .respuesta-boton {
+    min-height: clamp(3rem, 8vh, 4.25rem);
+    padding: var(--espacio-2) var(--espacio-3);
+}
+
+#partido-cuerpo .respuesta-boton > strong {
+    font-size: clamp(var(--tamano-texto-xs), 1vw, var(--tamano-texto-medio));
+}
+
+#partido-cuerpo .comodines-fila {
+    position: relative;
+    inset: auto;
+    grid-area: comodines;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--espacio-2);
+    width: 100%;
+    margin: 0;
+    padding: 0 0 env(safe-area-inset-bottom);
+    transform: none;
+}
+
+#partido-cuerpo .comodin-boton {
+    width: clamp(2.75rem, 5vw, 3.5rem);
+    min-width: 0;
+    min-height: 0;
+    aspect-ratio: 1;
+    padding: var(--espacio-1);
+}
+
+#partido-cuerpo .comodin-boton img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#resultado-cuerpo .resultado-pantalla {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: auto auto auto auto auto auto auto;
+    justify-items: center;
+    align-content: center;
+    gap: clamp(var(--espacio-2), 1.4vh, var(--espacio-4));
+    width: min(100%, 56rem);
+    height: 100vh;
+    height: 100svh;
+    min-height: 0;
+    margin-inline: auto;
+    padding: clamp(var(--espacio-3), 2vh, var(--espacio-6)) var(--espacio-4);
+    overflow: auto;
+}
+
+#resultado-cuerpo .resultado-cartel-wrap,
+#resultado-cuerpo .resultado-estadisticas,
+#resultado-cuerpo .resultado-experiencia-tarjeta,
+#resultado-cuerpo .resultado-estrellas,
+#resultado-cuerpo .resultado-experiencia-barra,
+#resultado-cuerpo .resultado-enfrentamiento,
+#resultado-cuerpo .resultado-volver {
+    position: relative;
+    inset: auto;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+}
+
+#resultado-cuerpo .resultado-cartel-wrap {
+    width: min(19rem, 70vw);
+    margin: 0 auto;
+}
+
+#resultado-cuerpo .resultado-cartel {
+    display: block;
+    max-height: clamp(3.25rem, 10vh, 5.5rem);
+    object-fit: contain;
+}
+
+#resultado-cuerpo .resultado-cartel-wrap strong {
+    font-size: clamp(var(--tamano-texto-grande), 2vw, var(--tamano-texto-h2));
+}
+
+#resultado-cuerpo .resultado-estadisticas {
+    width: min(100%, 40rem);
+    gap: var(--espacio-2);
+    padding: var(--espacio-3);
+    background: linear-gradient(145deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+}
+
+#resultado-cuerpo .resultado-estadisticas > div {
+    grid-template-columns: minmax(2.5rem, 0.65fr) minmax(0, 1.7fr) minmax(2.5rem, 0.65fr);
+    gap: var(--espacio-2);
+    min-width: 0;
+}
+
+#resultado-cuerpo .resultado-estadisticas span,
+#resultado-cuerpo .resultado-estadisticas strong {
+    min-width: 0;
+    min-height: var(--tamano-fila-compacto);
+    height: auto;
+    padding: var(--espacio-1);
+    font-size: var(--tamano-texto-xs);
+    line-height: var(--alto-linea-ajustado);
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+#resultado-cuerpo .resultado-experiencia-tarjeta {
+    display: grid;
+    place-items: center;
+    width: min(8rem, 32vw);
+    height: 2.5rem;
+}
+
+#resultado-cuerpo .resultado-experiencia-imagen {
+    width: 100%;
+    height: 100%;
+}
+
+#resultado-cuerpo .resultado-experiencia-tarjeta strong {
+    font-size: var(--tamano-texto-pequeno);
+}
+
+#resultado-cuerpo .resultado-estrellas {
+    color: var(--color-acento-dorado);
+    font-size: var(--tamano-texto-grande);
+    line-height: 1;
+}
+
+#resultado-cuerpo .resultado-experiencia-barra {
+    width: min(100%, 18rem);
+    height: 0.875rem;
+    margin: 0;
+}
+
+#resultado-cuerpo .resultado-experiencia-barra strong {
+    font-size: var(--tamano-texto-xs);
+}
+
+#resultado-cuerpo .resultado-enfrentamiento {
+    display: grid;
+    grid-template-columns: 3rem auto 3rem;
+    grid-template-rows: auto auto;
+    align-items: center;
+    justify-items: center;
+    gap: var(--espacio-1) var(--espacio-3);
+    width: min(100%, 18rem);
+}
+
+#resultado-cuerpo .resultado-enfrentamiento img {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+#resultado-cuerpo .resultado-enfrentamiento em {
+    grid-column: 1 / -1;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+#resultado-cuerpo .resultado-volver {
+    width: auto;
+    min-width: min(12rem, 100%);
+    margin: 0 auto;
+    filter: none;
+}
+
+@media (max-width: 760px) {
+    #partido-cuerpo {
+        overflow-y: auto;
+    }
+
+    #partido-cuerpo .partido-pantalla {
+        grid-template-rows: auto auto auto;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100svh;
+        overflow: visible;
+        gap: var(--espacio-3);
+    }
+
+    #partido-cuerpo .pregunta-zona {
+        grid-template-rows: auto auto auto;
+        margin: 0;
+    }
+
+    #partido-cuerpo .respuestas-grilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #partido-cuerpo .comodines-fila {
+        margin-top: auto;
+    }
+
+    #resultado-cuerpo {
+        overflow-y: auto;
+    }
+
+    #resultado-cuerpo .resultado-pantalla {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100svh;
+        align-content: start;
+        gap: var(--espacio-3);
+        padding-top: max(var(--espacio-4), env(safe-area-inset-top));
+        padding-bottom: max(var(--espacio-4), env(safe-area-inset-bottom));
+    }
+}
+
+/* Ajustes finales de seleccion de club para pantallas de telefono. */
+@media (max-width: 600px) {
+    #elegir-club-cuerpo .zona-clubes {
+        box-sizing: border-box;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+        width: 100%;
+        gap: var(--espacio-3);
+    }
+
+    #elegir-club-cuerpo .panel-selector-clubes,
+    #elegir-club-cuerpo .panel-detalle-club {
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+    }
+
+    #elegir-club-cuerpo .grilla-clubes-desplazamiento {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-height: 34svh;
+    }
+
+    #elegir-club-cuerpo .cabecera-detalle-club {
+        grid-template-columns: minmax(0, 4.25rem) minmax(0, 1fr);
+        align-items: start;
+        gap: var(--espacio-3);
+    }
+
+    #elegir-club-cuerpo .escudo-detalle-marco {
+        box-sizing: border-box;
+        width: 100%;
+        aspect-ratio: 1;
+        padding: var(--espacio-1);
+        overflow: hidden;
+    }
+
+    #elegir-club-cuerpo .escudo-detalle-marco img {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    #elegir-club-cuerpo .informacion-rapida-club h2 {
+        margin-bottom: var(--espacio-2);
+        font-size: clamp(0.95rem, 4.5vw, 1.2rem);
+        line-height: 1.1;
+        overflow-wrap: anywhere;
+    }
+
+    #elegir-club-cuerpo .informacion-rapida-club p {
+        font-size: var(--tamano-texto-xs);
+        line-height: 1.25;
+    }
+
+    #elegir-club-cuerpo .seccion-objetivos {
+        width: 100%;
+        margin-bottom: 0;
+    }
+}
+
+/* Paneles del menu: el contenido largo se desplaza dentro del panel. */
+#menu-cuerpo .menu-secundario-panel {
+    box-sizing: border-box;
+    position: relative;
+    inset: auto;
+    width: min(32rem, calc(100vw - 2 * var(--espacio-6)));
+    height: min(45vh, 18rem);
+    min-height: 12rem;
+    max-height: min(45vh, 18rem);
+    margin: var(--espacio-4) auto 0;
+    aspect-ratio: auto;
+    overflow: hidden;
+    transform: none;
+}
+
+#menu-cuerpo .menu-panel-contenido {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+#menu-cuerpo .menu-panel-contenido h1,
+#menu-cuerpo .menu-panel-cerrar {
+    flex: 0 0 auto;
+}
+
+#menu-cuerpo .menu-panel-cuerpo {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: var(--color-acento-cian) var(--color-superficie);
+    scrollbar-width: thin;
+}
+
+@media (max-width: 760px) {
+    #menu-cuerpo .menu-secundario-panel {
+        position: relative;
+        inset: auto;
+        width: min(88vw, 24rem);
+        height: min(44svh, 17rem);
+        min-height: 10rem;
+        max-height: min(44svh, 17rem);
+        margin: var(--espacio-4) auto 0;
+        padding: var(--espacio-3);
+        transform: none;
+    }
+}
+
+@media (max-width: 600px) {
+    #menu-cuerpo .menu-navegacion {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: min(100%, 22rem);
+        gap: var(--espacio-1);
+    }
+
+    #menu-cuerpo .menu-boton {
+        box-sizing: border-box;
+        min-height: 1.9rem;
+        padding: var(--espacio-2);
+        font-size: clamp(0.6rem, 2.7vw, 0.7rem);
+        line-height: 1.1;
+    }
+
+    #menu-cuerpo .menu-pie-acciones {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: min(100%, 22rem);
+        margin: var(--espacio-3) auto 0;
+        gap: var(--espacio-1);
+    }
+
+    #menu-cuerpo .menu-pie-boton {
+        min-width: 0;
+        min-height: 1.9rem;
+        padding: var(--espacio-2);
+        font-size: clamp(0.6rem, 2.7vw, 0.7rem);
+        line-height: 1.1;
+        overflow-wrap: anywhere;
+    }
+}
+
+/* Perfil DT: controles compactos, avatar completo y paneles separados. */
+@media (min-width: 981px) {
+    #perfil-cuerpo .perfil-navegacion {
+        top: clamp(100px, 14vh, 150px);
+        left: clamp(28px, 10vw, 180px);
+        width: min(300px, 21vw);
+        gap: var(--espacio-3);
+    }
+
+    #perfil-cuerpo .perfil-boton {
+        box-sizing: border-box;
+        width: 100%;
+        height: auto;
+        min-height: 2.5rem;
+        padding: var(--espacio-3) var(--espacio-4);
+        font-size: clamp(0.8rem, 1vw, 1rem);
+        line-height: var(--alto-linea-ajustado);
+    }
+
+    #perfil-cuerpo .perfil-avatar-principal {
+        left: 50%;
+        bottom: clamp(72px, 9vh, 108px);
+        width: auto;
+        max-width: min(34vw, 420px);
+        height: min(52vh, 500px);
+        object-fit: contain;
+        object-position: center bottom;
+    }
+
+    #perfil-cuerpo .perfil-panel {
+        top: clamp(100px, 14vh, 150px);
+        right: clamp(100px, 55vw, 116px);
+        width: min(500px, 28vw);
+        height: min(420px, 48vh);
+        padding: clamp(24px, 3vw, 42px);
+    }
+
+    #perfil-cuerpo .perfil-volver {
+        width: clamp(150px, 12vw, 210px);
+        min-height: 2.5rem;
+        padding: var(--espacio-3) var(--espacio-4);
+        font-size: clamp(0.8rem, 1vw, 1rem);
+    }
+}
+
+@media (max-width: 980px) {
+    #perfil-cuerpo .perfil-navegacion {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--espacio-2);
+        margin: var(--espacio-3) auto var(--espacio-4);
+    }
+
+    #perfil-cuerpo .perfil-boton {
+        box-sizing: border-box;
+        height: auto;
+        min-height: 2.25rem;
+        padding: var(--espacio-2) var(--espacio-3);
+        font-size: clamp(0.72rem, 1.8vw, 0.95rem);
+        line-height: var(--alto-linea-ajustado);
+    }
+
+    #perfil-cuerpo .perfil-avatar-principal {
+        width: min(58vw, 280px);
+        height: clamp(180px, 35vh, 260px);
+        margin: var(--espacio-2) auto var(--espacio-6);
+        object-fit: contain;
+        object-position: center bottom;
+    }
+
+    #perfil-cuerpo .perfil-panel {
+        margin: var(--espacio-6) auto var(--espacio-4);
+        padding: var(--espacio-6) var(--espacio-4);
+    }
+
+    #perfil-cuerpo .perfil-panel-cuerpo {
+        max-height: min(42vh, 20rem);
+        overflow-y: auto;
+    }
+
+    #perfil-cuerpo .perfil-volver {
+        width: min(12rem, 80vw);
+        min-height: 2.25rem;
+        padding: var(--espacio-2) var(--espacio-3);
+        font-size: var(--tamano-texto-pequeno);
+    }
+}
+
+/* Perfil DT compacto para teléfonos: reduce avatar y panel sin perder contenido. */
+@media (max-width: 600px) {
+    #perfil-cuerpo .perfil-avatar-principal {
+        width: min(42vw, 160px);
+        height: clamp(125px, 24vh, 170px);
+        margin: 0 auto var(--espacio-3);
+    }
+
+    #perfil-cuerpo .perfil-panel {
+        box-sizing: border-box;
+        width: min(88vw, 340px);
+        height: auto;
+        min-height: 0;
+        max-height: min(32vh, 230px);
+        margin: 0 auto var(--espacio-3);
+        padding: var(--espacio-3);
+        overflow-y: auto;
+    }
+
+    #perfil-cuerpo .perfil-panel h1 {
+        margin-bottom: var(--espacio-2);
+        font-size: var(--tamano-texto-base);
+    }
+
+    #perfil-cuerpo .perfil-panel-cuerpo {
+        max-height: 130px;
+        overflow-y: auto;
+    }
+
+    #perfil-cuerpo .perfil-volver {
+        width: min(10rem, 72vw);
+        min-height: 2rem;
+        margin: 0 auto var(--espacio-3);
+        padding: var(--espacio-1) var(--espacio-3);
+        font-size: var(--tamano-texto-pequeno);
+    }
+}
+
+/* Ajustes finales de tamaño y scroll para el panel de copas. */
+@media (min-width: 761px) {
+    #torneos-cuerpo .llave-torneo {
+        width: min(calc(100% - 2rem), 78rem);
+        min-height: 0;
+        max-height: none;
+        flex: 0 1 auto;
+        margin: 0 auto;
+    }
+
+    #torneos-cuerpo .lienzo-llave-torneo {
+        display: flex;
+        flex-direction: column;
+        height: min(64svh, 38rem);
+        max-height: calc(100svh - 13rem);
+        padding: var(--espacio-3);
+        overflow: hidden;
+    }
+
+    #torneos-cuerpo .encabezado-llave-torneo {
+        flex: 0 0 auto;
+        min-height: 5rem;
+        margin-bottom: var(--espacio-2);
+        padding-inline: var(--espacio-2);
+    }
+
+    #torneos-cuerpo .torneo-llave-logo,
+    #torneos-cuerpo .torneo-llave-copa {
+        height: 4.5rem;
+    }
+
+    #torneos-cuerpo .equipos-llave-torneo {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        overflow: auto;
+        scrollbar-gutter: stable;
+    }
+}
+
+@media (max-width: 760px) {
+    #torneos-cuerpo .llave-torneo {
+        width: calc(100% - 1.25rem);
+        min-height: 0;
+        max-height: none;
+        flex: 0 1 auto;
+        margin: 0 auto;
+    }
+
+    #torneos-cuerpo .lienzo-llave-torneo {
+        display: flex;
+        flex-direction: column;
+        max-height: 68svh;
+        padding: var(--espacio-2);
+        overflow: hidden;
+    }
+
+    #torneos-cuerpo .encabezado-llave-torneo {
+        flex: 0 0 auto;
+        grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
+        gap: var(--espacio-2);
+        min-height: 3.75rem;
+        margin-bottom: var(--espacio-2);
+        padding: 0 var(--espacio-1) var(--espacio-2);
+    }
+
+    #torneos-cuerpo .torneo-llave-logo,
+    #torneos-cuerpo .torneo-llave-copa {
+        height: 3.25rem;
+    }
+
+    #torneos-cuerpo .equipos-llave-torneo {
+        display: block;
+        flex: 0 1 auto;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        max-height: 48svh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-gutter: stable;
+        overscroll-behavior-y: contain;
+    }
+
+    #torneos-cuerpo .ronda-torneo {
+        min-height: 20rem;
+    }
+}

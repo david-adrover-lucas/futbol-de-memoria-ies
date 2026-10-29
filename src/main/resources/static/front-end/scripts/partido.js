@@ -6,10 +6,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
     const competition = params.get("competicion") || session.competicionCodigo || "temporada";
     const ui = {
-        local: document.getElementById("score-local-goals"), away: document.getElementById("score-away-goals"),
-        localCode: document.getElementById("score-local-code"), awayCode: document.getElementById("score-away-code"),
-        period: document.getElementById("score-period"), cup: document.getElementById("score-cup"), competition: document.getElementById("score-competition"),
-        question: document.getElementById("question-text"), answers: document.getElementById("answers-grid"), timer: document.getElementById("question-timer")
+        local: document.getElementById("marcador-goles-local"), away: document.getElementById("marcador-goles-visitante"),
+        localCode: document.getElementById("marcador-codigo-local"), awayCode: document.getElementById("marcador-codigo-visitante"),
+        period: document.getElementById("marcador-periodo"), cup: document.getElementById("marcador-copa"), competition: document.getElementById("marcador-competicion"),
+        question: document.getElementById("texto-pregunta"), answers: document.getElementById("respuestas-grilla"), timer: document.getElementById("temporizador-pregunta")
     };
     let game = null;
     let question = null;
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         await loadQuestion();
     } catch (error) { alert(error.message); window.location.assign("menu.html"); return; }
 
-    document.querySelectorAll(".wildcard-btn[data-wildcard]").forEach((button) => button.addEventListener("click", async () => {
+    document.querySelectorAll(".comodin-boton[data-wildcard]").forEach((button) => button.addEventListener("click", async () => {
         if (busy || !question) return;
         busy = true;
         try {
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (error) { alert(error.message); }
         finally { busy = false; }
     }));
-    document.getElementById("btn-exit-match").addEventListener("click", async () => {
+    document.getElementById("boton-salir-partido").addEventListener("click", async () => {
         if (!confirm("¿Finalizar y guardar este partido?")) return;
         stopTimer();
         try {
@@ -76,12 +76,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         ui.cup.src = `../assets/copa-${competition}.png`;
         ui.period.textContent = `PREGUNTA ${assignment.numeroPregunta}`;
         ui.question.textContent = question.textoPregunta;
-        ui.question.classList.toggle("is-penalty-question", question.tipoPregunta === "penal_numerico");
-        document.body.classList.toggle("match-penalty-mode", question.tipoPregunta === "penal_numerico");
+        ui.question.classList.toggle("es-penal-pregunta", question.tipoPregunta === "penal_numerico");
+        document.body.classList.toggle("partido-modo-penales", question.tipoPregunta === "penal_numerico");
         ui.answers.replaceChildren();
         if (question.tipoPregunta === "penal_numerico") renderNumeric();
         else options.forEach((option, index) => renderOption(option, index));
-        document.querySelectorAll(".wildcard-btn[data-wildcard]").forEach((button) => {
+        document.querySelectorAll(".comodin-boton[data-wildcard]").forEach((button) => {
             button.disabled = used.includes(button.dataset.wildcard) || question.tipoPregunta !== "opcion_multiple";
         });
         startedAt = new Date(assignment.preguntaIniciadaEn).getTime();
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function renderOption(option, index) {
         const button = document.createElement("button");
         button.type = "button";
-        button.className = "answer-btn";
+        button.className = "respuesta-boton";
         const letter = document.createElement("span"); letter.textContent = String.fromCharCode(65 + index);
         const label = document.createElement("strong"); label.textContent = option.textoOpcion;
         button.append(letter, label);
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function renderNumeric() {
         const form = document.createElement("form");
-        form.className = "penalty-answer";
+        form.className = "penal-respuesta";
         form.innerHTML = '<label for="penalty-input">Respuesta de aproximación</label><div><input id="penalty-input" type="number" inputmode="decimal" step="any" required><button type="submit">PATEAR</button></div>';
         form.addEventListener("submit", (event) => {
             event.preventDefault();

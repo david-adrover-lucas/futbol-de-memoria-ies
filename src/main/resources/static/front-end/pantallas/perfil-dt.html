@@ -5,43 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futbol de Memoria - Perfil DT</title>
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../estilos/principal.css">
 </head>
-<body id="perfil-body">
-    <main class="profile-screen">
-        <header class="profile-top">
-            <strong id="profile-name">LUCAS ARDROVER</strong>
+<body id="perfil-cuerpo">
+    <main class="perfil-pantalla">
+        <header class="perfil-superior">
+            <strong id="perfil-nombre">LUCAS ARDROVER</strong>
             <div>
-                <span id="profile-stars">â˜…â˜…â˜…â˜†â˜†</span>
-                <div class="profile-exp"><span id="profile-exp-bar"></span><em id="profile-exp-text">1200/2000</em></div>
+                <span id="perfil-estrellas">â˜…â˜…â˜…â˜†â˜†</span>
+                <div class="perfil-experiencia"><span id="perfil-barra-experiencia"></span><em id="perfil-texto-experiencia">1200/2000</em></div>
             </div>
-            <strong id="profile-meta">MENDOCINO<br>22 ANOS</strong>
+            <strong id="perfil-datos">MENDOCINO<br>22 ANOS</strong>
         </header>
 
-        <nav class="profile-nav">
-            <button type="button" data-panel="historial" class="profile-btn active">HISTORIAL DE CLUBES</button>
-            <button type="button" data-panel="titulos" class="profile-btn">TITULOS</button>
-            <button type="button" data-panel="trofeos" class="profile-btn">TROFEOS</button>
-            <button type="button" data-panel="logros" class="profile-btn">LOGROS</button>
-            <button type="button" data-panel="ofertas" class="profile-btn">OFERTAS</button>
-            <button type="button" data-panel="noticias" class="profile-btn">NOTICIAS</button>
-            <button type="button" data-panel="mensajes" class="profile-btn">MENSAJES</button>
+        <nav class="perfil-navegacion">
+            <button type="button" data-panel="historial" class="perfil-boton activo">HISTORIAL DE CLUBES</button>
+            <button type="button" data-panel="titulos" class="perfil-boton">TITULOS</button>
+            <button type="button" data-panel="trofeos" class="perfil-boton">TROFEOS</button>
+            <button type="button" data-panel="logros" class="perfil-boton">LOGROS</button>
+            <button type="button" data-panel="ofertas" class="perfil-boton">OFERTAS</button>
+            <button type="button" data-panel="noticias" class="perfil-boton">NOTICIAS</button>
+            <button type="button" data-panel="mensajes" class="perfil-boton">MENSAJES</button>
         </nav>
 
-        <img id="profile-avatar" class="profile-avatar-main" src="../assets/avatar-1.png" alt="Director tecnico">
+        <img id="perfil-avatar" class="perfil-avatar-principal" src="../assets/avatar-1.png" alt="Director tecnico">
 
-        <section class="profile-panel">
-            <h1 id="profile-panel-title">HISTORIAL DE CLUBES</h1>
-            <div id="profile-panel-body" class="profile-panel-body"></div>
+        <section class="perfil-panel">
+            <h1 id="perfil-titulo-panel">HISTORIAL DE CLUBES</h1>
+            <div id="perfil-cuerpo-panel" class="perfil-panel-cuerpo"></div>
         </section>
 
-        <button type="button" id="btn-profile-menu" class="menu-footer-btn profile-back">VOLVER AL MENU</button>
+        <button type="button" id="boton-menu-perfil" class="menu-pie-boton perfil-volver">VOLVER AL MENU</button>
     </main>
 
-    <script src="../scripts/core/api-client.js"></script>
-    <script src="../scripts/core/session.js"></script>
-    <script src="../scripts/core/mappers.js"></script>
-    <script src="../scripts/core/services.js"></script>
-    <script src="../scripts/perfil-dt.js"></script>
+    <script src="../scripts/nucleo/cliente-api.js"></script>
+    <script src="../scripts/nucleo/sesion.js"></script>
+    <script src="../scripts/nucleo/adaptadores.js"></script>
+    <script src="../scripts/nucleo/servicios.js"></script>
+    <script src="../scripts/perfil-entrenador.js"></script>
 </body>
 </html>

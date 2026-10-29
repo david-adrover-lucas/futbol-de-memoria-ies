@@ -5,34 +5,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fútbol de Memoria - Penales</title>
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../estilos/principal.css">
 </head>
-<body id="partido-body" class="shootout-body">
-    <main class="match-screen" aria-label="Tanda de penales">
-        <section class="match-scoreboard" aria-live="polite">
-            <b id="shootout-phase" class="score-competition">TANDA DE PENALES</b>
-            <div class="score-mainline">
-                <strong id="shootout-local-code">LOC</strong>
-                <span id="shootout-player-score">0</span>
+<body id="partido-cuerpo" class="tanda-penales-cuerpo">
+    <main class="partido-pantalla" aria-label="Tanda de penales">
+        <section class="partido-marcador" aria-live="polite">
+            <b id="fase-tanda-penales" class="marcador-competicion">TANDA DE PENALES</b>
+            <div class="marcador-linea-principal">
+                <strong id="codigo-local-tanda-penales">LOC</strong>
+                <span id="marcador-jugador-tanda-penales">0</span>
                 <img src="../assets/copa-libertadores.png" alt="">
-                <span id="shootout-rival-score">0</span>
-                <strong id="shootout-away-code">RIV</strong>
+                <span id="marcador-rival-tanda-penales">0</span>
+                <strong id="codigo-visitante-tanda-penales">RIV</strong>
             </div>
-            <em id="shootout-round">TURNO 1 DE 10</em>
+            <em id="ronda-tanda-penales">TURNO 1 DE 10</em>
         </section>
 
-        <section class="question-stage shootout-question-stage">
-            <div id="shootout-role" class="shootout-role">PATEÁS</div>
-            <div id="shootout-timer" class="match-timer">15 SEGUNDOS</div>
-            <h1 id="shootout-question" class="match-question">CARGANDO PREGUNTA</h1>
-            <div id="shootout-answers" class="answers-grid"></div>
+        <section class="pregunta-zona tanda-penales-pregunta-zona">
+            <div id="rol-tanda-penales" class="rol-tanda-penales">PATEÁS</div>
+            <div id="temporizador-tanda-penales" class="partido-temporizador">15 SEGUNDOS</div>
+            <h1 id="pregunta-tanda-penales" class="partido-pregunta">CARGANDO PREGUNTA</h1>
+            <div id="respuestas-tanda-penales" class="respuestas-grilla"></div>
         </section>
     </main>
 
-    <script src="../scripts/core/api-client.js"></script>
-    <script src="../scripts/core/session.js"></script>
-    <script src="../scripts/core/mappers.js"></script>
-    <script src="../scripts/core/services.js"></script>
+    <script src="../scripts/nucleo/cliente-api.js"></script>
+    <script src="../scripts/nucleo/sesion.js"></script>
+    <script src="../scripts/nucleo/adaptadores.js"></script>
+    <script src="../scripts/nucleo/servicios.js"></script>
     <script src="../scripts/penales.js"></script>
 </body>
 </html>

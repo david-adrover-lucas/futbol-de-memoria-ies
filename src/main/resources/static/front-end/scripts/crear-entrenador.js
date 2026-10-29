@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const session = window.FDM.session.requireUser();
     if (!session) return;
 
-    const avatarCards = [...document.querySelectorAll(".avatar-card")];
-    const form = document.getElementById("form-registro-dt");
+    const avatarCards = [...document.querySelectorAll(".avatar-tarjeta")];
+    const form = document.getElementById("formulario-registro-entrenador");
     let avatarSeleccionado = null;
 
     try {
@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     avatarCards.forEach((card) => card.addEventListener("click", () => seleccionarAvatar(card)));
-    document.getElementById("btn-back").addEventListener("click", () => window.location.assign("../index.html"));
-    document.getElementById("btn-random").addEventListener("click", () => {
+    document.getElementById("boton-volver").addEventListener("click", () => window.location.assign("../index.html"));
+    document.getElementById("boton-aleatorio").addEventListener("click", () => {
         seleccionarAvatar(avatarCards[Math.floor(Math.random() * avatarCards.length)]);
     });
 
@@ -29,11 +29,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!avatarSeleccionado) return mostrarError("Elegí un avatar para tu DT antes de continuar.");
         if (!form.reportValidity()) return;
 
-        const provincia = document.getElementById("dt-province");
+        const provincia = document.getElementById("entrenador-provincia");
         const draft = {
-            nombreDt: document.getElementById("dt-name").value.trim(),
-            apellidoDt: document.getElementById("dt-lastname").value.trim(),
-            edadDt: Number(document.getElementById("dt-age").value),
+            nombreDt: document.getElementById("entrenador-nombre").value.trim(),
+            apellidoDt: document.getElementById("entrenador-apellido").value.trim(),
+            edadDt: Number(document.getElementById("entrenador-edad").value),
             provincia: provincia.options[provincia.selectedIndex].text,
             numeroAvatar: Number(avatarSeleccionado)
         };
@@ -42,8 +42,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     function seleccionarAvatar(card) {
-        avatarCards.forEach((item) => item.classList.remove("selected"));
-        card.classList.add("selected");
+        avatarCards.forEach((item) => item.classList.remove("seleccionado"));
+        card.classList.add("seleccionado");
         avatarSeleccionado = card.dataset.avatar;
     }
 

@@ -7,14 +7,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         sudamericana: { title: "SUDAMERICANA", logo: "../assets/logo-sudamericana.png", cup: "../assets/copa-sudamericana.png" },
         nacional: { title: "NACIONAL", logo: "../assets/logo-nacional.png", cup: "../assets/copa-nacional.png" }
     };
-    const selection = document.getElementById("tour-select");
-    const bracket = document.getElementById("tour-bracket");
-    const teams = document.getElementById("tour-bracket-teams");
-    const roundTabs = document.createElement("nav");
-    roundTabs.className = "tour-round-tabs";
-    roundTabs.setAttribute("aria-label", "Seleccionar ronda");
-    roundTabs.setAttribute("role", "tablist");
-    teams.before(roundTabs);
+    const selection = document.getElementById("selector-torneo");
+    const bracket = document.getElementById("llave-torneo");
+    const teams = document.getElementById("equipos-llave-torneo");
+    const pestanasRonda = document.createElement("nav");
+    pestanasRonda.className = "pestanas-rondas-torneo";
+    pestanasRonda.setAttribute("aria-label", "Seleccionar ronda");
+    pestanasRonda.setAttribute("role", "tablist");
+    teams.before(pestanasRonda);
     let activeCode = null;
 
     try {
@@ -24,35 +24,35 @@ document.addEventListener("DOMContentLoaded", async () => {
             try { return [code, await api.torneoService.obtener(session.usuarioId, code)]; }
             catch { return [code, null]; }
         }));
-        summaries.forEach(([code, data]) => renderSelectionState(code, data));
+        summaries.forEach(([code, data]) => renderizarEstadoSeleccion(code, data));
     } catch (error) { alert(error.message); return; }
 
-    document.querySelectorAll(".tour-big-btn").forEach((button) => button.addEventListener("click", async () => {
+    document.querySelectorAll(".torneo-big-boton").forEach((button) => button.addEventListener("click", async () => {
         const code = button.dataset.torneo;
         button.disabled = true;
         try {
             const tournament = await api.torneoService.obtener(session.usuarioId, code);
             activeCode = code;
-            renderTournament(tournament);
+            renderizarTorneo(tournament);
         } catch (error) { alert(error.message); }
         finally { button.disabled = false; }
     }));
 
-    document.getElementById("btn-tour-menu").addEventListener("click", () => {
-        if (!bracket.classList.contains("hidden")) {
-            bracket.classList.add("hidden"); selection.classList.remove("hidden");
-            document.querySelector(".tour-page-title").classList.remove("hidden");
+    document.getElementById("boton-menu-torneo").addEventListener("click", () => {
+        if (!bracket.classList.contains("oculto")) {
+            bracket.classList.add("oculto"); selection.classList.remove("oculto");
+            document.querySelector(".titulo-pagina-torneo").classList.remove("oculto");
             return;
         }
         window.location.assign("menu.html");
     });
-    document.getElementById("btn-tour-play").addEventListener("click", () => window.location.assign("temporada.html"));
+    document.getElementById("boton-calendario-torneo").addEventListener("click", () => window.location.assign("temporada.html"));
 
-    function renderSelectionState(code, data) {
-        const button = document.querySelector(`.tour-big-btn[data-torneo="${code}"]`);
+    function renderizarEstadoSeleccion(code, data) {
+        const button = document.querySelector(`.torneo-big-boton[data-torneo="${code}"]`);
         if (!button) return;
-        let status = button.querySelector(".tour-select-status");
-        if (!status) { status = document.createElement("small"); status.className = "tour-select-status"; button.appendChild(status); }
+        let status = button.querySelector(".estado-selector-torneo");
+        if (!status) { status = document.createElement("small"); status.className = "estado-selector-torneo"; button.appendChild(status); }
         status.textContent = !data || data.estado === "sin_iniciar" ? "SIN RESULTADOS"
             : data.campeon ? `CAMPEÓN: ${data.campeon.nombre}`
             : data.estado === "eliminado" ? (data.campeon ? "TU EQUIPO ELIMINADO · TORNEO FINALIZADO" : "TU EQUIPO ELIMINADO · CPU EN CURSO")
@@ -60,85 +60,85 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function renderHeader(carrera) {
-        document.getElementById("tour-dt-avatar").src = `../assets/avatar-${carrera.numeroAvatar || 1}.png`;
-        document.getElementById("tour-dt-name").textContent = `${carrera.nombreDt} ${carrera.apellidoDt}`.toUpperCase();
-        document.getElementById("tour-dt-stars").textContent = "★".repeat(carrera.estrellas) + "☆".repeat(5 - carrera.estrellas);
-        document.getElementById("tour-club-name").textContent = carrera.equipoActual?.nombre?.toUpperCase() || "SIN EQUIPO";
-        document.getElementById("tour-club-badge").src = carrera.equipoActual?.rutaEscudo ? `../assets/${carrera.equipoActual.rutaEscudo}` : "../assets/logo-futbolmemoria.png";
+        document.getElementById("avatar-entrenador-torneo").src = `../assets/avatar-${carrera.numeroAvatar || 1}.png`;
+        document.getElementById("nombre-entrenador-torneo").textContent = `${carrera.nombreDt} ${carrera.apellidoDt}`.toUpperCase();
+        document.getElementById("estrellas-entrenador-torneo").textContent = "★".repeat(carrera.estrellas) + "☆".repeat(5 - carrera.estrellas);
+        document.getElementById("nombre-club-torneo").textContent = carrera.equipoActual?.nombre?.toUpperCase() || "SIN EQUIPO";
+        document.getElementById("insignia-club-torneo").src = carrera.equipoActual?.rutaEscudo ? `../assets/${carrera.equipoActual.rutaEscudo}` : "../assets/logo-futbolmemoria.png";
     }
 
-    function renderTournament(data) {
-        selection.classList.add("hidden"); bracket.classList.remove("hidden");
-        document.querySelector(".tour-page-title").classList.add("hidden");
+    function renderizarTorneo(data) {
+        selection.classList.add("oculto"); bracket.classList.remove("oculto");
+        document.querySelector(".titulo-pagina-torneo").classList.add("oculto");
         const meta = config[data.codigoCompeticion];
-        document.getElementById("tour-bracket-title").textContent = `${meta.title} · TEMPORADA ${data.numeroTemporada}`;
+        document.getElementById("titulo-llave-torneo").textContent = `${meta.title} · TEMPORADA ${data.numeroTemporada}`;
         const state = {
             sin_iniciar: "SIN RESULTADOS GUARDADOS",
             en_curso: `RONDA ${data.rondaActual} DE 4 · EN CURSO`,
             eliminado: data.campeon ? "TU EQUIPO ELIMINADO · TORNEO FINALIZADO" : "TU EQUIPO ELIMINADO · TORNEO EN SIMULACIÓN",
             campeon: "TORNEO FINALIZADO"
         };
-        document.getElementById("tour-bracket-round").textContent = state[data.estado] || data.estado.toUpperCase();
-        document.getElementById("tour-bracket-logo").src = meta.logo;
-        document.getElementById("tour-bracket-cup").src = meta.cup;
-        const champion = document.getElementById("tour-bracket-champion");
+        document.getElementById("ronda-llave-torneo").textContent = state[data.estado] || data.estado.toUpperCase();
+        document.getElementById("logo-llave-torneo").src = meta.logo;
+        document.getElementById("copa-llave-torneo").src = meta.cup;
+        const champion = document.getElementById("campeon-llave-torneo");
         champion.textContent = data.campeon ? `CAMPEÓN: ${data.campeon.nombre}`
             : data.estado === "sin_iniciar" ? "La llave y los resultados aparecerán al avanzar las fechas del calendario." : "";
         teams.replaceChildren();
-        roundTabs.replaceChildren();
+        pestanasRonda.replaceChildren();
         if (!data.fixtures.length) return;
 
-        const roundNames = ["", "OCTAVOS", "CUARTOS", "SEMIFINAL", "FINAL"];
-        const renderedRounds = [];
+        const nombresRonda = ["", "OCTAVOS", "CUARTOS", "SEMIFINAL", "FINAL"];
+        const rondasMostradas = [];
         for (let round = 1; round <= 4; round += 1) {
             const fixtures = data.fixtures.filter((item) => item.ronda === round);
             if (!fixtures.length) continue;
-            renderedRounds.push(round);
+            rondasMostradas.push(round);
             const column = document.createElement("section");
-            column.className = `tour-round tour-round--${["", "octavos", "cuartos", "semis", "final"][round]}`;
-            column.id = `tour-round-${round}`;
+            column.className = `ronda-torneo ronda-torneo--${["", "octavos", "cuartos", "semifinal", "final"][round]}`;
+            column.id = `ronda-torneo-${round}`;
             column.setAttribute("role", "tabpanel");
-            column.setAttribute("aria-label", roundNames[round]);
-            column.setAttribute("aria-labelledby", `tour-round-tab-${round}`);
-            const title = document.createElement("h3"); title.textContent = roundNames[round]; column.appendChild(title);
-            fixtures.forEach((fixture) => column.appendChild(renderFixture(fixture)));
+            column.setAttribute("aria-label", nombresRonda[round]);
+            column.setAttribute("aria-labelledby", `pestana-ronda-torneo-${round}`);
+            const title = document.createElement("h3"); title.textContent = nombresRonda[round]; column.appendChild(title);
+            fixtures.forEach((fixture) => column.appendChild(renderizarEncuentro(fixture)));
             teams.appendChild(column);
         }
-        const selectedRound = renderedRounds.includes(data.rondaActual) ? data.rondaActual : renderedRounds[0];
-        renderedRounds.forEach((round) => {
+        const rondaSeleccionada = rondasMostradas.includes(data.rondaActual) ? data.rondaActual : rondasMostradas[0];
+        rondasMostradas.forEach((round) => {
             const tab = document.createElement("button");
             tab.type = "button";
-            tab.className = "tour-round-tab";
-            tab.id = `tour-round-tab-${round}`;
+            tab.className = "pestana-ronda-torneo";
+            tab.id = `pestana-ronda-torneo-${round}`;
             tab.setAttribute("role", "tab");
-            tab.setAttribute("aria-controls", `tour-round-${round}`);
-            tab.setAttribute("aria-selected", String(round === selectedRound));
-            tab.tabIndex = round === selectedRound ? 0 : -1;
-            tab.textContent = roundNames[round];
-            tab.addEventListener("click", () => selectRound(round));
-            roundTabs.appendChild(tab);
+            tab.setAttribute("aria-controls", `ronda-torneo-${round}`);
+            tab.setAttribute("aria-selected", String(round === rondaSeleccionada));
+            tab.tabIndex = round === rondaSeleccionada ? 0 : -1;
+            tab.textContent = nombresRonda[round];
+            tab.addEventListener("click", () => seleccionarRonda(round));
+            pestanasRonda.appendChild(tab);
         });
-        selectRound(selectedRound);
+        seleccionarRonda(rondaSeleccionada);
     }
 
-    function selectRound(round) {
-        teams.querySelectorAll(".tour-round").forEach((section) => {
-            const active = section.id === `tour-round-${round}`;
-            section.classList.toggle("is-active", active);
+    function seleccionarRonda(round) {
+        teams.querySelectorAll(".ronda-torneo").forEach((section) => {
+            const active = section.id === `ronda-torneo-${round}`;
+            section.classList.toggle("es-activo", active);
         });
-        roundTabs.querySelectorAll("[role=tab]").forEach((tab) => {
-            const active = tab.id === `tour-round-tab-${round}`;
+        pestanasRonda.querySelectorAll("[role=tab]").forEach((tab) => {
+            const active = tab.id === `pestana-ronda-torneo-${round}`;
             tab.setAttribute("aria-selected", String(active));
             tab.tabIndex = active ? 0 : -1;
         });
     }
 
-    function renderFixture(fixture) {
-        const article = document.createElement("article"); article.className = "tour-match";
-        if (fixture.esPartidoDelUsuario) article.classList.add("my-club");
+    function renderizarEncuentro(fixture) {
+        const article = document.createElement("article"); article.className = "partido-torneo";
+        if (fixture.esPartidoDelUsuario) article.classList.add("mi-club");
         const left = document.createElement("strong"); left.textContent = fixture.equipoLocal.nombre;
         left.title = fixture.equipoLocal.nombre;
-        const score = document.createElement("span"); score.className = "tour-vs";
+        const score = document.createElement("span"); score.className = "contra-torneo";
         score.textContent = fixture.estado === "finalizado" || fixture.estado === "pendiente_penales"
             ? `${fixture.golesLocal} - ${fixture.golesVisitante}${fixture.estado === "pendiente_penales" ? " · PEN" : ""}` : "VS";
         const right = document.createElement("strong"); right.textContent = fixture.equipoVisitante.nombre;
@@ -147,8 +147,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const localGana = fixture.equipoGanadorId != null
                 ? fixture.equipoGanadorId === fixture.equipoLocal.equipoId
                 : fixture.golesLocal > fixture.golesVisitante;
-            (localGana ? left : right).classList.add("is-winner");
-            (localGana ? right : left).classList.add("is-eliminated");
+            (localGana ? left : right).classList.add("es-ganador");
+            (localGana ? right : left).classList.add("es-eliminado");
         }
         article.append(left, score, right);
         return article;

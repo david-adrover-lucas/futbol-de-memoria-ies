@@ -1,0 +1,347 @@
+/* Componentes visuales compartidos. Los nombres antiguos siguen disponibles para JS. */
+:where(
+    .interfaz-boton,
+    .boton-acceso-juego,
+    .boton-compacto-juego,
+    .boton-continuar-entrenador,
+    .menu-boton,
+    .menu-pie-boton,
+    .menu-panel-cerrar,
+    .torneo-big-boton,
+    .perfil-boton,
+    .comodin-boton,
+    .penal-respuesta button
+) {
+    box-sizing: border-box;
+    min-width: var(--tamano-boton-medio);
+    min-height: var(--tamano-boton-medio);
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    padding: var(--espacio-2) var(--espacio-3);
+    border: var(--ancho-borde) solid var(--color-borde);
+    border-radius: var(--radio-medio);
+    background: linear-gradient(180deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+    box-shadow: var(--sombra-control);
+    color: var(--color-texto-principal);
+    font: inherit;
+    font-weight: var(--peso-fuente-negrita);
+    line-height: var(--alto-linea-ajustado);
+    text-align: center;
+    text-decoration: none;
+    text-shadow: none;
+    cursor: pointer;
+    transition:
+        background-color var(--duracion-rapida) var(--curva-estandar),
+        border-color var(--duracion-rapida) var(--curva-estandar),
+        box-shadow var(--duracion-rapida) var(--curva-estandar),
+        color var(--duracion-rapida) var(--curva-estandar),
+        transform var(--duracion-rapida) var(--curva-estandar);
+}
+
+:where(.boton-acceso-juego, .boton-continuar-entrenador, .interfaz-boton--principal) {
+    border-color: color-mix(in srgb, var(--color-acento-cian) 72%, var(--color-borde));
+    background: linear-gradient(180deg, var(--color-boton-principal), var(--color-boton-principal-profundo));
+}
+
+:where(.boton-compacto-juego, .menu-pie-boton, .menu-panel-cerrar, .perfil-boton, .interfaz-boton--secundario) {
+    background: linear-gradient(180deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+}
+
+:where(.interfaz-boton--peligro, .interfaz-boton[data-variant="danger"]) {
+    border-color: color-mix(in srgb, var(--color-error) 72%, var(--color-borde));
+    background: linear-gradient(180deg, var(--color-boton-peligro), var(--color-boton-peligro-profundo));
+}
+
+:where(.menu-boton.activo, .perfil-boton.activo, .interfaz-boton--dorado) {
+    border-color: var(--color-acento-dorado);
+    background: linear-gradient(180deg, var(--color-boton-dorado), var(--color-boton-dorado-profundo));
+    box-shadow: var(--sombra-dorado-control);
+}
+
+:where(.interfaz-boton--deshabilitado, .interfaz-boton:disabled, .interfaz-boton[aria-disabled="true"], button:disabled, .boton-acceso-juego.deshabilitado) {
+    border-color: var(--color-borde);
+    background: var(--color-superficie);
+    box-shadow: none;
+    color: var(--color-texto-secundario);
+    opacity: var(--opacidad-deshabilitado);
+    filter: none;
+    transform: none;
+    cursor: not-allowed;
+}
+
+.interfaz-boton--compacto {
+    min-height: var(--tamano-boton-pequeno);
+    padding: var(--espacio-2) var(--espacio-3);
+    font-size: var(--tamano-texto-pequeno);
+}
+
+.interfaz-boton--pequeno {
+    min-height: var(--tamano-boton-pequeno);
+}
+
+.interfaz-boton--medio {
+    min-height: var(--tamano-boton-medio);
+}
+
+.interfaz-boton--amplio,
+.interfaz-boton--grande {
+    min-height: var(--tamano-boton-grande);
+    padding: var(--espacio-2) var(--espacio-4);
+}
+
+:where(.interfaz-boton, .boton-acceso-juego, .boton-compacto-juego, .menu-boton, .menu-pie-boton,
+    .menu-panel-cerrar, .torneo-big-boton, .perfil-boton, .comodin-boton, .penal-respuesta button):focus-visible {
+    outline: var(--ancho-contorno-enfoque) solid var(--color-enfoque);
+    outline-offset: var(--desplazamiento-contorno-enfoque);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    :where(.interfaz-boton, .boton-acceso-juego, .boton-compacto-juego, .menu-boton, .menu-pie-boton,
+        .menu-panel-cerrar, .torneo-big-boton, .perfil-boton, .comodin-boton, .penal-respuesta button):not(:disabled):hover {
+        border-color: var(--color-acento-cian);
+        background-color: var(--color-sobrevuelo);
+        box-shadow: var(--sombra-cian-brillo), var(--sombra-tarjeta);
+        transform: translateY(-1px);
+    }
+}
+
+:where(.interfaz-boton, .boton-acceso-juego, .boton-compacto-juego, .menu-boton, .menu-pie-boton,
+    .menu-panel-cerrar, .torneo-big-boton, .perfil-boton, .comodin-boton, .penal-respuesta button):not(:disabled):active {
+    background-color: var(--color-activo);
+    box-shadow: var(--sombra-presionado);
+    transform: translateY(1px);
+}
+
+/* Superficies compartidas; las clases históricas se mantienen para no tocar los scripts. */
+:where(
+    .interfaz-tarjeta,
+    .interfaz-modulo,
+    .panel-formulario,
+    .panel-avatares,
+    .panel-selector-clubes,
+    .panel-detalle-club,
+    .menu-secundario-panel,
+    .perfil-panel,
+    .contenedor-tabla-temporada,
+    .resultado-estadisticas
+) {
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 30%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+    box-shadow: var(--sombra-tarjeta), inset 0 1px var(--color-resalte);
+}
+
+:where(.interfaz-tarjeta, .interfaz-modulo) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.torneo-big-boton {
+    width: 100%;
+}
+
+:where(.interfaz-tarjeta__encabezado, .interfaz-modulo__encabezado) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-3);
+    min-width: 0;
+}
+
+:where(.interfaz-tarjeta__cuerpo, .interfaz-modulo__cuerpo) {
+    min-width: 0;
+}
+
+:where(.interfaz-tarjeta__pie, .interfaz-modulo__pie) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--espacio-3);
+}
+
+:where(.interfaz-tarjeta__titulo, .interfaz-modulo__titulo) {
+    margin: 0;
+    color: var(--color-acento-cian);
+    font-size: var(--tamano-texto-pequeno);
+    font-weight: var(--peso-fuente-negrita);
+    letter-spacing: 0.06em;
+    line-height: var(--alto-linea-ajustado);
+    overflow-wrap: anywhere;
+    text-transform: uppercase;
+}
+
+:where(.interfaz-tarjeta__valor, .interfaz-modulo__valor) {
+    margin: var(--espacio-2) 0 0;
+    color: var(--color-texto-principal);
+    font-size: var(--tamano-texto-grande);
+    font-weight: var(--peso-fuente-negrita);
+}
+
+/* Títulos de sección y placas antiguas convertidas en superficies tipográficas. */
+:where(.interfaz-titulo, .placa-titulo-pantalla, .club-pantalla-titulo, .titulo-pantalla) {
+    min-width: 0;
+    max-width: 100%;
+    color: var(--color-texto-principal);
+    font-family: var(--fuente-titulos);
+    font-size: var(--tamano-texto-h1);
+    line-height: var(--alto-linea-ajustado);
+    overflow-wrap: anywhere;
+    text-align: center;
+    text-shadow: var(--sombra-titulo);
+}
+
+:where(.placa-titulo-pantalla, .interfaz-titulo) {
+    width: fit-content;
+    height: auto;
+    min-height: 2.75rem;
+    margin-inline: auto;
+    padding: var(--espacio-2) var(--espacio-4);
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+}
+
+:where(.interfaz-titulo--seccion, .club-pantalla-titulo, .titulo-pantalla) {
+    font-size: var(--tamano-texto-h2);
+}
+
+/* Opciones: cuatro respuestas legibles y el formulario de penal reutiliza el mismo ritmo. */
+.respuestas-grilla {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: var(--espacio-3);
+    min-width: 0;
+}
+
+.respuesta-boton {
+    display: grid;
+    grid-template-columns: var(--tamano-respuesta-insignia) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--espacio-3);
+    width: 100%;
+    min-width: 0;
+    min-height: var(--tamano-respuesta-min);
+    height: auto;
+    padding: var(--espacio-3) var(--espacio-4);
+    overflow: hidden;
+    border: var(--ancho-borde-fuerte) solid color-mix(in srgb, var(--color-acento-cian) 60%, var(--color-borde));
+    border-radius: var(--radio-medio);
+    background: linear-gradient(145deg, var(--color-respuesta), var(--color-respuesta-profundo));
+    box-shadow: var(--sombra-control);
+    color: var(--color-texto-principal);
+    font: inherit;
+    line-height: var(--alto-linea-normal);
+    text-align: left;
+    text-shadow: none;
+    cursor: pointer;
+    transition: border-color var(--duracion-rapida), background-color var(--duracion-rapida),
+        box-shadow var(--duracion-rapida), transform var(--duracion-rapida);
+}
+
+.respuesta-boton::after {
+    content: none;
+}
+
+.respuesta-boton > span {
+    display: grid;
+    place-items: center;
+    width: var(--tamano-respuesta-insignia);
+    aspect-ratio: 1;
+    margin: 0;
+    border: var(--ancho-borde) solid var(--color-acento-cian);
+    border-radius: var(--radio-pequeno);
+    background: var(--color-respuesta-insignia);
+    box-shadow: none;
+    color: var(--color-acento-cian);
+    font-size: var(--tamano-texto-medio);
+    font-weight: var(--peso-fuente-negrita);
+    text-shadow: none;
+}
+
+.respuesta-boton > strong {
+    min-width: 0;
+    padding: 0;
+    font-size: var(--tamano-texto-medio);
+    font-weight: var(--peso-fuente-seminegrita);
+    line-height: var(--alto-linea-normal);
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .respuesta-boton:not(:disabled):hover {
+        border-color: var(--color-acento-cian);
+        background: linear-gradient(145deg, var(--color-respuesta-sobrevuelo), var(--color-activo));
+        box-shadow: var(--sombra-respuesta-sobrevuelo);
+        transform: translateY(-2px);
+    }
+}
+
+.respuesta-boton:focus-visible {
+    outline: var(--ancho-contorno-enfoque) solid var(--color-enfoque);
+    outline-offset: var(--desplazamiento-contorno-enfoque);
+}
+
+.respuesta-boton:disabled {
+    opacity: var(--opacidad-deshabilitado);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.respuesta-boton.es-seleccionado,
+.respuesta-boton[aria-pressed="true"] {
+    border-color: var(--color-acento-dorado);
+    box-shadow: var(--sombra-dorado-brillo);
+}
+
+.respuesta-boton.es-correcta {
+    border-color: var(--color-exito);
+    background: var(--color-exito-suave);
+}
+
+.respuesta-boton.es-incorrecta {
+    border-color: var(--color-error);
+    background: var(--color-error-suave);
+}
+
+.penal-respuesta {
+    border-color: var(--color-acento-dorado);
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+    box-shadow: var(--sombra-dorado-brillo);
+}
+
+.penal-respuesta button {
+    border-color: var(--color-acento-dorado);
+    background: linear-gradient(180deg, var(--color-boton-dorado), var(--color-boton-dorado-profundo));
+    font-size: var(--tamano-texto-pequeno);
+}
+
+.penal-respuesta input {
+    min-width: 0;
+    min-height: var(--tamano-boton-medio);
+    border-radius: var(--radio-pequeno);
+    font: inherit;
+    font-size: var(--tamano-texto-grande);
+}
+
+@media (max-width: 600px) {
+    .respuestas-grilla {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .respuesta-boton {
+        min-height: var(--tamano-respuesta-movil-min);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :where(.interfaz-boton, .boton-acceso-juego, .boton-compacto-juego, .menu-boton, .menu-pie-boton,
+        .menu-panel-cerrar, .torneo-big-boton, .perfil-boton, .comodin-boton, .respuesta-boton, .penal-respuesta button) {
+        scroll-behavior: auto;
+        transition-duration: 0.01ms;
+    }
+}

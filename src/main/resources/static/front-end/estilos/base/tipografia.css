@@ -1,5 +1,5 @@
 /* Base tipográfica. Los componentes conservan sus estilos actuales durante fase 1. */
 body {
-    font-family: var(--font-body);
-    color: var(--color-text-primary);
+    font-family: var(--fuente-cuerpo);
+    color: var(--color-texto-principal);
 }

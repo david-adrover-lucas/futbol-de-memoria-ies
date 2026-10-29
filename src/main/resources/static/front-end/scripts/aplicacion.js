@@ -1,22 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const splash = document.getElementById("splash-screen");
-    const loginScreen = document.getElementById("login-screen");
-    const loginForm = document.getElementById("login-form");
-    const loginButton = document.getElementById("login-btn");
-    const registerButton = document.getElementById("register-mode-btn");
-    const email = document.getElementById("email");
+    const splash = document.getElementById("pantalla-inicio");
+    const loginScreen = document.getElementById("pantalla-acceso");
+    const loginForm = document.getElementById("formulario-acceso");
+    const loginButton = document.getElementById("boton-acceso");
+    const registerButton = document.getElementById("boton-modo-registro");
+    const email = document.getElementById("correo-electronico");
     let registering = false;
 
     window.setTimeout(() => {
         if (splash && loginScreen) {
-            splash.classList.add("hidden");
-            loginScreen.classList.remove("hidden");
+            splash.classList.add("oculto");
+            loginScreen.classList.remove("oculto");
         }
     }, 700);
 
     registerButton?.addEventListener("click", () => {
         registering = !registering;
-        email.classList.toggle("hidden", !registering);
+        email.classList.toggle("oculto", !registering);
         email.required = registering;
         loginButton.textContent = registering ? "REGISTRAR CUENTA" : "LOGIN";
         registerButton.textContent = registering ? "VOLVER AL LOGIN" : "CREAR CUENTA";
@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
         loginButton.textContent = registering ? "REGISTRANDO..." : "CONECTANDO...";
 
         try {
-            const username = document.getElementById("username").value.trim();
-            const password = document.getElementById("password").value;
+            const username = document.getElementById("nombre-usuario").value.trim();
+            const password = document.getElementById("contrasena").value;
             const response = registering
                 ? await window.FDM.services.authService.register(username, email.value.trim(), password)
                 : await window.FDM.services.authService.login(username, password);

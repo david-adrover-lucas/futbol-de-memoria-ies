@@ -1,0 +1,441 @@
+/* Anchos raíz: las pantallas ocupan el viewport sin crear un segundo scroll lateral. */
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+:where(.menu-pantalla, .carrera-pantalla, .perfil-pantalla, .partido-pantalla, .resultado-pantalla) {
+    box-sizing: border-box;
+    width: min(100%, var(--ancho-maximo-diseno));
+    min-width: 0;
+    margin-inline: auto;
+}
+
+:where(.menu-pantalla, .carrera-pantalla, .perfil-pantalla) {
+    min-height: 100vh;
+}
+
+@supports (min-height: 100svh) {
+    :where(.menu-pantalla, .carrera-pantalla, .perfil-pantalla) {
+        min-height: 100svh;
+    }
+}
+
+/* Header con columnas flexibles: perfil y club comparten espacio, el logo queda centrado. */
+:where(.menu-encabezado, .carrera-encabezado) {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(5rem, 7vw, 6.5rem) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--separacion-encabezado);
+    width: min(calc(100% - 2 * var(--espacio-4)), var(--ancho-maximo-diseno));
+    height: auto;
+    min-height: var(--alto-encabezado);
+    margin: var(--espacio-2) auto 0;
+    padding: var(--espacio-3) clamp(var(--espacio-3), 2vw, var(--espacio-8));
+    overflow: visible;
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 32%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+    box-shadow: var(--sombra-tarjeta), inset 0 1px var(--color-resalte);
+    filter: none;
+}
+
+:where(.menu-entrenador-tarjeta, .menu-club-tarjeta, .carrera-entrenador, .carrera-club) {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-3);
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    padding: 0;
+    overflow: visible;
+}
+
+.menu-entrenador-tarjeta {
+    justify-content: flex-start;
+}
+
+.menu-club-tarjeta,
+.carrera-club {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+:where(.menu-entrenador-informacion, .menu-club-informacion, .torneo-encabezado-texto) {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.menu-entrenador-informacion {
+    grid-template-columns: minmax(0, 1fr) max-content;
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: var(--espacio-1) var(--espacio-3);
+    height: auto;
+}
+
+.menu-entrenador-nombre-col {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    padding: 0;
+}
+
+.menu-entrenador-centro {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: stretch;
+    align-items: flex-start;
+    width: 100%;
+    max-width: none;
+}
+
+.menu-entrenador-datos-col {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    justify-self: end;
+    gap: var(--espacio-1);
+    padding: 0;
+}
+
+.temporada-menu-encabezado .menu-entrenador-informacion {
+    grid-template-columns: minmax(0, 1fr) max-content;
+    grid-template-rows: auto auto auto;
+}
+
+.temporada-menu-encabezado .menu-entrenador-informacion > strong {
+    grid-column: 1 / -1;
+    grid-row: 1;
+}
+
+.temporada-menu-encabezado .menu-entrenador-informacion > #temporada-edad-entrenador {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.temporada-menu-encabezado .menu-entrenador-informacion > #temporada-provincia-entrenador {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: right;
+}
+
+.temporada-menu-encabezado .menu-estrellas {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.temporada-menu-encabezado .menu-experiencia-wrap {
+    grid-column: 2;
+    grid-row: 3;
+    align-self: center;
+}
+
+:where(.menu-entrenador-informacion strong, .menu-club-informacion strong, .torneo-encabezado-texto strong, .torneo-encabezado-club strong,
+    .carrera-entrenador strong, .carrera-club strong) {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    line-height: var(--alto-linea-ajustado);
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+}
+
+:where(.menu-medio-box, .carrera-entrenador img, .carrera-club img) {
+    flex: 0 0 auto;
+}
+
+:where(.menu-avatar, .menu-club-insignia, .carrera-entrenador img, .carrera-club img, .carrera-logo, .menu-aplicacion-logo) {
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.menu-aplicacion-logo,
+.carrera-logo {
+    justify-self: center;
+    align-self: center;
+    width: clamp(5rem, 6vw, 7rem);
+    max-height: var(--alto-encabezado);
+    height: auto;
+    transform: none;
+    filter: drop-shadow(0 0.5rem 0.75rem rgb(0 0 0 / 48%));
+    z-index: 1;
+}
+
+/* Cabecera de torneos: usa el mismo reparto de espacio que la cabecera principal. */
+#torneos-cuerpo .torneo-encabezado {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(5rem, 7vw, 6.5rem) minmax(0, 1fr);
+    width: min(calc(100% - 2 * var(--espacio-4)), var(--ancho-maximo-diseno));
+    min-height: var(--alto-encabezado);
+    height: auto;
+    padding: var(--espacio-3) clamp(var(--espacio-3), 2vw, var(--espacio-8));
+    gap: var(--separacion-encabezado);
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 32%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+    box-shadow: var(--sombra-tarjeta), inset 0 1px var(--color-resalte);
+    filter: none;
+}
+
+#torneos-cuerpo .torneo-encabezado-lateral {
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+}
+
+#torneos-cuerpo .torneo-encabezado-centro {
+    flex: initial;
+    min-width: 0;
+    pointer-events: none;
+}
+
+#torneos-cuerpo .torneo-logo {
+    width: clamp(5rem, 6vw, 7rem);
+    height: auto;
+    max-height: var(--alto-encabezado);
+    object-fit: contain;
+}
+
+/* Perfil: datos en tres zonas, sin el relleno lateral que comprimía el nombre. */
+.perfil-superior {
+    box-sizing: border-box;
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.8fr) minmax(0, 1fr);
+    gap: var(--separacion-encabezado);
+    width: min(calc(100% - 2 * var(--espacio-4)), var(--ancho-maximo-diseno));
+    height: auto;
+    min-height: var(--alto-encabezado);
+    padding: var(--espacio-3) clamp(var(--espacio-3), 2vw, var(--espacio-8));
+    overflow: visible;
+    border: var(--ancho-borde) solid color-mix(in srgb, var(--color-acento-cian) 32%, var(--color-borde));
+    border-radius: var(--radio-grande);
+    background: linear-gradient(145deg, var(--color-superficie-panel-elevada), var(--color-superficie-panel));
+    box-shadow: var(--sombra-tarjeta), inset 0 1px var(--color-resalte);
+    filter: none;
+}
+
+#perfil-nombre,
+.perfil-superior > strong:last-child {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.perfil-experiencia {
+    width: min(100%, 22rem);
+}
+
+@media (max-width: 920px) {
+    :where(.menu-pantalla, .carrera-pantalla, .perfil-pantalla, .partido-pantalla, .resultado-pantalla) {
+        width: 100%;
+    }
+
+    :where(.menu-encabezado, .carrera-encabezado, #torneos-cuerpo .torneo-encabezado) {
+        grid-template-columns: minmax(0, 1fr) clamp(4rem, 7vw, 5rem) minmax(0, 1fr);
+        min-height: 5.5rem;
+    }
+
+    :where(.menu-entrenador-tarjeta, .menu-club-tarjeta, .carrera-entrenador, .carrera-club) {
+        gap: var(--espacio-2);
+    }
+
+    .menu-medio-box {
+        width: clamp(2.75rem, 7vw, 3.5rem);
+        height: clamp(2.75rem, 7vw, 3.5rem);
+    }
+
+    .perfil-superior {
+        grid-template-columns: minmax(0, 1fr) minmax(10rem, 0.8fr) minmax(0, 1fr);
+        min-height: 5.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    :where(.menu-pantalla, .carrera-pantalla, .perfil-pantalla, .partido-pantalla, .resultado-pantalla) {
+        padding-left: max(var(--espacio-3), env(safe-area-inset-left));
+        padding-right: max(var(--espacio-3), env(safe-area-inset-right));
+    }
+
+    .menu-pantalla {
+        height: auto;
+        min-height: 100vh;
+        padding-top: max(var(--espacio-3), env(safe-area-inset-top));
+    }
+
+    .menu-encabezado,
+    #torneos-cuerpo .torneo-encabezado {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        gap: var(--espacio-3);
+        width: 100%;
+        min-height: 0;
+        padding: var(--espacio-3);
+    }
+
+    .menu-aplicacion-logo,
+    #torneos-cuerpo .torneo-encabezado-centro {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        justify-self: center;
+    }
+
+    .menu-aplicacion-logo {
+        width: 5rem;
+    }
+
+    .menu-entrenador-tarjeta,
+    #torneos-cuerpo .torneo-encabezado-perfil {
+        grid-column: 1;
+        grid-row: 2;
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .menu-club-tarjeta,
+    #torneos-cuerpo .torneo-encabezado-club {
+        grid-column: 2;
+        grid-row: 2;
+        justify-content: flex-end;
+        text-align: right;
+    }
+
+    .menu-medio-box {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .menu-entrenador-informacion {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+        gap: var(--espacio-1);
+    }
+
+    .menu-entrenador-nombre-col,
+    .menu-entrenador-centro,
+    .menu-entrenador-datos-col {
+        grid-column: 1;
+        justify-self: stretch;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .menu-entrenador-nombre-col { grid-row: 1; }
+    .menu-entrenador-centro { grid-row: 2; }
+    .menu-entrenador-datos-col { grid-row: 3; }
+
+    .menu-entrenador-datos {
+        max-width: 100%;
+        font-size: var(--tamano-texto-xs);
+    }
+
+    .menu-entrenador-informacion strong,
+    .menu-club-informacion strong,
+    #torneos-cuerpo .torneo-encabezado-texto strong,
+    #torneos-cuerpo .torneo-encabezado-club strong {
+        font-size: var(--tamano-texto-xs);
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .menu-club-informacion {
+        min-width: 0;
+    }
+
+    #torneos-cuerpo .torneo-encabezado-lateral {
+        gap: var(--espacio-2);
+    }
+
+    #torneos-cuerpo .torneo-encabezado-lateral img {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    #torneos-cuerpo .torneo-logo {
+        width: 5rem;
+        max-height: 3rem;
+    }
+
+    .temporada-menu-encabezado .menu-entrenador-informacion {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+    }
+
+    .temporada-menu-encabezado .menu-entrenador-informacion > strong {
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+
+    .temporada-menu-encabezado .menu-entrenador-informacion > #temporada-edad-entrenador {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .temporada-menu-encabezado .menu-entrenador-informacion > #temporada-provincia-entrenador {
+        grid-column: 2;
+        grid-row: 2;
+        text-align: right;
+    }
+
+    .temporada-menu-encabezado .menu-estrellas {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    .temporada-menu-encabezado .menu-experiencia-wrap {
+        grid-column: 2;
+        grid-row: 3;
+        align-self: center;
+    }
+
+    #torneos-cuerpo .carrera-encabezado {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto auto;
+    }
+
+    #torneos-cuerpo .torneo-encabezado-centro {
+        flex: initial;
+    }
+
+    .perfil-pantalla {
+        height: auto;
+        min-height: 100vh;
+        padding-top: max(var(--espacio-3), env(safe-area-inset-top));
+        padding-bottom: max(var(--espacio-6), env(safe-area-inset-bottom));
+    }
+
+    .perfil-superior {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas: "name meta" "progress progress";
+        min-height: 0;
+        width: 100%;
+        margin-top: 0;
+        padding: var(--espacio-3);
+        gap: var(--espacio-2);
+    }
+
+    #perfil-nombre {
+        grid-area: name;
+        justify-self: start;
+        text-align: left;
+        font-size: var(--tamano-texto-grande);
+    }
+
+    .perfil-superior > div {
+        grid-area: progress;
+    }
+
+    .perfil-superior > strong:last-child {
+        grid-area: meta;
+        justify-self: end;
+        font-size: var(--tamano-texto-xs);
+        text-align: right;
+    }
+
+    .perfil-experiencia {
+        width: 100%;
+        margin-top: var(--espacio-2);
+    }
+}

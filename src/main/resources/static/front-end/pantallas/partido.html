@@ -5,50 +5,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futbol de Memoria - Partido</title>
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../estilos/principal.css">
 </head>
-<body id="partido-body">
-    <main class="match-screen" aria-label="Partido de trivia">
-        <div id="match-event-layer" class="match-event-layer" aria-live="polite"></div>
+<body id="partido-cuerpo">
+    <main class="partido-pantalla" aria-label="Partido de trivia">
+        <div id="partido-capa-evento" class="partido-capa-evento" aria-live="polite"></div>
 
-        <section class="match-scoreboard" aria-live="polite">
-            <b id="score-competition" class="score-competition">COPA</b>
-            <div class="score-mainline">
-                <strong id="score-local-code">BOC</strong>
-                <span id="score-local-goals">0</span>
-                <img id="score-cup" src="../assets/copa-libertadores.png" alt="">
-                <span id="score-away-goals">0</span>
-                <strong id="score-away-code">RIV</strong>
+        <section class="partido-marcador" aria-live="polite">
+            <b id="marcador-competicion" class="marcador-competicion">COPA</b>
+            <div class="marcador-linea-principal">
+                <strong id="marcador-codigo-local">BOC</strong>
+                <span id="marcador-goles-local">0</span>
+                <img id="marcador-copa" src="../assets/copa-libertadores.png" alt="">
+                <span id="marcador-goles-visitante">0</span>
+                <strong id="marcador-codigo-visitante">RIV</strong>
             </div>
-            <em id="score-period">PT&nbsp;&nbsp;10'</em>
+            <em id="marcador-periodo">PT&nbsp;&nbsp;10'</em>
         </section>
 
-        <section class="question-stage">
-            <div id="question-timer" class="match-timer">15 SEGUNDOS</div>
-            <h1 id="question-text" class="match-question">PREGUNTA</h1>
-            <div id="answers-grid" class="answers-grid"></div>
+        <section class="pregunta-zona">
+            <div id="temporizador-pregunta" class="partido-temporizador">15 SEGUNDOS</div>
+            <h1 id="texto-pregunta" class="partido-pregunta">PREGUNTA</h1>
+            <div id="respuestas-grilla" class="respuestas-grilla"></div>
         </section>
 
-        <div class="wildcards-row" aria-label="Comodines">
-            <button type="button" class="wildcard-btn" data-wildcard="penal" title="Penal">
+        <div class="comodines-fila" aria-label="Comodines">
+            <button type="button" class="comodin-boton" data-wildcard="penal" title="Penal">
                 <img src="../assets/comodin-penal.png" alt="Penal">
             </button>
-            <button type="button" class="wildcard-btn" data-wildcard="doble" title="Gol doble">
+            <button type="button" class="comodin-boton" data-wildcard="doble" title="Gol doble">
                 <img src="../assets/comodin-x2.png" alt="Gol doble">
             </button>
-            <button type="button" class="wildcard-btn" data-wildcard="cincuenta" title="50/50">
+            <button type="button" class="comodin-boton" data-wildcard="cincuenta" title="50/50">
                 <img src="../assets/comodin-50-50.png" alt="50/50">
             </button>
-            <button type="button" id="btn-exit-match" class="wildcard-btn" title="Salir">
+            <button type="button" id="boton-salir-partido" class="comodin-boton" title="Salir">
                 <span>FIN</span>
             </button>
         </div>
     </main>
 
-    <script src="../scripts/core/api-client.js"></script>
-    <script src="../scripts/core/session.js"></script>
-    <script src="../scripts/core/mappers.js"></script>
-    <script src="../scripts/core/services.js"></script>
+    <script src="../scripts/nucleo/cliente-api.js"></script>
+    <script src="../scripts/nucleo/sesion.js"></script>
+    <script src="../scripts/nucleo/adaptadores.js"></script>
+    <script src="../scripts/nucleo/servicios.js"></script>
     <script src="../scripts/partido.js"></script>
 </body>
 </html>

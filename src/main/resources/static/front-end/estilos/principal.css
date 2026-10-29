@@ -1,0 +1,12 @@
+/* Punto de entrada único. Las hojas actuales se conservan durante la migración. */
+@layer reinicio, legado, tokens, base, diseno, componentes, paginas, utilidades;
+
+@import url("./base/reinicio.css") layer(reinicio);
+@import url("./base/legado.css") layer(legado);
+@import url("./componentes/sistema-interfaz.css") layer(legado);
+@import url("./tokens.css") layer(tokens);
+@import url("./base/tipografia.css") layer(base);
+@import url("./diseno/diseno.css") layer(diseno);
+@import url("./componentes/componentes.css") layer(componentes);
+@import url("./paginas/paginas.css") layer(paginas);
+@import url("./utilidades/accesibilidad.css") layer(utilidades);

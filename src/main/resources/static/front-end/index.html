@@ -5,29 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futbol de Memoria - Login</title>
-    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./estilos/principal.css">
 </head>
 <body>
-    <div id="splash-screen" class="screen-container">
-        <div class="loading-container">
-            <h2 id="loading-text" class="text-cargando">CARGANDO RECURSOS...</h2>
+    <div id="pantalla-inicio" class="pantalla-contenedor">
+        <div class="cargando-contenedor">
+            <h2 id="texto-cargando" class="texto-cargando">CARGANDO RECURSOS...</h2>
         </div>
     </div>
 
-    <div id="login-screen" class="screen-container hidden">
-        <form id="login-form" class="login-form-container">
-            <input type="text" id="username" class="login-input-field" placeholder="INGRESA TU DT / USUARIO" required autocomplete="username">
-            <input type="password" id="password" class="login-input-field" placeholder="CONTRASENA" required>
-            <input type="email" id="email" class="login-input-field hidden" placeholder="CORREO ELECTRONICO" autocomplete="email">
-            <button type="submit" id="login-btn" class="btn-login-esport">LOGIN</button>
-            <button type="button" id="register-mode-btn" class="btn-small-esport">CREAR CUENTA</button>
+    <div id="pantalla-acceso" class="pantalla-contenedor oculto">
+        <form id="formulario-acceso" class="acceso-formulario-contenedor">
+            <input type="text" id="nombre-usuario" class="acceso-campo-campo" placeholder="INGRESA TU DT / USUARIO" required autocomplete="username">
+            <input type="password" id="contrasena" class="acceso-campo-campo" placeholder="CONTRASENA" required>
+            <input type="email" id="correo-electronico" class="acceso-campo-campo oculto" placeholder="CORREO ELECTRONICO" autocomplete="email">
+            <button type="submit" id="boton-acceso" class="boton-acceso-juego">LOGIN</button>
+            <button type="button" id="boton-modo-registro" class="boton-compacto-juego">CREAR CUENTA</button>
         </form>
     </div>
 
-    <script src="./scripts/core/api-client.js"></script>
-    <script src="./scripts/core/session.js"></script>
-    <script src="./scripts/core/mappers.js"></script>
-    <script src="./scripts/core/services.js"></script>
-    <script src="./scripts/app.js"></script>
+    <script src="./scripts/nucleo/cliente-api.js"></script>
+    <script src="./scripts/nucleo/sesion.js"></script>
+    <script src="./scripts/nucleo/adaptadores.js"></script>
+    <script src="./scripts/nucleo/servicios.js"></script>
+    <script src="./scripts/aplicacion.js"></script>
 </body>
 </html>

@@ -18,44 +18,44 @@ document.addEventListener("DOMContentLoaded", async () => {
         const result = tanda?.estado === "finalizada"
             ? (tanda.equipoGanadorId === game.equipoLocal?.equipoId ? "victoria" : "derrota")
             : game.golesLocal > game.golesVisitante ? "victoria" : game.golesLocal < game.golesVisitante ? "derrota" : "empate";
-        document.body.classList.add(`result-${result}`);
+        document.body.classList.add(`resultado-${result}`);
         const delta = Number(game.variacionExperiencia) || 0;
         const stars = Math.max(1, Number(carrera.estrellas) || 1);
         const levelFloor = [0, 0, 500, 1500, 3000, 5000][stars];
         const levelNext = [500, 500, 1500, 3000, 5000, 5000][stars];
         const progress = Math.min(100, Math.max(0, ((carrera.experiencia - levelFloor) / Math.max(1, levelNext - levelFloor)) * 100));
 
-        document.getElementById("result-banner").src = result === "derrota" ? "../assets/cartel-perdiste.png" : "../assets/cartel-ganaste.png";
-        document.getElementById("result-banner-text").textContent = result === "victoria" ? "GANASTE" : result === "derrota" ? "PERDISTE" : "EMPATE";
-        document.getElementById("result-exp-img").src = delta < 0 ? "../assets/exp-negativa.png" : "../assets/exp-positiva.png";
-        document.getElementById("result-exp-delta").textContent = `${delta > 0 ? "+" : ""}${delta} XP`;
-        document.getElementById("result-local-img").src = rutaEscudo(game.equipoLocal);
-        document.getElementById("result-away-img").src = rutaEscudo(game.equipoVisitante);
-        document.getElementById("result-local-badge").textContent = game.respuestasCorrectas;
-        document.getElementById("result-away-badge").textContent = game.respuestasIncorrectas;
-        document.getElementById("result-shots-local").textContent = game.golesLocal;
-        document.getElementById("result-shots-away").textContent = game.golesVisitante;
+        document.getElementById("resultado-cartel").src = result === "derrota" ? "../assets/cartel-perdiste.png" : "../assets/cartel-ganaste.png";
+        document.getElementById("resultado-texto-cartel").textContent = result === "victoria" ? "GANASTE" : result === "derrota" ? "PERDISTE" : "EMPATE";
+        document.getElementById("resultado-imagen-experiencia").src = delta < 0 ? "../assets/exp-negativa.png" : "../assets/exp-positiva.png";
+        document.getElementById("resultado-variacion-experiencia").textContent = `${delta > 0 ? "+" : ""}${delta} XP`;
+        document.getElementById("resultado-imagen-local").src = rutaEscudo(game.equipoLocal);
+        document.getElementById("resultado-imagen-visitante").src = rutaEscudo(game.equipoVisitante);
+        document.getElementById("resultado-insignia-local").textContent = game.respuestasCorrectas;
+        document.getElementById("resultado-insignia-visitante").textContent = game.respuestasIncorrectas;
+        document.getElementById("resultado-remates-local").textContent = game.golesLocal;
+        document.getElementById("resultado-remates-visitante").textContent = game.golesVisitante;
         if (tanda?.estado === "finalizada") {
-            const penales = document.getElementById("result-penalties");
+            const penales = document.getElementById("resultado-penales");
             penales.textContent = `PENALES ${tanda.golesJugador} - ${tanda.golesRival}`;
-            penales.classList.remove("hidden");
+            penales.classList.remove("oculto");
         }
-        document.getElementById("result-wild-local").textContent = comodines.length;
-        document.getElementById("result-wild-away").textContent = "—";
-        document.getElementById("result-stars").textContent = "★".repeat(stars) + "☆".repeat(5 - stars);
-        document.getElementById("result-exp-bar").style.width = `${progress}%`;
-        document.getElementById("result-exp-text").textContent = `${carrera.experiencia} XP`;
-        document.getElementById("result-date").textContent = game.competicion?.nombre || "PARTIDO FINALIZADO";
-        document.querySelector(".result-stats > div:first-child strong").textContent = "RESPUESTAS CORRECTAS / INCORRECTAS";
-        document.querySelector(".result-stats > div:nth-child(2) strong").textContent = "GOLES DEL PARTIDO";
-        document.querySelector(".result-stats > div:nth-child(3) strong").textContent = "COMODINES USADOS";
+        document.getElementById("resultado-comodines-local").textContent = comodines.length;
+        document.getElementById("resultado-comodines-visitante").textContent = "—";
+        document.getElementById("resultado-estrellas").textContent = "★".repeat(stars) + "☆".repeat(5 - stars);
+        document.getElementById("resultado-barra-experiencia").style.width = `${progress}%`;
+        document.getElementById("resultado-texto-experiencia").textContent = `${carrera.experiencia} XP`;
+        document.getElementById("resultado-fecha").textContent = game.competicion?.nombre || "PARTIDO FINALIZADO";
+        document.querySelector(".resultado-estadisticas > div:first-child strong").textContent = "RESPUESTAS CORRECTAS / INCORRECTAS";
+        document.querySelector(".resultado-estadisticas > div:nth-child(2) strong").textContent = "GOLES DEL PARTIDO";
+        document.querySelector(".resultado-estadisticas > div:nth-child(3) strong").textContent = "COMODINES USADOS";
         window.FDM.session.set({ ...session, carreraId: carrera.carreraId, carrera, estadisticas });
     } catch (error) {
         alert(error.message);
         window.location.replace("menu.html");
         return;
     }
-    document.getElementById("btn-back-menu-result").addEventListener("click", () => {
+    document.getElementById("boton-volver-menu-resultado").addEventListener("click", () => {
         const current = window.FDM.session.get() || {};
         const { ultimoPartidoId, ...clean } = current;
         window.FDM.session.set(clean);

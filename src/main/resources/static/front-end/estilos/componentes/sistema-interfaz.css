@@ -1,0 +1,247 @@
+/* Sistema visual del juego: componentes CSS sin placas rasterizadas. */
+:root {
+    color-scheme: dark;
+    --interfaz-tinta: #f4f8ff;
+    --interfaz-tenue: #a9bad0;
+    --interfaz-fondo: #07111f;
+    --interfaz-panel: #101d30;
+    --interfaz-panel-elevado: #172941;
+    --interfaz-linea: #2b4964;
+    --interfaz-cian: #54dcff;
+    --interfaz-cian-fuerte: #13b8e8;
+    --interfaz-dorado: #ffd166;
+    --interfaz-peligro: #ff6174;
+    --interfaz-radio: 10px;
+    --interfaz-radio-pequeno: 7px;
+    --interfaz-sombra: 0 16px 36px rgb(0 0 0 / 38%);
+    --interfaz-brillo: 0 0 18px rgb(84 220 255 / 24%);
+    --interfaz-superficie-boton: linear-gradient(180deg, #1b3853, #10243a);
+    --interfaz-superficie-boton-sobrevuelo: linear-gradient(180deg, #24516f, #12334e);
+    --interfaz-superficie-dorada: linear-gradient(180deg, #705322, #332712);
+    --interfaz-superficie-panel: linear-gradient(145deg, rgb(20 39 61 / 96%), rgb(8 18 32 / 96%));
+    --interfaz-transicion: 160ms ease;
+}
+
+/* Controles base y foco visible para teclado. */
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    color: var(--interfaz-tinta);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid var(--interfaz-dorado);
+    outline-offset: 3px;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    filter: grayscale(.65);
+    opacity: .55;
+}
+
+.acceso-campo-campo,
+.selector-campo,
+.penal-respuesta input {
+    box-sizing: border-box;
+    border: 1px solid var(--interfaz-linea);
+    border-radius: var(--interfaz-radio-pequeno);
+    background: rgb(7 17 31 / 88%);
+    box-shadow: inset 0 1px 5px rgb(0 0 0 / 35%);
+    transition: border-color var(--interfaz-transicion), box-shadow var(--interfaz-transicion);
+}
+
+.acceso-campo-campo:focus,
+.selector-campo:focus,
+.penal-respuesta input:focus {
+    border-color: var(--interfaz-cian);
+    box-shadow: 0 0 0 3px rgb(84 220 255 / 16%), var(--interfaz-brillo);
+}
+
+/* Botones existentes. Las clases .interfaz-boton permiten usarlas en pantallas nuevas. */
+.boton-acceso-juego,
+.boton-compacto-juego,
+.menu-boton,
+.menu-pie-boton,
+.menu-panel-cerrar,
+.partido-temporizador,
+.partido-pregunta,
+.respuesta-boton,
+.resultado-volver,
+.placa-titulo-pantalla,
+.torneo-big-boton,
+.perfil-boton,
+.interfaz-boton {
+    border: 1px solid rgb(84 220 255 / 56%);
+    border-radius: var(--interfaz-radio-pequeno);
+    background: var(--interfaz-superficie-boton);
+    box-shadow: inset 0 1px rgb(255 255 255 / 12%), 0 7px 18px rgb(0 0 0 / 28%);
+    color: var(--interfaz-tinta);
+    text-shadow: 0 2px 5px rgb(0 0 0 / 75%);
+    transition: background var(--interfaz-transicion), border-color var(--interfaz-transicion),
+        box-shadow var(--interfaz-transicion), transform var(--interfaz-transicion), color var(--interfaz-transicion);
+}
+
+.boton-acceso-juego:hover,
+.boton-compacto-juego:hover,
+.menu-boton:hover,
+.menu-pie-boton:hover,
+.menu-panel-cerrar:hover,
+.respuesta-boton:hover,
+.torneo-big-boton:hover,
+.perfil-boton:hover,
+.interfaz-boton:hover {
+    border-color: var(--interfaz-cian);
+    background: var(--interfaz-superficie-boton-sobrevuelo);
+    box-shadow: inset 0 1px rgb(255 255 255 / 18%), var(--interfaz-brillo), 0 9px 22px rgb(0 0 0 / 34%);
+    transform: translateY(-2px);
+}
+
+.menu-boton.activo,
+.menu-boton.activo:hover,
+.perfil-boton.activo,
+.partido-pregunta.es-penal-pregunta,
+.interfaz-boton--dorado {
+    border-color: var(--interfaz-dorado);
+    background: var(--interfaz-superficie-dorada);
+    box-shadow: inset 0 1px rgb(255 255 255 / 20%), 0 0 18px rgb(255 209 102 / 28%);
+}
+
+.boton-acceso-juego:active,
+.boton-compacto-juego:active,
+.menu-boton:active,
+.menu-pie-boton:active,
+.menu-panel-cerrar:active,
+.respuesta-boton:active,
+.torneo-big-boton:active,
+.perfil-boton:active,
+.interfaz-boton:active {
+    transform: translateY(1px) scale(.985);
+    box-shadow: inset 0 2px 8px rgb(0 0 0 / 32%);
+}
+
+/* Widgets, paneles, cards y placas informativas. */
+.panel-formulario,
+.panel-avatares,
+.panel-selector-clubes,
+.panel-detalle-club,
+.menu-encabezado,
+.menu-secundario-panel,
+.carrera-encabezado,
+.perfil-superior,
+.perfil-panel,
+.contenedor-tabla-temporada,
+.menu-informacion-fila,
+.perfil-fila,
+.resultado-estadisticas,
+.avatar-marco,
+.tarjeta-casillero-club,
+.escudo-detalle-marco,
+.boton-objetivo-etiqueta,
+.interfaz-tarjeta,
+.interfaz-modulo {
+    border: 1px solid color-mix(in srgb, var(--interfaz-cian) 38%, var(--interfaz-linea));
+    border-radius: var(--interfaz-radio);
+    background: var(--interfaz-superficie-panel);
+    box-shadow: var(--interfaz-sombra), inset 0 1px rgb(255 255 255 / 8%);
+}
+
+.menu-encabezado,
+.carrera-encabezado,
+.perfil-superior {
+    background: linear-gradient(180deg, rgb(19 38 59 / 96%), rgb(8 18 32 / 94%));
+}
+
+.menu-secundario-panel,
+.perfil-panel,
+.contenedor-tabla-temporada {
+    background: var(--interfaz-superficie-panel);
+    backdrop-filter: blur(12px);
+}
+
+.avatar-marco {
+    box-sizing: border-box;
+    padding: 7px;
+    box-shadow: var(--interfaz-sombra), inset 0 0 0 2px rgb(255 209 102 / 28%);
+}
+
+.avatar-imagen {
+    border-radius: calc(var(--interfaz-radio-pequeno) - 2px);
+}
+
+.tarjeta-casillero-club {
+    border-color: color-mix(in srgb, var(--interfaz-color-nivel, var(--interfaz-cian)) 50%, var(--interfaz-linea));
+    background: linear-gradient(145deg, rgb(24 43 66 / 96%), rgb(7 15 27 / 96%));
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 5%), 0 6px 14px rgb(0 0 0 / 32%);
+}
+
+.tarjeta-casillero-club.seleccionado,
+.escudo-detalle-marco {
+    --interfaz-color-nivel: var(--interfaz-dorado);
+    border-color: var(--interfaz-color-nivel);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--interfaz-color-nivel) 35%, transparent), var(--interfaz-sombra);
+}
+
+.tarjeta-casillero-club.blocked-club {
+    filter: grayscale(.7) opacity(.62);
+}
+
+.boton-objetivo-etiqueta,
+.menu-informacion-fila,
+.perfil-fila,
+.resultado-estadisticas span,
+.resultado-estadisticas strong,
+.resultado-enfrentamiento em {
+    background: linear-gradient(100deg, rgb(21 43 65 / 94%), rgb(9 22 38 / 94%));
+    border-color: rgb(84 220 255 / 35%);
+    border-radius: var(--interfaz-radio-pequeno);
+}
+
+.respuesta-boton {
+    min-height: 58px;
+    padding: 12px 18px;
+    cursor: pointer;
+}
+
+.respuesta-boton:disabled {
+    transform: none;
+}
+
+.interfaz-tarjeta__titulo,
+.interfaz-modulo__titulo {
+    margin: 0 0 .5rem;
+    color: var(--interfaz-cian);
+    font-size: 1rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.interfaz-tarjeta__valor,
+.interfaz-modulo__valor {
+    margin: 0;
+    color: var(--interfaz-tinta);
+    font-size: clamp(1.15rem, 2vw, 1.8rem);
+    font-weight: 800;
+}
+
+.boton-acceso-juego.deshabilitado {
+    border-color: var(--interfaz-linea);
+    background: #263342;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}

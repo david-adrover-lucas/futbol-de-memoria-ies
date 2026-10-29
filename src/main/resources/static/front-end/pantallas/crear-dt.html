@@ -5,20 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futbol de Memoria - Crear DT</title>
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../estilos/principal.css">
 </head>
-<body id="crear-dt-body">
-    <div class="crear-dt-container">
+<body id="crear-entrenador-cuerpo">
+    <div class="crear-entrenador-contenedor">
         <div class="panel-formulario">
             <h2 class="titulo-pantalla">CREAR DT</h2>
 
-            <form id="form-registro-dt">
-                <div class="inputs-inner">
-                    <input type="text" id="dt-name" class="login-input-field" placeholder="INGRESA TU NOMBRE" required>
-                    <input type="text" id="dt-lastname" class="login-input-field" placeholder="INGRESA TU APELLIDO" required>
-                    <input type="number" id="dt-age" class="login-input-field" placeholder="INGRESA TU EDAD" min="18" max="99" required>
+            <form id="formulario-registro-entrenador">
+                <div class="campos-interiores">
+                    <input type="text" id="entrenador-nombre" class="acceso-campo-campo" placeholder="INGRESA TU NOMBRE" required>
+                    <input type="text" id="entrenador-apellido" class="acceso-campo-campo" placeholder="INGRESA TU APELLIDO" required>
+                    <input type="number" id="entrenador-edad" class="acceso-campo-campo" placeholder="INGRESA TU EDAD" min="18" max="99" required>
 
-                    <select id="dt-province" class="login-input-field select-field" required>
+                    <select id="entrenador-provincia" class="acceso-campo-campo selector-campo" required>
                         <option value="" disabled selected>SELECCIONA TU PROVINCIA</option>
                         <option value="buenos-aires">Buenos Aires</option>
                         <option value="capital-federal">Capital Federal</option>
@@ -30,31 +30,31 @@
                     </select>
                 </div>
 
-                <button type="submit" id="btn-continuar-dt" class="btn-login-esport btn-continuar-dt">CONTINUAR</button>
+                <button type="submit" id="boton-continuar-entrenador" class="boton-acceso-juego boton-continuar-entrenador">CONTINUAR</button>
 
-                <div class="buttons-row">
-                    <button type="button" id="btn-random" class="btn-small-esport">RANDOM</button>
-                    <button type="button" id="btn-back" class="btn-small-esport">BACK</button>
+                <div class="fila-botones">
+                    <button type="button" id="boton-aleatorio" class="boton-compacto-juego">RANDOM</button>
+                    <button type="button" id="boton-volver" class="boton-compacto-juego">BACK</button>
                 </div>
             </form>
         </div>
 
         <div class="panel-avatares">
-            <div class="grid-avatares">
-                <div class="avatar-card" data-avatar="1"><div class="avatar-frame"><img src="../assets/avatar-1.png" alt="DT 1" class="avatar-img"></div></div>
-                <div class="avatar-card" data-avatar="2"><div class="avatar-frame"><img src="../assets/avatar-2.png" alt="DT 2" class="avatar-img"></div></div>
-                <div class="avatar-card" data-avatar="3"><div class="avatar-frame"><img src="../assets/avatar-3.png" alt="DT 3" class="avatar-img"></div></div>
-                <div class="avatar-card" data-avatar="4"><div class="avatar-frame"><img src="../assets/avatar-4.png" alt="DT 4" class="avatar-img"></div></div>
-                <div class="avatar-card" data-avatar="5"><div class="avatar-frame"><img src="../assets/avatar-5.png" alt="DT 5" class="avatar-img"></div></div>
-                <div class="avatar-card" data-avatar="6"><div class="avatar-frame"><img src="../assets/avatar-6.png" alt="DT 6" class="avatar-img"></div></div>
+            <div class="grilla-avatares">
+                <div class="avatar-tarjeta" data-avatar="1"><div class="avatar-marco"><img src="../assets/avatar-1.png" alt="DT 1" class="avatar-imagen"></div></div>
+                <div class="avatar-tarjeta" data-avatar="2"><div class="avatar-marco"><img src="../assets/avatar-2.png" alt="DT 2" class="avatar-imagen"></div></div>
+                <div class="avatar-tarjeta" data-avatar="3"><div class="avatar-marco"><img src="../assets/avatar-3.png" alt="DT 3" class="avatar-imagen"></div></div>
+                <div class="avatar-tarjeta" data-avatar="4"><div class="avatar-marco"><img src="../assets/avatar-4.png" alt="DT 4" class="avatar-imagen"></div></div>
+                <div class="avatar-tarjeta" data-avatar="5"><div class="avatar-marco"><img src="../assets/avatar-5.png" alt="DT 5" class="avatar-imagen"></div></div>
+                <div class="avatar-tarjeta" data-avatar="6"><div class="avatar-marco"><img src="../assets/avatar-6.png" alt="DT 6" class="avatar-imagen"></div></div>
             </div>
         </div>
     </div>
 
-    <script src="../scripts/core/api-client.js"></script>
-    <script src="../scripts/core/session.js"></script>
-    <script src="../scripts/core/mappers.js"></script>
-    <script src="../scripts/core/services.js"></script>
-    <script src="../scripts/crear-dt.js"></script>
+    <script src="../scripts/nucleo/cliente-api.js"></script>
+    <script src="../scripts/nucleo/sesion.js"></script>
+    <script src="../scripts/nucleo/adaptadores.js"></script>
+    <script src="../scripts/nucleo/servicios.js"></script>
+    <script src="../scripts/crear-entrenador.js"></script>
 </body>
 </html>

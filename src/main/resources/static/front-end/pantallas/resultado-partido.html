@@ -5,42 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futbol de Memoria - Resultado</title>
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../estilos/principal.css">
 </head>
-<body id="resultado-body">
-    <main class="result-screen">
-        <div class="result-banner-wrap">
-            <img id="result-banner" class="result-banner" src="../assets/cartel-ganaste.png" alt="Resultado">
-            <strong id="result-banner-text">GANASTE</strong>
+<body id="resultado-cuerpo">
+    <main class="resultado-pantalla">
+        <div class="resultado-cartel-wrap">
+            <img id="resultado-cartel" class="resultado-cartel" src="../assets/cartel-ganaste.png" alt="Resultado">
+            <strong id="resultado-texto-cartel">GANASTE</strong>
         </div>
 
-        <section class="result-stats">
-            <div><span id="result-local-badge">0</span><strong>RESPUESTAS CORRECTAS</strong><span id="result-away-badge">0</span></div>
-            <div><span id="result-shots-local">0</span><strong>GOLES DEL PARTIDO</strong><span id="result-shots-away">0</span><small id="result-penalties" class="result-penalties hidden"></small></div>
-            <div><span id="result-wild-local">0</span><strong>COMODINES</strong><span id="result-wild-away">0</span></div>
+        <section class="resultado-estadisticas">
+            <div><span id="resultado-insignia-local">0</span><strong>RESPUESTAS CORRECTAS</strong><span id="resultado-insignia-visitante">0</span></div>
+            <div><span id="resultado-remates-local">0</span><strong>GOLES DEL PARTIDO</strong><span id="resultado-remates-visitante">0</span><small id="resultado-penales" class="resultado-penales oculto"></small></div>
+            <div><span id="resultado-comodines-local">0</span><strong>COMODINES</strong><span id="resultado-comodines-visitante">0</span></div>
         </section>
 
-        <div class="result-exp-card">
-            <img id="result-exp-img" class="result-exp-img" src="../assets/exp-positiva.png" alt="Experiencia">
-            <strong id="result-exp-delta">+100 XP</strong>
+        <div class="resultado-experiencia-tarjeta">
+            <img id="resultado-imagen-experiencia" class="resultado-experiencia-imagen" src="../assets/exp-positiva.png" alt="Experiencia">
+            <strong id="resultado-variacion-experiencia">+100 XP</strong>
         </div>
-        <div id="result-stars" class="result-stars">â˜…â˜…â˜…â˜†â˜†</div>
-        <div class="result-exp-bar"><span id="result-exp-bar"></span><strong id="result-exp-text">0/2000</strong></div>
+        <div id="resultado-estrellas" class="resultado-estrellas">â˜…â˜…â˜…â˜†â˜†</div>
+        <div class="resultado-experiencia-barra"><span id="resultado-barra-experiencia"></span><strong id="resultado-texto-experiencia">0/2000</strong></div>
 
-        <section class="result-versus">
-            <img id="result-local-img" src="../assets/Boca_escudo.png" alt="">
+        <section class="resultado-enfrentamiento">
+            <img id="resultado-imagen-local" src="../assets/Boca_escudo.png" alt="">
             <strong>VS</strong>
-            <img id="result-away-img" src="../assets/Escudo_del_Club_AtlÃ©tico_Independiente.svg.png" alt="">
-            <em id="result-date">FECHA 1</em>
+            <img id="resultado-imagen-visitante" src="../assets/Escudo_del_Club_Atlético_Independiente.svg.png" alt="">
+            <em id="resultado-fecha">FECHA 1</em>
         </section>
 
-        <button type="button" id="btn-back-menu-result" class="menu-footer-btn result-back">VOLVER AL MENU</button>
+        <button type="button" id="boton-volver-menu-resultado" class="menu-pie-boton resultado-volver">VOLVER AL MENU</button>
     </main>
 
-    <script src="../scripts/core/api-client.js"></script>
-    <script src="../scripts/core/session.js"></script>
-    <script src="../scripts/core/mappers.js"></script>
-    <script src="../scripts/core/services.js"></script>
+    <script src="../scripts/nucleo/cliente-api.js"></script>
+    <script src="../scripts/nucleo/sesion.js"></script>
+    <script src="../scripts/nucleo/adaptadores.js"></script>
+    <script src="../scripts/nucleo/servicios.js"></script>
     <script src="../scripts/resultado-partido.js"></script>
 </body>
 </html>

@@ -5,69 +5,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futbol de Memoria - Temporada</title>
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../estilos/principal.css">
 </head>
-<body id="temporada-body">
-    <main class="career-screen season-screen">
-        <header class="menu-header season-menu-header">
-            <div class="menu-dt-card">
-                <div class="menu-media-box">
-                    <img id="season-dt-avatar" class="menu-avatar" src="../assets/avatar-1.png" alt="Avatar DT">
+<body id="temporada-cuerpo">
+    <main class="carrera-pantalla pantalla-temporada">
+        <header class="menu-encabezado temporada-menu-encabezado">
+            <div class="menu-entrenador-tarjeta">
+                <div class="menu-medio-box">
+                    <img id="temporada-avatar-entrenador" class="menu-avatar" src="../assets/avatar-1.png" alt="Avatar DT">
                 </div>
-                <div class="menu-dt-info">
-                    <strong id="season-dt-name">DT</strong>
-                    <span id="season-dt-age" class="menu-dt-meta">EDAD: --</span>
-                    <span id="season-dt-province" class="menu-dt-meta">PROVINCIA: --</span>
-                    <div id="season-dt-stars" class="menu-stars">â˜…â˜…â˜…â˜†â˜†</div>
-                    <div class="menu-exp-wrap" aria-label="Experiencia del DT">
-                        <span class="menu-exp-bar season-exp-bar"></span>
+                <div class="menu-entrenador-informacion">
+                    <strong id="temporada-nombre-entrenador">DT</strong>
+                    <span id="temporada-edad-entrenador" class="menu-entrenador-datos">EDAD: --</span>
+                    <span id="temporada-provincia-entrenador" class="menu-entrenador-datos">PROVINCIA: --</span>
+                    <div id="temporada-estrellas-entrenador" class="menu-estrellas">â˜…â˜…â˜…â˜†â˜†</div>
+                    <div class="menu-experiencia-wrap" aria-label="Experiencia del DT">
+                        <span class="menu-experiencia-barra temporada-experiencia-barra"></span>
                     </div>
                 </div>
             </div>
 
-            <img class="menu-app-logo" src="../assets/logo-futbolmemoria.png" alt="Futbol de Memoria">
+            <img class="menu-aplicacion-logo" src="../assets/logo-futbolmemoria.png" alt="Futbol de Memoria">
 
-            <div class="menu-club-card">
-                <div class="menu-club-info">
-                    <strong id="season-club-name">BOCA JUNIORS</strong>
-                    <span id="season-club-apodo">APODO</span>
+            <div class="menu-club-tarjeta">
+                <div class="menu-club-informacion">
+                    <strong id="temporada-nombre-club">BOCA JUNIORS</strong>
+                    <span id="temporada-apodo-club">APODO</span>
                 </div>
-                <div class="menu-media-box">
-                    <img id="season-club-badge" class="menu-club-badge" src="../assets/Boca_escudo.png" alt="Escudo del club">
+                <div class="menu-medio-box">
+                    <img id="temporada-insignia-club" class="menu-club-insignia" src="../assets/Boca_escudo.png" alt="Escudo del club">
                 </div>
             </div>
         </header>
 
-        <h1 class="screen-title-plate">TEMPORADA</h1>
+        <h1 class="placa-titulo-pantalla">TEMPORADA</h1>
 
-        <p id="season-calendar-info" class="season-calendar-info" aria-live="polite">Cargando calendario...</p>
+        <p id="temporada-informacion-calendario" class="temporada-calendario-informacion" aria-live="polite">Cargando calendario...</p>
 
-        <section class="season-table-wrap" aria-label="Tabla de posiciones de temporada">
-            <div class="season-legend">
-                <span class="legend-lib">LIBERTADORES</span>
-                <span class="legend-sud">SUDAMERICANA</span>
-                <span class="legend-desc">DESCENSO</span>
+        <section class="contenedor-tabla-temporada" aria-label="Tabla de posiciones de temporada">
+            <div class="leyenda-temporada">
+                <span class="leyenda-libertadores">LIBERTADORES</span>
+                <span class="leyenda-sudamericana">SUDAMERICANA</span>
+                <span class="leyenda-descenso">DESCENSO</span>
             </div>
 
-            <div class="season-table-scroll">
-                <table class="season-table">
+            <div class="desplazamiento-tabla-temporada">
+                <table class="tabla-temporada">
                     <thead>
-                        <tr><th>NÂ°</th><th>EQUIPOS</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>DG</th><th>PTS</th></tr>
+                        <tr><th>N°</th><th>EQUIPOS</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>DG</th><th>PTS</th></tr>
                     </thead>
-                    <tbody id="season-table-body"></tbody>
+                    <tbody id="cuerpo-tabla-temporada"></tbody>
                 </table>
             </div>
         </section>
 
-        <footer class="season-footer" aria-label="Acciones de temporada">
-            <button type="button" id="btn-season-menu" class="menu-footer-btn season-back">VOLVER AL MENU</button>
+        <footer class="temporada-pie" aria-label="Acciones de temporada">
+            <button type="button" id="boton-menu-temporada" class="menu-pie-boton temporada-volver">VOLVER AL MENU</button>
         </footer>
     </main>
 
-    <script src="../scripts/core/api-client.js"></script>
-    <script src="../scripts/core/session.js"></script>
-    <script src="../scripts/core/mappers.js"></script>
-    <script src="../scripts/core/services.js"></script>
+    <script src="../scripts/nucleo/cliente-api.js"></script>
+    <script src="../scripts/nucleo/sesion.js"></script>
+    <script src="../scripts/nucleo/adaptadores.js"></script>
+    <script src="../scripts/nucleo/servicios.js"></script>
     <script src="../scripts/temporada.js"></script>
 </body>
 </html>

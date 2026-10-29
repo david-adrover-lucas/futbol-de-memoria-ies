@@ -5,69 +5,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futbol de Memoria - Torneos</title>
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../estilos/principal.css">
 </head>
-<body id="torneos-body">
-    <main class="career-screen tournament-screen">
-        <header class="career-header tour-header" aria-label="Datos del torneo">
-            <div class="career-dt tour-header-side tour-header-profile">
-                <img id="tour-dt-avatar" src="../assets/avatar-1.png" alt="">
-                <div class="tour-header-copy">
-                    <strong id="tour-dt-name">DT</strong>
-                    <span id="tour-dt-stars">â˜…â˜…â˜…â˜†â˜†</span>
+<body id="torneos-cuerpo">
+    <main class="carrera-pantalla torneo-pantalla">
+        <header class="carrera-encabezado torneo-encabezado" aria-label="Datos del torneo">
+            <div class="carrera-entrenador torneo-encabezado-lateral torneo-encabezado-perfil">
+                <img id="avatar-entrenador-torneo" src="../assets/avatar-1.png" alt="">
+                <div class="torneo-encabezado-texto">
+                    <strong id="nombre-entrenador-torneo">DT</strong>
+                    <span id="estrellas-entrenador-torneo">â˜…â˜…â˜…â˜†â˜†</span>
                 </div>
             </div>
 
-            <div class="tour-header-center">
-                <img class="career-logo tour-logo" src="../assets/logo-futbolmemoria.png" alt="Futbol de Memoria">
+            <div class="torneo-encabezado-centro">
+                <img class="carrera-logo torneo-logo" src="../assets/logo-futbolmemoria.png" alt="Futbol de Memoria">
             </div>
 
-            <div class="career-club tour-header-side tour-header-club">
-                <strong id="tour-club-name">BOCA JUNIORS</strong>
-                <img id="tour-club-badge" src="../assets/Boca_escudo.png" alt="Escudo del club">
+            <div class="carrera-club torneo-encabezado-lateral torneo-encabezado-club">
+                <strong id="nombre-club-torneo">BOCA JUNIORS</strong>
+                <img id="insignia-club-torneo" src="../assets/Boca_escudo.png" alt="Escudo del club">
             </div>
         </header>
 
-        <h1 class="tour-page-title">TORNEOS</h1>
+        <h1 class="titulo-pagina-torneo">TORNEOS</h1>
 
-        <nav id="tour-select" class="tour-select" aria-label="Seleccionar torneo">
-            <button type="button" class="tour-big-btn" data-torneo="libertadores">
+        <nav id="selector-torneo" class="selector-torneo" aria-label="Seleccionar torneo">
+            <button type="button" class="torneo-big-boton" data-torneo="libertadores">
                 <span>LIBERTADORES</span>
             </button>
-            <button type="button" class="tour-big-btn" data-torneo="sudamericana">
+            <button type="button" class="torneo-big-boton" data-torneo="sudamericana">
                 <span>SUDAMERICANA</span>
             </button>
-            <button type="button" class="tour-big-btn" data-torneo="nacional">
+            <button type="button" class="torneo-big-boton" data-torneo="nacional">
                 <span>NACIONAL</span>
             </button>
         </nav>
 
-        <section id="tour-bracket" class="tour-bracket hidden" aria-label="Llave del torneo">
-            <div class="tour-bracket-canvas">
-                <header class="tour-bracket-heading">
-                    <img id="tour-bracket-logo" class="tour-bracket-logo" src="../assets/logo-sudamericana.png" alt="">
-                    <div class="tour-bracket-title-wrap">
-                        <h2 id="tour-bracket-title" class="tour-bracket-title">TORNEO</h2>
-                        <span id="tour-bracket-round" class="tour-bracket-round">OCTAVOS A FINAL</span>
-                        <p id="tour-bracket-champion" class="tour-bracket-champion" aria-live="polite"></p>
+        <section id="llave-torneo" class="llave-torneo oculto" aria-label="Llave del torneo">
+            <div class="lienzo-llave-torneo">
+                <header class="encabezado-llave-torneo">
+                    <img id="logo-llave-torneo" class="torneo-llave-logo" src="../assets/logo-sudamericana.png" alt="">
+                    <div class="contenedor-titulo-llave">
+                        <h2 id="titulo-llave-torneo" class="torneo-llave-titulo">TORNEO</h2>
+                        <span id="ronda-llave-torneo" class="ronda-llave-torneo">OCTAVOS A FINAL</span>
+                        <p id="campeon-llave-torneo" class="campeon-llave-torneo" aria-live="polite"></p>
                     </div>
-                    <img id="tour-bracket-cup" class="tour-bracket-cup" src="../assets/copa-sudamericana.png" alt="">
+                    <img id="copa-llave-torneo" class="torneo-llave-copa" src="../assets/copa-sudamericana.png" alt="">
                 </header>
 
-                <div id="tour-bracket-teams" class="tour-bracket-teams"></div>
+                <div id="equipos-llave-torneo" class="equipos-llave-torneo"></div>
             </div>
         </section>
 
-        <footer class="tour-footer" aria-label="Acciones de torneo">
-            <button type="button" id="btn-tour-menu" class="menu-footer-btn">VOLVER AL MENU</button>
-            <button type="button" id="btn-tour-play" class="menu-footer-btn">IR AL CALENDARIO</button>
+        <footer class="torneo-pie" aria-label="Acciones de torneo">
+            <button type="button" id="boton-menu-torneo" class="menu-pie-boton">VOLVER AL MENU</button>
+            <button type="button" id="boton-calendario-torneo" class="menu-pie-boton">IR AL CALENDARIO</button>
         </footer>
     </main>
 
-    <script src="../scripts/core/api-client.js"></script>
-    <script src="../scripts/core/session.js"></script>
-    <script src="../scripts/core/mappers.js"></script>
-    <script src="../scripts/core/services.js"></script>
+    <script src="../scripts/nucleo/cliente-api.js"></script>
+    <script src="../scripts/nucleo/sesion.js"></script>
+    <script src="../scripts/nucleo/adaptadores.js"></script>
+    <script src="../scripts/nucleo/servicios.js"></script>
     <script src="../scripts/torneos.js"></script>
 </body>
 </html>

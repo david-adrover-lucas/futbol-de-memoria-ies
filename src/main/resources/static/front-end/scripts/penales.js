@@ -3,11 +3,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!session || !session.partidoActualId) { window.location.replace("menu.html"); return; }
     const { tandaPenalesService, partidoService } = window.FDM.services;
     const ui = {
-        player: document.getElementById("shootout-player-score"), rival: document.getElementById("shootout-rival-score"),
-        local: document.getElementById("shootout-local-code"), away: document.getElementById("shootout-away-code"),
-        phase: document.getElementById("shootout-phase"), round: document.getElementById("shootout-round"),
-        role: document.getElementById("shootout-role"), timer: document.getElementById("shootout-timer"),
-        question: document.getElementById("shootout-question"), answers: document.getElementById("shootout-answers")
+        player: document.getElementById("marcador-jugador-tanda-penales"), rival: document.getElementById("marcador-rival-tanda-penales"),
+        local: document.getElementById("codigo-local-tanda-penales"), away: document.getElementById("codigo-visitante-tanda-penales"),
+        phase: document.getElementById("fase-tanda-penales"), round: document.getElementById("ronda-tanda-penales"),
+        role: document.getElementById("rol-tanda-penales"), timer: document.getElementById("temporizador-tanda-penales"),
+        question: document.getElementById("pregunta-tanda-penales"), answers: document.getElementById("respuestas-tanda-penales")
     };
     let tanda, partido, startedAt = 0, interval = null, busy = false;
 
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
         ui.question.textContent = current.textoPregunta;
-        ui.question.classList.toggle("is-penalty-question", true);
+        ui.question.classList.toggle("es-penal-pregunta", true);
         ui.answers.replaceChildren();
         if (current.tipoPregunta === "opcion_multiple") current.opciones.forEach((option, index) => renderOption(current, option, index));
         else renderNumeric(current);
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function renderOption(question, option, index) {
-        const button = document.createElement("button"); button.type = "button"; button.className = "answer-btn";
+        const button = document.createElement("button"); button.type = "button"; button.className = "respuesta-boton";
         const letter = document.createElement("span"); letter.textContent = String.fromCharCode(65 + index);
         const label = document.createElement("strong"); label.textContent = option.textoOpcion;
         button.append(letter, label);
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function renderNumeric(question) {
-        const form = document.createElement("form"); form.className = "penalty-answer";
+        const form = document.createElement("form"); form.className = "penal-respuesta";
         form.innerHTML = '<label for="shootout-input">Respuesta numérica</label><div><input id="shootout-input" type="number" inputmode="decimal" step="any" required><button type="submit">CONFIRMAR</button></div>';
         form.addEventListener("submit", event => {
             event.preventDefault(); submit({ preguntaId: question.preguntaId, textoRespuesta: form.querySelector("input").value });
